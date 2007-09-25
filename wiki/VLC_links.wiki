@@ -2,3 +2,5 @@ These are links to VLC documentation and tutorials
 
 
 http://www.faqs.org/docs/Linux-HOWTO/VideoLAN-HOWTO.html
+
+http://wiki.videolan.org/Developers_Corner
