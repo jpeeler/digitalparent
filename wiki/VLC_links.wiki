@@ -1,0 +1,4 @@
+These are links to VLC documentation and tutorials
+
+
+http://www.faqs.org/docs/Linux-HOWTO/VideoLAN-HOWTO.html
