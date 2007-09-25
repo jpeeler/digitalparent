@@ -1,0 +1,210 @@
+/**
+ * Test stub for database / SQLite component of the DigitalParent product.
+ *
+ * Basic Approach:
+ *    1) Create User, Profile, and Disc objects with sample data.
+      2) Insert sample data into database using store*() methods.
+ *    3) For each get*() method, ensure that the objects returned
+ *       contain the proper sample data from the database.
+ *    4) Remove sample data inserted in (2) using the remove*() commands.
+ *    5) For each get*() method, attempt to read data not in the database
+ *       (as if querying for information on a disc that has not been
+ *       inserted yet).
+ *    6) Test behavior in the event that the database file is unreadable.
+**/
+
+#include "database.h"
+#include <string>
+#include <stdio.h> // for perror
+
+int main(void) {
+
+   Disc sampleDisc, returnDisc;
+   Profile sampleProfile, returnProfile;
+   User sampleUser, returnUser;
+   SkipTime skip1, skip2;
+   int userID, discID, profileID;
+	
+ 
+   std::string discname = "We Were Soldiers";
+   std::string username = "TestUser";
+   std::string pwdhash = "#PWDHasH!";
+   std::string iconfile = "/filename";
+   /**
+    * Create objects with sample data for inserts.
+   **/
+   //sampleDisc = new Disc();
+   sampleDisc.setDiscName(discname);
+   sampleDisc.setDiscLength(123456789);
+   sampleDisc.setDiscChapterNum(12);
+   sampleDisc.setDiscRating(1);
+
+   //note: need to set lastMovieID after Disc object is in database
+   //sampleUser = new User();
+   sampleUser.setUser(username);
+   sampleUser.setPasswordHash(pwdhash);
+   sampleUser.setIconfile(iconfile);
+   sampleUser.setPlayUnknownDisc(false);
+   sampleUser.setMaxPlayLevel(2);
+   sampleUser.setLastMoviePos(4321);
+
+   //skip1 = new Skip_Time();
+   skip1.setSkipStart(1300);
+   skip1.setSkipStop(1403);
+   skip1.setAudioOnly(false);
+
+   //skip2 = new Skip_Time();
+   skip2.setSkipStart(2100);
+   skip2.setSkipStop(2403);
+   skip2.setAudioOnly(true);
+
+   //note: will need to set userID, discID once User and Disc
+   //are inserted and IDs assigned
+   //sampleProfile = new Profile();
+   sampleProfile.addSkipChapter(2);
+   sampleProfile.addSkipChapter(5);
+   sampleProfile.addSkipChapter(12);
+   sampleProfile.addSkipTime(skip1);
+   sampleProfile.addSkipTime(skip2);
+
+   /**
+    * Use objects to insert data into database.
+   **/
+   if(!storeDisc(&sampleDisc)) {
+      perror("Insert Disc");
+      exit(1);
+   }
+
+   if(!storeUser(&sampleUser)) {
+      perror("Insert User");
+      exit(1);
+   }
+
+   sampleProfile.setUserID(sampleUser.getUserID());
+   //sampleProfile.getDiscID(sampleDisc.getDiscID());
+   sampleProfile.getDiscID(); // check
+
+   if(!storeProfile(&sampleProfile)) {
+      perror("Insert Profile");
+      exit(1);
+   }
+
+   /**
+    * Get data from database to compare with sample data.
+   **/
+
+   returnUser = getUser(sampleUser.getUser(), sampleUser.getPasswordHash());
+   if(NULL == returnUser) {
+      perror("Get User");
+      exit(1);
+   }
+
+   returnDisc = getDisc(sampleDisc.getDiscName(), sampleDisc.getDiscChapterNum(), sampleDisc.getDiscLength());
+   if(NULL == returnDisc) {
+      perror("Get Disc");
+      exit(1);
+   }
+
+   returnProfile = getProfile(sampleDisc.getDiscID(), sampleUser.getUserID());
+   if(NULL == returnProfile) {
+      perror("Get Profile");
+      exit(1);
+   }
+
+   /**
+    * For each element, compare to see if data is the same
+   **/
+   if(sampleUser.getUserID() != returnUser.getUserID()) {
+      perror("User ID");
+      exit(1);
+   }
+   if(sampleUser.getUser() != returnUser.getUser()) {
+      perror("Username");
+      exit(1);
+   }
+   if(sampleUser.getPasswordHash() != returnUser.getPasswordHash()) {
+      perror("Password Hash");
+      exit(1);
+   }
+   if(sampleUser.getIconfile() != returnUser.getIconfile()) {
+      perror("User Icon");
+      exit(1);
+   }
+   if(sampleUser.getPlayUnknownDisc() != returnUser.getPlayUnknownDisc()) {
+      perror("User Unknown Discs");
+      exit(1);
+   }
+   if(sampleUser.getMaxPlayLevel() != returnUser.getMaxPlayLevel()) {
+      perror("User Max Play Level");
+      exit(1);
+   }
+   if(sampleUser.getLastMovieID() != returnUser.getLastMovieID()) {
+      perror("User Last Movie ID");
+      exit(1);
+   }
+   if(sampleUser.getLastMoviePos() != returnUser.getLastMoviePos()) {
+      perror("User Last Movie Position");
+      exit(1);
+   }
+   
+   //if we've gotten this far, the User is correct
+   printf("\nUser good!\n");
+   
+   if(sampleDisc.getDiscID() != returnDisc.getDiscID()) {
+      perror("Disc ID");
+      exit(1);
+   }
+   if(sampleDisc.getDiscName() != returnDisc.getDiscName()) {
+      perror("Disc Name");
+      exit(1);
+   }
+   if(sampleDisc.getDiscLength() != returnDisc.getDiscLength()) {
+      perror("Disc Length");
+      exit(1);
+   }
+   if(sampleDisc.getDiscChapterNum() != returnDisc.getDiscChapterNum()) {
+      perror("Disc NumChapters");
+      exit(1);
+   }
+   if(sampleDisc.getDiscRating() != returnDisc.getDiscRating()) {
+      perror("Disc Rating");
+      exit(1);
+   }
+   
+   //if we've gotten this far, the Disc is correct
+   printf("\nDisc good!\n");
+   
+   if(sampleProfile.getProfileID() != returnProfile.getProfileID()) {
+      perror("Profile ID");
+      exit(1);
+   }
+   if(sampleProfile.getUserID() != returnProfile.getUserID()) {
+      perror("Profile User ID");
+      exit(1);
+   }
+   if(sampleProfile.getDiscID() != returnProfile.getDiscID()) {
+      perror("Profile Disc ID");
+      exit(1);
+   }
+   
+   //add checks for skipped chapters and skipped times
+
+   //if we've gotten this far, the Profile is correct
+   printf("\nProfile good!\n");
+   
+   if(!deleteUser(&returnUser)) {
+      perror("Delete User");
+      exit(1);
+   }
+   if(!deleteProfile(&returnProfile)) {
+      perror("Delete Profile");
+      exit(1);
+   }
+   
+   /**
+    * Test what will happen if get*() is called with data that is
+    * not in database.
+    * Also test what happens when the database file cannot be accessed.
+   **/
+
+}
