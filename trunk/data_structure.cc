@@ -24,7 +24,7 @@ void Disc::setDiscID(int ID)
 	m_discID = ID;
 }
 
-int Disc::getDiscID()
+const int Disc::getDiscID() const
 {
 	return m_discID;
 }
@@ -34,7 +34,7 @@ void Disc::setDiscName(std::string& name)
 	m_disc_name = name;
 }
 
-std::string& Disc::getDiscName()
+const std::string& Disc::getDiscName() const
 {
 	return m_disc_name;
 }
@@ -44,7 +44,7 @@ void Disc::setDiscLength(long length)
 	m_disc_length = length;
 }
 
-long Disc::getDiscLength()
+const long Disc::getDiscLength() const
 {
 	return m_disc_length;
 }
@@ -54,7 +54,7 @@ void Disc::setDiscChapterNum(int chapters)
 	m_disc_chapters = chapters;
 }
 
-int Disc::getDiscChapterNum()
+const int Disc::getDiscChapterNum() const
 {
 	return m_disc_chapters;
 }
@@ -64,7 +64,7 @@ void Disc::setDiscRating(int rating)
 	m_disc_rating = rating;
 }
 
-int Disc::getDiscRating()
+const int Disc::getDiscRating() const
 {
 	return m_disc_rating;
 }
@@ -77,7 +77,7 @@ void User::setUserID(int ID)
 	m_userID = ID;
 }
 
-int User::getUserID()
+const int User::getUserID() const
 {
 	return m_userID;
 }
@@ -87,7 +87,7 @@ void User::setUser(std::string& username)
 	m_username = username;
 }
 
-std::string& User::getUser()
+const std::string& User::getUser() const
 {
 	return m_username;
 }
@@ -97,17 +97,17 @@ void User::setPasswordHash(std::string& hash)
 	m_password = hash;
 }
 
-std::string& User::getPasswordHash()
+const std::string& User::getPasswordHash() const
 {
 	return m_password;
 }
 
-void User::setIconfile(std::string& file)
+void User::setUserIcon(std::string& file)
 {
 	m_iconfile = file;
 }
 
-std::string& User::getIconfile()
+const std::string& User::getUserIcon() const
 {
 	return m_iconfile;
 }
@@ -117,7 +117,7 @@ void User::setPlayUnknownDisc(bool flag)
 	m_play_unknown = flag;
 }
 
-bool User::getPlayUnknownDisc()
+const bool User::getPlayUnknownDisc() const
 {
 	return m_play_unknown;
 }
@@ -127,7 +127,7 @@ void User::setMaxPlayLevel(int level)
 	m_max_play_level = level;
 }
 
-int User::getMaxPlayLevel()
+const int User::getMaxPlayLevel() const
 {
 	return m_max_play_level;
 }
@@ -137,7 +137,7 @@ void User::setLastMovieID(int ID)
 	m_last_movie_ID = ID;
 }
 
-int User::getLastMovieID()
+const int User::getLastMovieID() const
 {
 	return m_last_movie_ID;
 }
@@ -147,7 +147,7 @@ void User::setLastMoviePos(long position)
 	m_last_movie_pos = position;
 }
 
-long User::getLastMoviePos()
+const long User::getLastMoviePos() const
 {
 	return m_last_movie_pos;
 }
@@ -160,7 +160,7 @@ void SkipTime::setSkipStart(long start)
 	m_start_time = start;
 }
 
-long SkipTime::getSkipStart()
+const long SkipTime::getSkipStart() const
 {
 	return m_start_time;
 }
@@ -172,7 +172,7 @@ void SkipTime::setSkipStop(long stop)
 		m_stop_time = stop;
 }
 
-long SkipTime::getSkipStop()
+const long SkipTime::getSkipStop() const
 {
 	return m_stop_time;
 }
@@ -182,7 +182,7 @@ void SkipTime::setAudioOnly(bool isAudio)
 	m_audio_only = isAudio;
 }
 
-bool SkipTime::getAudioOnly()
+const bool SkipTime::getAudioOnly() const
 {
 	return m_audio_only;
 }
@@ -195,7 +195,7 @@ void Profile::setProfileID(int ID)
 	m_profileID = ID;
 }
 
-int Profile::getProfileID()
+const int Profile::getProfileID() const
 {
 	return m_profileID;
 }
@@ -205,7 +205,7 @@ void Profile::setUserID(int ID)
 	m_userID = ID;
 }
 
-int Profile::getUserID()
+const int Profile::getUserID() const
 {
 	return m_userID;
 }
@@ -215,7 +215,7 @@ void Profile::setDiscID(int ID)
 	m_discID = ID;
 }
 
-int Profile::getDiscID()
+const int Profile::getDiscID() const
 {
 	return m_discID;
 }
@@ -237,7 +237,7 @@ void Profile::removeSkipChapter(int chapter)
 	
 }
 		
-std::vector<int>& Profile::getSkipChapters()
+const std::vector<int>& Profile::getSkipChapters() const
 {
 	return m_skip_chapters;
 }
@@ -268,7 +268,7 @@ void Profile::removeSkipTime(SkipTime skip_time)
 	
 }
 
-std::vector<SkipTime>& Profile::getSkipTimes()
+const std::vector<SkipTime>& Profile::getSkipTimes() const
 {
 	return m_skip_times;
 }
@@ -290,8 +290,8 @@ bool SkipTime::operator==(const SkipTime& other)
 	development is done: integration with database, extensive error checking,
 	and adding const methods.
 */
-
-int main()
+// TODO: make testbench an object
+int ds_testbench()
 {	
 	const int anumber = 4;
 	std::string astring = "Jeff";
@@ -343,7 +343,7 @@ int main()
 		puts("DEBUG: problem with profile");
 	
 	// check out the vector
-	for (std::vector<SkipTime>::iterator it=aprofile.getSkipTimes().begin();
+	for (std::vector<SkipTime>::const_iterator it = aprofile.getSkipTimes().begin();
 		it!=aprofile.getSkipTimes().end(); ++it)
 	{
 		printf("%s\n", "an element:");

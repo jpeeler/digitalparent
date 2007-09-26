@@ -14,6 +14,9 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
  
+#ifndef DATASTRUCTURE_H
+#define DATASTRUCTURE_H 
+
 #include <string>
 #include <vector>
 
@@ -23,19 +26,19 @@ class Disc
 {
 public:
 	void setDiscID(int ID);
-	int getDiscID();
+	const int getDiscID() const;
 
 	void setDiscName(std::string& name);
-	std::string& getDiscName();
+	const std::string& getDiscName() const;
 
 	void setDiscLength(long length);
-	long getDiscLength();
+	const long getDiscLength() const;
 
 	void setDiscChapterNum(int chapters);
-	int getDiscChapterNum();
+	const int getDiscChapterNum() const;
 
 	void setDiscRating(int rating);
-	int getDiscRating();
+	const int getDiscRating() const;
 
 private:
 	int m_discID;
@@ -50,28 +53,28 @@ class User
 {
 public:
 	void setUserID(int ID);
-	int getUserID();
+	const int getUserID() const;
 
-	void setUser(std::string& username); // const?
-	std::string& getUser();
+	void setUser(std::string& username);
+	const std::string& getUser() const;
 
 	void setPasswordHash(std::string& hash);
-	std::string& getPasswordHash();
+	const std::string& getPasswordHash() const;
 
-	void setIconfile(std::string& file);
-	std::string& getIconfile();
+	void setUserIcon(std::string& file);
+	const std::string& getUserIcon() const;
 
 	void setPlayUnknownDisc(bool flag);
-	bool getPlayUnknownDisc();
+	const bool getPlayUnknownDisc() const;
 
 	void setMaxPlayLevel(int level);
-	int getMaxPlayLevel();
+	const int getMaxPlayLevel() const;
 
 	void setLastMovieID(int ID);
-	int getLastMovieID();
+	const int getLastMovieID() const;
 
 	void setLastMoviePos(long position);
-	long getLastMoviePos();
+	const long getLastMoviePos() const;
 
 private:
 	int m_userID;
@@ -88,13 +91,13 @@ class SkipTime
 {
 public:
 	void setSkipStart(long start);
-	long getSkipStart();
+	const long getSkipStart() const;
 
 	void setSkipStop(long stop);
-	long getSkipStop();
+	const long getSkipStop() const;
 
 	void setAudioOnly(bool isAudio);
-	bool getAudioOnly();
+	const bool getAudioOnly() const;
 
 	bool operator==(const SkipTime& other);
 	
@@ -109,23 +112,21 @@ class Profile
 {
 public:
 	void setProfileID(int ID);
-	int getProfileID();
+	const int getProfileID() const;
 
 	void setUserID(int ID);
-	int getUserID();
+	const int getUserID() const;
 
 	void setDiscID(int ID);
-	int getDiscID();
+	const int getDiscID() const;
 
 	void addSkipChapter(int chapter);
 	void removeSkipChapter(int chapter);
-	std::vector<int>& getSkipChapters();
+	const std::vector<int>& getSkipChapters() const;
 
-	// TODO: perhaps make a addSkipTimePair method?
-	// void addSkipTimingPair(long start, long stop);
 	void addSkipTime(SkipTime skip_time);
 	void removeSkipTime(SkipTime skip_time);
-	std::vector<SkipTime>& getSkipTimes();
+	const std::vector<SkipTime>& getSkipTimes() const;
 
 private:
 	int m_profileID;
@@ -135,6 +136,9 @@ private:
 	std::vector<int> m_skip_chapters; // chapters marked for skipping
 };
 
+
+// dont think we need this anymore, for stack based
+/*
 class DataStructure
 {
 public:
@@ -147,3 +151,6 @@ private:
 	Disc m_disc;
 	Profile m_profile;	
 };
+*/
+
+#endif

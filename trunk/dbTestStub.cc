@@ -43,7 +43,7 @@ int main(void) {
    //sampleUser = new User();
    sampleUser.setUser(username);
    sampleUser.setPasswordHash(pwdhash);
-   sampleUser.setIconfile(iconfile);
+   sampleUser.setUserIcon(iconfile);
    sampleUser.setPlayUnknownDisc(false);
    sampleUser.setMaxPlayLevel(2);
    sampleUser.setLastMoviePos(4321);
@@ -126,7 +126,7 @@ int main(void) {
       perror("Password Hash");
       exit(1);
    }
-   if(sampleUser.getIconfile() != returnUser.getIconfile()) {
+   if(sampleUser.getUserIcon() != returnUser.getUserIcon()) {
       perror("User Icon");
       exit(1);
    }
@@ -192,11 +192,11 @@ int main(void) {
    //if we've gotten this far, the Profile is correct
    printf("\nProfile good!\n");
    
-   if(!deleteUser(&returnUser)) {
+   if(!removeUser(&returnUser)) {
       perror("Delete User");
       exit(1);
    }
-   if(!deleteProfile(&returnProfile)) {
+   if(!removeProfile(&returnProfile)) {
       perror("Delete Profile");
       exit(1);
    }
