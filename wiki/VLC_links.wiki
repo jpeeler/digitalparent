@@ -14,3 +14,6 @@ Forums  . . . . . . . . . . http://forum.videolan.org/
 Wiki  . . . . . . . . . . . http://wiki.videolan.org/
 
 The Developers site . . . . http://developers.videolan.org/vlc/
+
+This is a very short libvlc how-to:
+http://wiki.videolan.org/Documentation:Hacker's_Guide/libvlc
