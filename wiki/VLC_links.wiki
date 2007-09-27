@@ -17,3 +17,6 @@ The Developers site . . . . http://developers.videolan.org/vlc/
 
 This is a very short libvlc how-to:
 http://wiki.videolan.org/Documentation:Hacker's_Guide/libvlc
+
+Here is some linux code examples:
+http://wiki.videolan.org/LibVLC_Tutorial_086c
