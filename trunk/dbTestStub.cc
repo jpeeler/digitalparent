@@ -13,31 +13,32 @@
  *    6) Test behavior in the event that the database file is unreadable.
 **/
 
-#include "database.h"
+#include "database.cc"
 #include <string>
 #include <stdio.h> // for perror
 
 int main(void) {
 
-   Disc sampleDisc, returnDisc;
-   Profile sampleProfile, returnProfile;
-   User sampleUser, returnUser;
-   SkipTime skip1, skip2;
-   int userID, discID, profileID;
+	Database db;
+   	Disc sampleDisc, returnDisc;
+   	Profile sampleProfile, returnProfile;
+   	User sampleUser, returnUser;
+   	SkipTime skip1, skip2;
+   	//int userID, discID, profileID;
 	
  
-   std::string discname = "We Were Soldiers";
-   std::string username = "TestUser";
-   std::string pwdhash = "#PWDHasH!";
-   std::string iconfile = "/filename";
-   /**
-    * Create objects with sample data for inserts.
-   **/
-   //sampleDisc = new Disc();
-   sampleDisc.setDiscName(discname);
-   sampleDisc.setDiscLength(123456789);
-   sampleDisc.setDiscChapterNum(12);
-   sampleDisc.setDiscRating(1);
+   	std::string discname = "We Were Soldiers";
+   	std::string username = "TestUser";
+   	std::string pwdhash = "#PWDHasH!";
+   	std::string iconfile = "/filename";
+   	/**
+     * Create objects with sample data for inserts.
+   	**/
+   	//sampleDisc = new Disc();
+   	sampleDisc.setDiscName(discname);
+   	sampleDisc.setDiscLength(123456789);
+   	sampleDisc.setDiscChapterNum(12);
+   	sampleDisc.setDiscRating(1);
 
    //note: need to set lastMovieID after Disc object is in database
    //sampleUser = new User();
@@ -70,12 +71,12 @@ int main(void) {
    /**
     * Use objects to insert data into database.
    **/
-   if(!storeDisc(&sampleDisc)) {
+   if(!db.storeDisc(&sampleDisc)) {
       perror("Insert Disc");
       exit(1);
    }
 
-   if(!storeUser(&sampleUser)) {
+   if(!db.storeUser(&sampleUser)) {
       perror("Insert User");
       exit(1);
    }
@@ -84,7 +85,7 @@ int main(void) {
    //sampleProfile.getDiscID(sampleDisc.getDiscID());
    sampleProfile.getDiscID(); // check
 
-   if(!storeProfile(&sampleProfile)) {
+   if(!db.storeProfile(&sampleProfile)) {
       perror("Insert Profile");
       exit(1);
    }
@@ -93,20 +94,20 @@ int main(void) {
     * Get data from database to compare with sample data.
    **/
 
-   returnUser = getUser(sampleUser.getUser(), sampleUser.getPasswordHash());
-   if(NULL == returnUser) {
+   returnUser = db.getUser((std::string&) sampleUser.getUser(), (std::string&) sampleUser.getPasswordHash());
+   if(0 == returnUser.getUserID()) {
       perror("Get User");
       exit(1);
    }
 
-   returnDisc = getDisc(sampleDisc.getDiscName(), sampleDisc.getDiscChapterNum(), sampleDisc.getDiscLength());
-   if(NULL == returnDisc) {
+   returnDisc = db.getDisc((std::string&) sampleDisc.getDiscName(), sampleDisc.getDiscChapterNum(), sampleDisc.getDiscLength());
+   if(0 == returnDisc.getDiscID()) {
       perror("Get Disc");
       exit(1);
    }
 
-   returnProfile = getProfile(sampleDisc.getDiscID(), sampleUser.getUserID());
-   if(NULL == returnProfile) {
+   returnProfile = db.getProfile((int) sampleDisc.getDiscID(), sampleUser.getUserID());
+   if(0 == returnProfile.getProfileID()) {
       perror("Get Profile");
       exit(1);
    }
@@ -192,11 +193,11 @@ int main(void) {
    //if we've gotten this far, the Profile is correct
    printf("\nProfile good!\n");
    
-   if(!removeUser(&returnUser)) {
+   if(!db.removeUser(&returnUser)) {
       perror("Delete User");
       exit(1);
    }
-   if(!removeProfile(&returnProfile)) {
+   if(!db.removeProfile(&returnProfile)) {
       perror("Delete Profile");
       exit(1);
    }
