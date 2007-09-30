@@ -347,8 +347,8 @@ int ds_testbench()
 		it!=aprofile.getSkipTimes().end(); ++it)
 	{
 		printf("%s\n", "an element:");
-		printf("%d\n",it->getSkipStart());
-		printf("%d\n",it->getSkipStop());
+		printf("%ld\n",it->getSkipStart());
+		printf("%ld\n",it->getSkipStop());
 		printf("%s\n\n", it->getAudioOnly() ? "true" : "false");
 	}
 	
