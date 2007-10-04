@@ -8,7 +8,7 @@
 #include <iostream>
 #include <string>
 
-#include "../include/data_structure.h"
+#include "data_structure.h"
 #include <tntdb/connect.h>
 #include <tntdb/connection.h>
 #include <tntdb/result.h>
