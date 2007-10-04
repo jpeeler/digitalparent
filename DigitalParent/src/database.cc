@@ -267,3 +267,239 @@ Disc Database::getDisc(std::string& discName, int numChapters, long discLength)
 	
 	return outDisc;
 }
+
+//--------------------------------------------------------------------------//
+
+/**
+ * 10/4/07 - Moved code from original dbTestStub.cc to DBTest class function
+ *				below.  Need to add error checking.
+**/
+
+/**
+ * Test stub for database / SQLite component of the DigitalParent product.
+ *
+ * Basic Approach:
+ *    1) Create User, Profile, and Disc objects with sample data.
+      2) Insert sample data into database using store*() methods.
+ *    3) For each get*() method, ensure that the objects returned
+ *       contain the proper sample data from the database.
+ *    4) Remove sample data inserted in (2) using the remove*() commands.
+ *    5) For each get*() method, attempt to read data not in the database
+ *       (as if querying for information on a disc that has not been
+ *       inserted yet).
+ *    6) Test behavior in the event that the database file is unreadable.
+**/
+
+#define TEST_USER true
+#define TEST_DISC false
+#define TEST_PROFILE true
+#define DELETE_PROFILE false
+#define DELETE_USER false
+
+void DBTest::do_DBTest()
+{
+	Database db;
+   	Disc sampleDisc, returnDisc;
+   	Profile sampleProfile, returnProfile;
+   	User sampleUser, returnUser;
+   	SkipTime skip1, skip2;
+	
+ 
+   	std::string discname = "We Were Soldiers";
+   	std::string username = "TestUser2";
+   	std::string pwdhash = "#PWDHasH!";
+   	std::string iconfile = "/filename";
+   	/**
+     * Create objects with sample data for inserts.
+   	**/
+   	sampleDisc.setDiscName(discname);
+   	sampleDisc.setDiscLength(123456789);
+   	sampleDisc.setDiscChapterNum(12);
+   	sampleDisc.setDiscRating(1);
+
+   //note: need to set lastMovieID after Disc object is in database
+   sampleUser.setUser(username);
+   sampleUser.setPasswordHash(pwdhash);
+   sampleUser.setUserIcon(iconfile);
+   sampleUser.setPlayUnknownDisc(false);
+   sampleUser.setMaxPlayLevel(2);
+   sampleUser.setLastMoviePos(4321);
+
+   skip1.setSkipStart(1300);
+   skip1.setSkipStop(1403);
+   skip1.setAudioOnly(false);
+
+   skip2.setSkipStart(2100);
+   skip2.setSkipStop(2403);
+   skip2.setAudioOnly(true);
+
+   //note: will need to set userID, discID once User and Disc
+   //are inserted and IDs assigned
+   sampleProfile.addSkipChapter(2);
+   sampleProfile.addSkipChapter(5);
+   sampleProfile.addSkipChapter(12);
+   sampleProfile.addSkipTime(skip1);
+   sampleProfile.addSkipTime(skip2);
+
+   /**
+    * Use objects to insert data into database.
+   **/
+/*
+   if(!db.storeDisc(&sampleDisc)) {
+      printf("\nInsert Disc\n");
+      exit(1);
+   }
+*/
+	//returnUser = db.getUser(username, pwdhash);
+	
+   if(!db.storeUser(&sampleUser)) {
+      printf("\nInsert User\n");
+      exit(1);
+   }
+
+   sampleProfile.setUserID(sampleUser.getUserID());
+   sampleProfile.setDiscID(2);//sampleDisc.getDiscID());
+
+   if(!db.storeProfile(&sampleProfile)) {
+      printf("\nInsert Profile\n");
+      exit(1);
+   }
+
+   /**
+    * Get data from database to compare with sample data.
+   **/
+	if(TEST_USER) {
+   		returnUser = db.getUser((std::string&) sampleUser.getUser(), (std::string&) sampleUser.getPasswordHash());
+   		if(0 == returnUser.getUserID()) {
+      		printf("\nGet User\n");
+      		exit(1);
+		}
+	   
+		if(sampleUser.getUserID() != returnUser.getUserID()) {
+			printf("\nUser ID\n");
+			exit(1);
+		}
+		if(sampleUser.getUser() != returnUser.getUser()) {
+			printf("\nUsername\n");
+			exit(1);
+		}
+		if(sampleUser.getPasswordHash() != returnUser.getPasswordHash()) {
+			printf("\nPassword Hash\n");
+			exit(1);
+		}
+		if(sampleUser.getUserIcon() != returnUser.getUserIcon()) {
+			printf("\nUser Icon\n");
+			exit(1);
+		}
+		if(sampleUser.getPlayUnknownDisc() != returnUser.getPlayUnknownDisc()) {
+			printf("\nUser Unknown Discs\n");
+			exit(1);
+		}
+		if(sampleUser.getMaxPlayLevel() != returnUser.getMaxPlayLevel()) {
+			printf("\nUser Max Play Level\n");
+			exit(1);
+		}
+		if(sampleUser.getLastMovieID() != returnUser.getLastMovieID()) {
+			printf("\nUser Last Movie ID\n");
+			exit(1);
+		}
+		if(sampleUser.getLastMoviePos() != returnUser.getLastMoviePos()) {
+			printf("\nUser Last Movie Position\n");
+			exit(1);
+		}
+	   
+		//if we've gotten this far, the User is correct
+		printf("\nUser good!\n");
+	   
+	   if(DELETE_USER)
+	   {
+			if(!db.removeUser(&returnUser)) {
+				printf("\nDelete User\n");
+				exit(1);
+			}
+	   }
+   
+	}
+
+	if(TEST_DISC) {
+	   returnDisc = db.getDisc((std::string&) sampleDisc.getDiscName(), sampleDisc.getDiscChapterNum(), sampleDisc.getDiscLength());
+	   if(0 == returnDisc.getDiscID()) {
+		  printf("\nGet Disc\n");
+		  exit(1);
+	   }
+	   
+	   if(sampleDisc.getDiscID() != returnDisc.getDiscID()) {
+		  printf("\nDisc ID\n");
+		  exit(1);
+	   }
+	   if(sampleDisc.getDiscName() != returnDisc.getDiscName()) {
+		  printf("\nDisc Name\n");
+		  exit(1);
+	   }
+	   if(sampleDisc.getDiscLength() != returnDisc.getDiscLength()) {
+		  printf("\nDisc Length\n");
+		  exit(1);
+	   }
+	   if(sampleDisc.getDiscChapterNum() != returnDisc.getDiscChapterNum()) {
+		  printf("\nDisc NumChapters\n");
+		  exit(1);
+	   }
+	   if(sampleDisc.getDiscRating() != returnDisc.getDiscRating()) {
+		  printf("\nDisc Rating\n");
+		  exit(1);
+	   }
+	   
+	   //if we've gotten this far, the Disc is correct
+	   printf("\nDisc good!\n");
+	   
+	}
+	
+	if(TEST_PROFILE) {
+	   returnProfile = db.getProfile(sampleProfile.getDiscID(), sampleProfile.getUserID());
+	   if(0 == returnProfile.getProfileID()) {
+		  printf("\nGet Profile\n");
+		  exit(1);
+	   }
+	   
+	   if(sampleProfile.getProfileID() != returnProfile.getProfileID()) {
+		  printf("\nProfile ID\n");
+		  exit(1);
+	   }
+	   if(sampleProfile.getUserID() != returnProfile.getUserID()) {
+		  printf("\nProfile User ID\n");
+		  exit(1);
+	   }
+	   if(sampleProfile.getDiscID() != returnProfile.getDiscID()) {
+		  printf("\nProfile Disc ID\n");
+		  exit(1);
+	   }
+	   
+	   //add checks for skipped chapters and skipped times
+	
+	   //if we've gotten this far, the Profile is correct
+	   printf("\nProfile good!\n");
+	   
+	   if(DELETE_PROFILE) {
+			if(!db.removeProfile(&returnProfile)) {
+				printf("\nDelete Profile\n");
+				exit(1);
+			}
+		}
+	 
+	}
+   /**
+    * For each element, compare to see if data is the same
+   **/
+   
+   
+   
+   
+   
+   
+   /**
+    * Test what will happen if get*() is called with data that is
+    * not in database.
+    * Also test what happens when the database file cannot be accessed.
+   **/
+
+}
