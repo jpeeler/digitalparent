@@ -54,7 +54,7 @@ Profile Database::getProfile(int diskID, int userID)
 	try {
 		row = query.selectRow();
 	}
-	catch(tntdb::NotFound) {
+	catch(tntdb::Error &e) {
 		outProfile.setProfileID(0);
 		return outProfile;
 	}
@@ -164,6 +164,9 @@ bool Database::removeProfile(Profile *profile)
 	query = conn.prepare("DELETE FROM Profiles WHERE Profile_ID = :v1");
 	query.setInt("v1", (*profile).getProfileID()).execute();
 	
+	//set profile_id to 0 in case they try to store it again
+	(*profile).setProfileID(0);
+	
 	return true;
 }
 
@@ -172,6 +175,9 @@ User Database::getUser(std::string& username, std::string& password)
 	User outUser;
 	tntdb::Statement query;
 	tntdb::Row row;
+	std::string returnName;
+	std::string returnPassword;
+	std::string returnIcon;
 	
 	query = conn.prepare("SELECT User_ID, Username, Password, User_Icon, Can_Play_Unknown, Disc_Rating_ID, Last_Movie_ID, Last_Movie_Position FROM Users WHERE Username = :v1 AND Password = :v2");
 	query.setString("v1", username).setString("v2", password);
@@ -185,6 +191,20 @@ User Database::getUser(std::string& username, std::string& password)
 		printf("\n\nError getting user\n\n");
 		exit(1);
 	}
+	
+	//user was successfully retrieved, fill object
+	returnName = (row[1]).getString();
+	returnPassword = (row[2]).getString();
+	returnIcon = (row[3]).getString();
+	
+	outUser.setUserID(row[0]);
+	outUser.setUser(returnName);
+	outUser.setPasswordHash(returnPassword);
+	outUser.setUserIcon(returnIcon);
+	outUser.setPlayUnknownDisc(row[4]);
+	outUser.setMaxPlayLevel(row[5]);
+	outUser.setLastMovieID(row[6]);
+	outUser.setLastMoviePos((int) row[7]);
 	
 	return outUser;
 	
@@ -224,6 +244,15 @@ bool Database::storeUser(User *user)
 
 bool Database::removeUser(User *user)
 {
+	//need to remove all data for this user, including profiles
+	//get list of profiles for this userID
+	
+	//for each profile, remove skip chapters and skip times
+	
+	//all skip chapters/times removed, delete Profile entries
+	
+	//Profiles gone, remove Users entry
+	
 	return true;
 }
 

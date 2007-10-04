@@ -13,7 +13,7 @@
  *    6) Test behavior in the event that the database file is unreadable.
 **/
 
-#define TEST_USER false
+#define TEST_USER true
 #define TEST_DISC false
 #define TEST_PROFILE true
 #define DELETE_PROFILE false
