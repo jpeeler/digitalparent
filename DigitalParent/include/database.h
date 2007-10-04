@@ -39,5 +39,11 @@ private:
 
 };
 
+class DBTest
+{
+	public:
+		static void do_DBTest();
+};
+
 
 #endif
