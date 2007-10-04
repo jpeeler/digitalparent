@@ -284,14 +284,13 @@ bool SkipTime::operator==(const SkipTime& other)
 }
 
 // -----------------------------------------------------------------------------
-// main - the testbench
+// DataTest testbench
 /* 9/22/07 - At this point most of the data structure operations are simply
 	setting instance variables. Future testing to be added once further
 	development is done: integration with database, extensive error checking,
 	and adding const methods.
 */
-// TODO: make testbench an object
-int ds_testbench()
+void DataTest::do_test()
 {	
 	const int anumber = 4;
 	std::string astring = "Jeff";
@@ -300,6 +299,9 @@ int ds_testbench()
 	long alongnum2 = 18888888;
 	long alongnum3 = 99999999;
 	int size;
+	
+	Disc atest;
+	printf("%d\n",atest.getDiscID());
 	
 	// Test user object on the heap ----
 	User *auser2 = new User();
@@ -347,8 +349,8 @@ int ds_testbench()
 		it!=aprofile.getSkipTimes().end(); ++it)
 	{
 		printf("%s\n", "an element:");
-		printf("%d\n",it->getSkipStart());
-		printf("%d\n",it->getSkipStop());
+		printf("%ld\n",it->getSkipStart());
+		printf("%ld\n",it->getSkipStop());
 		printf("%s\n\n", it->getAudioOnly() ? "true" : "false");
 	}
 	
@@ -357,5 +359,4 @@ int ds_testbench()
 	if (size != 0)
 		puts("DEBUG: problem with profile");
 	
-	return 0;
 }

@@ -24,6 +24,9 @@
 #include <stdio.h> // for perror
 
 int main(void) {
+	
+	// data structures test, should probably be moved to main.cc
+	DataTest::do_test();
 
 	Database db;
    	Disc sampleDisc, returnDisc;

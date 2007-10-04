@@ -20,11 +20,18 @@
 #include <string>
 #include <vector>
 
-// TODO: add constructor methods, optionally with ID parameter
 
 class Disc
 {
 public:
+	Disc() : m_discID(0),
+             m_disc_name(""),
+             m_disc_length(0),
+             m_disc_chapters(0),
+             m_disc_rating(0)
+	{}
+	~Disc() {}
+
 	void setDiscID(int ID);
 	const int getDiscID() const;
 
@@ -52,6 +59,17 @@ private:
 class User
 {
 public:
+	User() : m_userID(0),
+             m_username(""),
+             m_iconfile(""),
+             m_password(""),
+             m_play_unknown(false),
+             m_max_play_level(0),
+             m_last_movie_ID(0),
+             m_last_movie_pos(0)
+	{}
+	~User() {}
+
 	void setUserID(int ID);
 	const int getUserID() const;
 
@@ -90,6 +108,13 @@ private:
 class SkipTime
 {
 public:
+	
+	SkipTime() : m_start_time(0),
+                 m_stop_time(0),
+                 m_audio_only(false)
+	{}
+	~SkipTime() {}
+
 	void setSkipStart(long start);
 	const long getSkipStart() const;
 
@@ -111,6 +136,12 @@ private:
 class Profile
 {
 public:
+	Profile() : m_profileID(0),
+                m_userID(0),
+                m_discID(0)
+	{}
+	~Profile() {}
+
 	void setProfileID(int ID);
 	const int getProfileID() const;
 
@@ -137,6 +168,11 @@ private:
 };
 
 
+class DataTest
+{
+public:
+	static void do_test();
+};
 // dont think we need this anymore, for stack based
 /*
 class DataStructure
