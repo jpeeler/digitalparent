@@ -41,44 +41,40 @@ Database::~Database()
 	// TODO: put destructor code here
 }
 
-Profile Database::getProfile(int diskID, int userID)
+bool Database::getProfile(Profile *profile)
 {
-	Profile outProfile;
 	SkipTime skipTime;
 	tntdb::Row row;
 	
-	tntdb::Statement query = conn.prepare("SELECT Profile_ID, User_ID, Disc_ID FROM Profiles WHERE Disc_ID = :v1 AND User_ID = :v2");
+	tntdb::Statement query = conn.prepare("SELECT Profile_ID FROM Profiles WHERE Disc_ID = :v1 AND User_ID = :v2");
 	
-	query.setInt("v1", diskID).setInt("v2", userID);
+	query.setInt("v1", (*profile).getDiscID()).setInt("v2", (*profile).getUserID());
 	
 	try {
-		row = query.selectRow();
+		(*profile).setProfileID(query.selectValue());
 	}
 	catch(tntdb::Error &e) {
-		outProfile.setProfileID(0);
-		return outProfile;
+		(*profile).setProfileID(0);
+		return false;
 	}
 	
-	outProfile.setProfileID((int) row[0]);
-	outProfile.setUserID((int) row[1]);
-	outProfile.setDiscID((int) row[2]);
 	
 	//get the skipped chapters for this profile
 	query = conn.prepare("SELECT Chapter_Number FROM Skip_Chapters WHERE Profile_ID = :v1 ORDER BY Chapter_Number ASC");
 	
-	query.setInt("v1", outProfile.getProfileID());
+	query.setInt("v1", (*profile).getProfileID());
 	
 	for(tntdb::Statement::const_iterator cursor = query.begin();
 			cursor != query.end(); ++cursor)
 	{
 		row = *cursor;
-		outProfile.addSkipChapter((int) row[0]);
+		(*profile).addSkipChapter((int) row[0]);
 	}
 	
 	//get skip times for this profile
 	query = conn.prepare("SELECT Skip_Start, Skip_Stop, Audio_Only FROM Skip_Times WHERE Profile_ID = :v1 ORDER BY Skip_Start ASC");
 	
-	query.setInt("v1", outProfile.getProfileID());
+	query.setInt("v1", (*profile).getProfileID());
 	
 	for(tntdb::Statement::const_iterator cursor = query.begin();
 			cursor != query.end(); ++cursor)
@@ -88,10 +84,10 @@ Profile Database::getProfile(int diskID, int userID)
 		skipTime.setSkipStop((int) row[1]);
 		skipTime.setAudioOnly(row[2]);
 		
-		outProfile.addSkipTime(skipTime);
+		(*profile).addSkipTime(skipTime);
 	}
 	
-	return outProfile;
+	return true;
 }
 
 bool Database::storeProfile(Profile *profile)
@@ -170,17 +166,14 @@ bool Database::removeProfile(Profile *profile)
 	return true;
 }
 
-User Database::getUser(std::string& username, std::string& password)
+bool Database::getUser(User *user)
 {
-	User outUser;
 	tntdb::Statement query;
 	tntdb::Row row;
-	std::string returnName;
-	std::string returnPassword;
 	std::string returnIcon;
 	
 	query = conn.prepare("SELECT User_ID, Username, Password, User_Icon, Can_Play_Unknown, Disc_Rating_ID, Last_Movie_ID, Last_Movie_Position FROM Users WHERE Username = :v1 AND Password = :v2");
-	query.setString("v1", username).setString("v2", password);
+	query.setString("v1", (*user).getUser()).setString("v2", (*user).getPasswordHash());
 	
 	try
 	{
@@ -192,21 +185,17 @@ User Database::getUser(std::string& username, std::string& password)
 		exit(1);
 	}
 	
-	//user was successfully retrieved, fill object
-	returnName = (row[1]).getString();
-	returnPassword = (row[2]).getString();
+	//user was successfully retreived, fill object
 	returnIcon = (row[3]).getString();
 	
-	outUser.setUserID(row[0]);
-	outUser.setUser(returnName);
-	outUser.setPasswordHash(returnPassword);
-	outUser.setUserIcon(returnIcon);
-	outUser.setPlayUnknownDisc(row[4]);
-	outUser.setMaxPlayLevel(row[5]);
-	outUser.setLastMovieID(row[6]);
-	outUser.setLastMoviePos((int) row[7]);
+	(*user).setUserID(row[0]);
+	(*user).setUserIcon(returnIcon);
+	(*user).setPlayUnknownDisc(row[4]);
+	(*user).setMaxPlayLevel(row[5]);
+	(*user).setLastMovieID(row[6]);
+	(*user).setLastMoviePos((int) row[7]);
 	
-	return outUser;
+	return true;
 	
 }
 
@@ -244,28 +233,95 @@ bool Database::storeUser(User *user)
 
 bool Database::removeUser(User *user)
 {
+	tntdb::Statement query;
+	tntdb::Statement removeTimesQuery;
+	tntdb::Statement removeChaptersQuery;
+	tntdb::Row row;
+	
 	//need to remove all data for this user, including profiles
 	//get list of profiles for this userID
+	query = conn.prepare("SELECT Profile_ID FROM Profiles WHERE User_ID = :v1");
+	query.setInt("v1", (*user).getUserID());
 	
-	//for each profile, remove skip chapters and skip times
+	removeTimesQuery = conn.prepare("DELETE FROM Skip_Times WHERE Profile_ID = :v1");
+	removeChaptersQuery = conn.prepare("DELETE FROM Skip_Chapters WHERE Profile_ID = :v1");
+	
+	for(tntdb::Statement::const_iterator cursor = query.begin();
+			cursor != query.end(); ++cursor)
+	{
+		//for each profile, remove skip chapters and skip times
+		row = *cursor;
+		removeTimesQuery.setInt("v1", row[0]).execute();
+		removeChaptersQuery.setInt("v1", row[0]).execute();
+	}
 	
 	//all skip chapters/times removed, delete Profile entries
+	query = conn.prepare("DELETE FROM Profiles WHERE User_ID = :v1");
+	query.setInt("v1", (*user).getUserID()).execute();
 	
 	//Profiles gone, remove Users entry
+	query = conn.prepare("DELETE FROM Users WHERE User_ID = :v1");
+	query.setInt("v1", (*user).getUserID()).execute();
+	
+	(*user).setUserID(0);
 	
 	return true;
 }
 
 bool Database::storeDisc(Disc *discInfo)
 {
+	tntdb::Statement query;
+	tntdb::Row row;
+	std::string discname;
+
+	discname = (*discInfo).getDiscName();
+	
+	query = conn.prepare("SELECT Disc_ID, Disc_Rating_ID FROM Disc WHERE Disc_Name = :v1 AND Disc_Length = :v2 AND Disc_NumChapters = :v3");
+	query.setString("v1", discname).setInt("v2", (*discInfo).getDiscLength()).setInt("v3", (*discInfo).getDiscChapterNum());
+	
+	try {
+		row = query.selectRow();
+		
+		//if error was not thrown, this disc is already in database;
+		//set Disc ID and rating
+		(*discInfo).setDiscID(row[0]);
+		(*discInfo).setDiscRating(row[1]);
+	}
+	catch(tntdb::Error &e) {
+		//if error thrown is tntdb::NotFound, this disc does not exist so insert
+		query = conn.prepare("INSERT INTO Disc (Disc_Name, Disc_Length, Disc_NumChapters, Disc_Rating_ID) VALUES (:v1, :v2, :v3, :v4)");
+		query.setString("v1", discname).setInt("v2", (*discInfo).getDiscLength()).setInt("v3", (*discInfo).getDiscChapterNum()).setInt("v4", (*discInfo).getDiscRating());
+		query.execute();
+		
+		//get ID for this discID
+		getDisc(discInfo);
+	}
+	
 	return true;
 }
 
-Disc Database::getDisc(std::string& discName, int numChapters, long discLength)
+bool Database::getDisc(Disc *disc)
 {
-	Disc outDisc;
+	tntdb::Statement query;
+	tntdb::Row row;
+	std::string discname = (*disc).getDiscName();
 	
-	return outDisc;
+	query = conn.prepare("SELECT Disc_ID, Disc_Rating_ID FROM Disc WHERE Disc_Name = :v1 AND Disc_Length = :v2 AND Disc_NumChapters = :v3");
+	query.setString("v1", discname).setInt("v2", (*disc).getDiscLength());
+	query.setInt("v3", (*disc).getDiscChapterNum());
+	
+	try {
+		row = query.selectRow();
+		
+		(*disc).setDiscID(row[0]);
+		(*disc).setDiscRating(row[1]);
+	}
+	catch(tntdb::Error &e) {
+		//this disc does not exist, return false
+		return false;
+	}
+	
+	return true;
 }
 
 //--------------------------------------------------------------------------//
@@ -291,7 +347,7 @@ Disc Database::getDisc(std::string& discName, int numChapters, long discLength)
 **/
 
 #define TEST_USER true
-#define TEST_DISC false
+#define TEST_DISC true
 #define TEST_PROFILE true
 #define DELETE_PROFILE false
 #define DELETE_USER false
@@ -344,13 +400,12 @@ void DBTest::do_DBTest()
    /**
     * Use objects to insert data into database.
    **/
-/*
+
    if(!db.storeDisc(&sampleDisc)) {
       printf("\nInsert Disc\n");
       exit(1);
    }
-*/
-	//returnUser = db.getUser(username, pwdhash);
+
 	
    if(!db.storeUser(&sampleUser)) {
       printf("\nInsert User\n");
@@ -358,18 +413,29 @@ void DBTest::do_DBTest()
    }
 
    sampleProfile.setUserID(sampleUser.getUserID());
-   sampleProfile.setDiscID(2);//sampleDisc.getDiscID());
+   sampleProfile.setDiscID(sampleDisc.getDiscID());
 
    if(!db.storeProfile(&sampleProfile)) {
       printf("\nInsert Profile\n");
       exit(1);
    }
+   
+   //set up necessary info in return objects for get* functions
+   returnUser.setUser(username);
+   returnUser.setPasswordHash(pwdhash);
+   
+   returnProfile.setDiscID(sampleProfile.getDiscID());
+   returnProfile.setUserID(sampleProfile.getUserID());
+   
+   returnDisc.setDiscLength(sampleDisc.getDiscLength());
+   returnDisc.setDiscName(discname);
+   returnDisc.setDiscChapterNum(sampleDisc.getDiscChapterNum());
 
    /**
     * Get data from database to compare with sample data.
    **/
 	if(TEST_USER) {
-   		returnUser = db.getUser((std::string&) sampleUser.getUser(), (std::string&) sampleUser.getPasswordHash());
+   		db.getUser(&returnUser);
    		if(0 == returnUser.getUserID()) {
       		printf("\nGet User\n");
       		exit(1);
@@ -411,18 +477,12 @@ void DBTest::do_DBTest()
 		//if we've gotten this far, the User is correct
 		printf("\nUser good!\n");
 	   
-	   if(DELETE_USER)
-	   {
-			if(!db.removeUser(&returnUser)) {
-				printf("\nDelete User\n");
-				exit(1);
-			}
-	   }
+	   
    
 	}
 
 	if(TEST_DISC) {
-	   returnDisc = db.getDisc((std::string&) sampleDisc.getDiscName(), sampleDisc.getDiscChapterNum(), sampleDisc.getDiscLength());
+	   db.getDisc(&returnDisc);
 	   if(0 == returnDisc.getDiscID()) {
 		  printf("\nGet Disc\n");
 		  exit(1);
@@ -455,7 +515,7 @@ void DBTest::do_DBTest()
 	}
 	
 	if(TEST_PROFILE) {
-	   returnProfile = db.getProfile(sampleProfile.getDiscID(), sampleProfile.getUserID());
+	   db.getProfile(&returnProfile);
 	   if(0 == returnProfile.getProfileID()) {
 		  printf("\nGet Profile\n");
 		  exit(1);
@@ -479,13 +539,24 @@ void DBTest::do_DBTest()
 	   //if we've gotten this far, the Profile is correct
 	   printf("\nProfile good!\n");
 	   
-	   if(DELETE_PROFILE) {
-			if(!db.removeProfile(&returnProfile)) {
-				printf("\nDelete Profile\n");
-				exit(1);
-			}
-		}
+	   
 	 
+	}
+	
+	
+	if(DELETE_PROFILE) {
+		if(!db.removeProfile(&returnProfile)) {
+			printf("\nDelete Profile\n");
+			exit(1);
+		}
+	}
+		
+	if(DELETE_USER)
+	{
+		if(!db.removeUser(&returnUser)) {
+			printf("\nDelete User\n");
+			exit(1);
+		}
 	}
    /**
     * For each element, compare to see if data is the same
