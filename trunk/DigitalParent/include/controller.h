@@ -22,68 +22,69 @@
 class Controller
 {
 public:
-	User* loadUser(std::string& username, std::string& password);
-	void storeUser(User *user);
-	void removeUser(User *user);
-	bool deleteUser(User *user);
+	int loadCurrentUser(std::string& username, std::string& password);
+	bool storeCurrentUser();
+	bool deleteCurrentUser();
 
-	Profile* loadProfile(int userID, int discID);
-	void storeProfile(Profile *profile);
-	void removeProfile(Profile *profile);
-	bool deleteProfile(Profile *profile);
+	int loadProfile(int userID, int discID);
+	bool storeProfile();
+	bool deleteProfile();
 	
-	Disc* loadDisc(std::string& discName, long discLength, int numChapters);
-	void storeDisc(Disc *disc);
-	bool deleteDisc(Disc *disc);
+	int loadDisc(std::string& discName, long discLength, int numChapters);
+	bool storeDisc();
+	bool deleteDisc();
 	// TODO: should user be able to remove a disc from database?
 	//void removeDisc(Disc *disc);
 
 	// controller disc wrapper methods
-	void c_setDiscID(Disc *disc, int ID);
-	void c_setDiscName(Disc *disc, std::string& name);
-	void c_setDiscLength(Disc *disc, long length);
-	void c_setDiscChapterNum(Disc *disc, int chapters);
-	void c_setDiscRating(Disc *disc, int rating);
+	void c_setDiscID(int ID);
+	void c_setDiscName(std::string& name);
+	void c_setDiscLength(long length);
+	void c_setDiscChapterNum(int chapters);
+	void c_setDiscRating(int rating);
 	
 	// controller user wrapper methods
-	void c_setUserID(User *user, int ID);
-	void c_setUser(User *user, std::string& username);
-	void c_setUserPasswordHash(User *user, std::string& hash);
-	void c_setUserIcon(User *user, std::string& file);
-	void c_setUserCanPlayUnknown(User *user, bool flag);
-	void c_setUserMaxPlayLevel(User *user, int level);
-	void c_setUserLastMovieID(User *user, int ID);
-	void c_setUserLastMoviePos(User *user, long position);
+	void c_setCurrentUserID(int ID);
+	void c_setCurrentUser(std::string& username);
+	void c_setCurrentUserPasswordHash(std::string& hash);
+	void c_setCurrentUserIcon(std::string& file);
+	void c_setCurrentUserCanPlayUnknown(bool flag);
+	void c_setCurrentUserMaxPlayLevel(int level);
+	void c_setCurrentUserLastMovieID(int ID);
+	void c_setCurrentUserLastMoviePos(long position);
 	
-	// controller skip wrapper methods - replaced by non-wrapper method
+	// TODO: need to set options on other user object?
+	
+	// controller profile wrapper methods
+	void c_setProfileID(int ID);
+	void c_profileSetUserID(int ID);
+	void c_profileSetDiscID(int ID);
+	void c_addSkipChapter(int chapter);
+	void c_removeSkipChapter(int chapter);
+	
+	// replaced by non-wrapper method
 	/*
 	void c_setSkipStart(long start);
 	void c_setSkipStop(long stop);
 	void c_setAudioOnly(bool isAudio); // rename?
-	*/
 	
-	// controller profile wrapper methods
-	void c_setProfileID(Profile *profile, int ID);
-	void c_profileSetUserID(Profile *profile, int ID);
-	void c_profileSetDiscID(Profile *profile, int ID);
-	void c_addSkipChapter(Profile *profile, int chapter);
-	void c_removeSkipChapter(Profile *profile, int chapter);
-	// replaced by non-wrapper method
-	/*
 	void c_addSkipTime(Profile *profile, SkipTime skip_time); // yes, not a pointer
 	void c_removeSkipTime(Profile *profile, SkipTime skip_time);
 	*/
 	
 	// controller skip method (not wrapper) PROBABLY BETTER?
-	void addSkipTiming(Profile *profile, long start, long stop, bool onlyAudio); 
+	void addSkipTiming(long start, long stop, bool onlyAudio);
 	
-/* if we were to know EXACTLY which objects we are going to create, this could work:
+	friend class TestController; // (allows access to m_data in test class)
+	
 private:
-	Disc *theDisc;
-	User *userLoggedIn;
-	User *otherUser; // what's the other user object for?
-	Profile *theProfile;
-*/
+	DataStructure m_data;
+};
+
+class TestController
+{
+public:
+	static void do_test();
 };
 
 #endif
