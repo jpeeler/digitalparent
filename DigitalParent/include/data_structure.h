@@ -173,20 +173,29 @@ class DataTest
 public:
 	static void do_test();
 };
-// dont think we need this anymore, for stack based
-/*
+
+
 class DataStructure
 {
 public:
 	Disc* getDisc();
-	User* getUser();
+	const Disc* getDisc() const;
+
+	User* getUserLoggedIn();
+	const User* getUserLoggedIn() const;
+
+	User* getUserOther();
+	const User* getUserOther() const;
+
 	Profile* getProfile();
+	const Profile* getProfile() const;
 
 private:
-	User m_user;
+	User m_userLoggedIn;
+	User m_userOther;
 	Disc m_disc;
 	Profile m_profile;	
 };
-*/
+
 
 #endif

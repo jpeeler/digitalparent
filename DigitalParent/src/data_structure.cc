@@ -284,6 +284,47 @@ bool SkipTime::operator==(const SkipTime& other)
 }
 
 // -----------------------------------------------------------------------------
+// DataStructure class
+Disc* DataStructure::getDisc()
+{
+	return &m_disc;
+}
+
+const Disc* DataStructure::getDisc() const
+{
+	return &m_disc;
+}
+
+User* DataStructure::getUserLoggedIn()
+{
+	return &m_userLoggedIn;
+}
+
+const User* DataStructure::getUserLoggedIn() const
+{
+	return &m_userLoggedIn;
+}
+
+User* DataStructure::getUserOther()
+{
+	return &m_userOther;
+}
+
+const User* DataStructure::getUserOther() const
+{
+	return &m_userOther;
+}
+
+Profile* DataStructure::getProfile()
+{
+	return &m_profile;
+}
+
+const Profile* DataStructure::getProfile() const
+{
+	return &m_profile;
+}
+// -----------------------------------------------------------------------------
 // DataTest testbench
 /* 9/22/07 - At this point most of the data structure operations are simply
 	setting instance variables. Future testing to be added once further

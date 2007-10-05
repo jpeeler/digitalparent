@@ -19,156 +19,171 @@
 #include "database.h"
 
 // wrappers to database methods
-User* Controller::loadUser(std::string& username, std::string& password)
+int Controller::loadCurrentUser(std::string& username, std::string& password)
 {
 	// call database methods to fetch info, change this
-	User *auser = new User();
-	auser->setUserID(1);
-	auser->setPasswordHash(password);
-	auser->setUser(username);	
-	return auser;
+	User* user = m_data.getUserLoggedIn();
+	user->setUserID(1);
+	user->setPasswordHash(password);
+	user->setUser(username);	
+	return 0;
 }
 
-void Controller::storeUser(User *user)
+bool Controller::storeCurrentUser()
 {
-	
+	return true;
 }
 
-void Controller::removeUser(User *user)
+bool Controller::deleteCurrentUser()
 {
-	
-}
-
-bool Controller::deleteUser(User *user)
-{
-	
+	return true;
 }
 // -------------------------------------
-Profile* Controller::loadProfile(int userID, int discID)
+int Controller::loadProfile(int userID, int discID)
 {
-	
+	return 0;
 }
 
-void Controller::storeProfile(Profile *profile)
+bool Controller::storeProfile()
 {
-	
+	return true;
 }
 
-void Controller::removeProfile(Profile *profile)
+bool Controller::deleteProfile()
 {
-	
-}
-
-bool Controller::deleteProfile(Profile *profile)
-{
-	
+	return true;
 }
 // -------------------------------------
-Disc* Controller::loadDisc(std::string& discName, long discLength, int numChapters)
+int Controller::loadDisc(std::string& discName, long discLength, int numChapters)
 {
-	
+	return 0;
 }
 
-void Controller::storeDisc(Disc *disc)
+bool Controller::storeDisc()
 {
-	
+	return true;
 }
 
-bool Controller::deleteDisc(Disc *disc)
+bool Controller::deleteDisc()
 {
-	
+	return true;
 }
 // -------------------------------------
 // wrappers of data structures
-void Controller::c_setDiscName(Disc *disc, std::string& name)
+void Controller::c_setDiscID(int ID)
 {
+	Disc* disc = m_data.getDisc();
+	disc->setDiscID(ID);
+}
+
+void Controller::c_setDiscName(std::string& name)
+{
+	Disc* disc = m_data.getDisc();
 	disc->setDiscName(name);
 }
 
-void Controller::c_setDiscLength(Disc *disc, long length)
+void Controller::c_setDiscLength(long length)
 {
+	Disc* disc = m_data.getDisc();
 	disc->setDiscLength(length);
 }
 
-void Controller::c_setDiscChapterNum(Disc *disc, int chapters)
+void Controller::c_setDiscChapterNum(int chapters)
 {
+	Disc* disc = m_data.getDisc();
 	disc->setDiscChapterNum(chapters);
 }
 
-void Controller::c_setDiscRating(Disc *disc, int rating)
+void Controller::c_setDiscRating(int rating)
 {
+	Disc* disc = m_data.getDisc();
 	disc->setDiscRating(rating);
 }
 
-void Controller::c_setUserID(User *user, int ID)
+void Controller::c_setCurrentUserID(int ID)
 {
+	User* user = m_data.getUserLoggedIn();
 	user->setUserID(ID);
 }
 
-void Controller::c_setUser(User *user, std::string& username)
+void Controller::c_setCurrentUser(std::string& username)
 {
+	User* user = m_data.getUserLoggedIn();
 	user->setUser(username);
 }
 
-void Controller::c_setUserPasswordHash(User *user, std::string& hash)
+void Controller::c_setCurrentUserPasswordHash(std::string& hash)
 {
+	User* user = m_data.getUserLoggedIn();
 	user->setPasswordHash(hash);
 }
 
-void Controller::c_setUserIcon(User *user, std::string& file)
+void Controller::c_setCurrentUserIcon(std::string& file)
 {
+	User* user = m_data.getUserLoggedIn();
 	user->setUserIcon(file);
 }
 
-void Controller::c_setUserCanPlayUnknown(User *user, bool flag)
+void Controller::c_setCurrentUserCanPlayUnknown(bool flag)
 {
+	User* user = m_data.getUserLoggedIn();
 	user->setPlayUnknownDisc(flag);
 }
 
-void Controller::c_setUserMaxPlayLevel(User *user, int level)
+void Controller::c_setCurrentUserMaxPlayLevel(int level)
 {
+	User* user = m_data.getUserLoggedIn();
 	user->setMaxPlayLevel(level);
 }
 
-void Controller::c_setUserLastMovieID(User *user, int ID)
+void Controller::c_setCurrentUserLastMovieID(int ID)
 {
+	User* user = m_data.getUserLoggedIn();
 	user->setLastMovieID(ID);
 }
 
-void Controller::c_setUserLastMoviePos(User *user, long position)
+void Controller::c_setCurrentUserLastMoviePos(long position)
 {
+	User* user = m_data.getUserLoggedIn();
 	user->setLastMoviePos(position);
 }
 
 // controller profile wrapper methods
-void Controller::c_setProfileID(Profile *profile, int ID)
+void Controller::c_setProfileID(int ID)
 {
+	Profile* profile = m_data.getProfile();
 	profile->setProfileID(ID);
 }
 
-void Controller::c_profileSetUserID(Profile *profile, int ID)
+void Controller::c_profileSetUserID(int ID)
 {
+	Profile* profile = m_data.getProfile();
 	profile->setUserID(ID);
 }
 
-void Controller::c_profileSetDiscID(Profile *profile, int ID)
+void Controller::c_profileSetDiscID(int ID)
 {
+	Profile* profile = m_data.getProfile();
 	profile->setDiscID(ID);
 }
 
-void Controller::c_addSkipChapter(Profile *profile, int chapter)
+void Controller::c_addSkipChapter(int chapter)
 {
+	Profile* profile = m_data.getProfile();
 	profile->addSkipChapter(chapter);
 }
 
-void Controller::c_removeSkipChapter(Profile *profile, int chapter)
+void Controller::c_removeSkipChapter(int chapter)
 {
+	Profile* profile = m_data.getProfile();
 	profile->removeSkipChapter(chapter);
 }
 
 // controller skip method (not wrapper) PROBABLY BETTER?
-void Controller::addSkipTiming(Profile *profile, long start, long stop, bool onlyAudio)
+void Controller::addSkipTiming(long start, long stop, bool onlyAudio)
 {
+	Profile* profile = m_data.getProfile();
+	
 	SkipTime askiptime;
 	askiptime.setSkipStart(start);
 	askiptime.setSkipStop(stop);
@@ -177,18 +192,16 @@ void Controller::addSkipTiming(Profile *profile, long start, long stop, bool onl
 	profile->addSkipTime(askiptime);
 }
 
-// TODO: make testbench an object
-int c_testbench()
+void TestController::do_test()
 {
 	Controller theController;
+	const User* constUser = theController.m_data.getUserLoggedIn();
 	std::string usern="test";
 	std::string passw="pass";
-	User* auser = theController.loadUser(usern,passw);
-	theController.c_setUserID(auser, 3);
-	//auser->setUserID(5);
-	printf("%d",auser->getUserID());
-	printf("%s",auser->getUser().c_str());
-	delete(auser);
-	
-	return 0;
+	theController.loadCurrentUser(usern,passw);
+	theController.c_setCurrentUserID(3);
+	//using setter method with const pointer should fail
+	//constUser->setUserID(5);
+	printf("User ID = %d\n",constUser->getUserID());
+	printf("Username = %s\n",constUser->getUser().c_str());
 }

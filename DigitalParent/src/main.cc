@@ -3,9 +3,11 @@
 
 #define TEST_DATABASE true
 #define TEST_DATA_STRUCTURE true
+#define TEST_CONTROLLER true
 
 #include <iostream>
 #include "database.h"
+#include "controller.h"
 
 int main()
 {
@@ -21,6 +23,13 @@ int main()
 		printf("\n------ Begin Data Structure Test ------\n\n");
 		DataTest::do_test();
 		printf("\n------- End Data Structure Test -------\n\n");
+	}
+	
+	if(TEST_CONTROLLER)
+	{
+		printf("\n------ Begin Controller Test ------\n\n");
+		TestController::do_test();
+		printf("\n------- End Controller Test -------\n\n");
 	}
 	
 	return 0;
