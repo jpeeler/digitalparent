@@ -77,7 +77,7 @@ module.source.files=\
 	controller.cc\
 	data_structure.cc\
 	database.cc\
-	dbTestStub.cc
+	main.cc
 
 module.pixmap.name=pixmaps
 module.pixmap.type=
