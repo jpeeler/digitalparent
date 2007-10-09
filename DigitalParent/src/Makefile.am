@@ -6,7 +6,7 @@
 
 INCLUDES =\
 	$(PACKAGE_CFLAGS)\
-	 -I/home/jbpeele/453/paul/digitalparent/DigitalParent/include
+	 -I/Projects/DigitalParent/include
 
 AM_CFLAGS =\
 	 -Wall\
@@ -22,7 +22,7 @@ digitalparent_SOURCES = \
 	controller.cc\
 	data_structure.cc\
 	database.cc\
-	main.cc
+	dbTestStub.cc
 
 digitalparent_LDFLAGS = 
 
