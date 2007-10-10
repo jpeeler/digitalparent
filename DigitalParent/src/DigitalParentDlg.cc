@@ -21,3 +21,35 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+
+#include "DigitalParentDlg.h"
+
+DigitalParentDlg::DigitalParentDlg()
+{
+	
+}
+
+DigitalParentDlg::~DigitalParentDlg()
+{
+	
+}
+
+bool DigitalParentDlg::ShowRunOnce()
+{
+	return true;
+}
+
+bool DigitalParentDlg::ShowLogin()
+{
+	return true;
+}
+
+bool DigitalParentDlg::ShowPasswordDlg(User *user)
+{
+	return true;
+}
+
+bool DigitalParentDlg::ShowMediaPlayer()
+{
+	return true;
+}
