@@ -25,15 +25,33 @@
 #ifndef _DIGITALPARENTDLG_H
 #define _DIGITALPARENTDLG_H
 
-#ifdef __cplusplus
-extern "C"
+//#ifdef __cplusplus
+//extern "C"
+//{
+//#endif
+
+#include <string>
+#include <vector>
+#include "data_structure.h"	
+	
+class DigitalParentDlg
 {
-#endif
+public:
+	DigitalParentDlg();
+	~DigitalParentDlg();
+	
+	bool ShowRunOnce();
+	bool ShowLogin();
+	bool ShowMediaPlayer();
+	bool ShowPasswordDlg(User *user);
 
+private:
+	const std::vector<User> *m_user;
+};
+		
 
-
-#ifdef __cplusplus
-}
-#endif
+//#ifdef __cplusplus
+//}
+//#endif
 
 #endif /* _DIGITALPARENTDLG_H */
