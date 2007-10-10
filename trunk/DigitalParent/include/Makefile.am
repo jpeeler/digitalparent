@@ -10,6 +10,7 @@ digitalparent_include_DATA = \
 	controller.h\
 	data_structure.h\
 	database.h\
-	login_dlg.h
+	login_dlg.h\
+	player_dlg.h
 
 EXTRA_DIST = $(digitalparent_include_DATA)

@@ -52,7 +52,7 @@ binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_digitalparent_OBJECTS = controller.$(OBJEXT) \
 	data_structure.$(OBJEXT) database.$(OBJEXT) main.$(OBJEXT) \
-	login_dlg.$(OBJEXT)
+	login_dlg.$(OBJEXT) player_dlg.$(OBJEXT)
 digitalparent_OBJECTS = $(am_digitalparent_OBJECTS)
 am__DEPENDENCIES_1 =
 digitalparent_DEPENDENCIES = $(am__DEPENDENCIES_1) \
@@ -224,7 +224,8 @@ digitalparent_SOURCES = \
 	data_structure.cc\
 	database.cc\
 	main.cc\
-	login_dlg.cc
+	login_dlg.cc\
+	player_dlg.cc
 
 digitalparent_LDFLAGS = 
 digitalparent_LDADD = \
@@ -307,6 +308,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/database.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/login_dlg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/player_dlg.Po@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
