@@ -9,6 +9,7 @@ digitalparent_includedir = $(pkgincludedir)
 digitalparent_include_DATA = \
 	controller.h\
 	data_structure.h\
-	database.h
+	database.h\
+	login_dlg.h
 
 EXTRA_DIST = $(digitalparent_include_DATA)
