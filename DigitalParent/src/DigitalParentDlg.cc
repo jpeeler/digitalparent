@@ -1,8 +1,8 @@
 /***************************************************************************
- *            player_dlg.c
+ *            DigitalParentDlg.cc
  *
- *  Wed Oct 10 01:10:48 2007
- *  Copyright  2007  Jeremy Morey
+ *  Wed Oct 10 09:17:40 2007
+ *  Copyright  2007  User
  *  Email
  ****************************************************************************/
 
@@ -21,15 +21,3 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-
-#include "player_dlg.h"
-
-PlayerDlg::PlayerDlg()
-{
-	
-}
-
-PlayerDlg::~PlayerDlg()
-{
-	
-}

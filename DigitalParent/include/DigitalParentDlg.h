@@ -1,8 +1,8 @@
 /***************************************************************************
- *            login_dlg.h
+ *            DigitalParentDlg.h
  *
- *  Tue Oct  9 23:39:07 2007
- *  Copyright  2007  Jeremy Morey
+ *  Wed Oct 10 09:16:08 2007
+ *  Copyright  2007  User
  *  Email
  ****************************************************************************/
 
@@ -22,28 +22,18 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
  
+#ifndef _DIGITALPARENTDLG_H
+#define _DIGITALPARENTDLG_H
 
-#include <vector>
-#include <string>
-#include "data_structure.h"
-
-#ifndef __LOGINDLG__
-#define __LOGINDLG__
-
-class LoginDlg
+#ifdef __cplusplus
+extern "C"
 {
-	public:
-		LoginDlg();	
-		~LoginDlg();
-	
-		int GetLogin(const std::vector<User> *users);
-		bool Hide();			
-	
-	private:		
-		const std::vector<User> *m_users;
-		std::string GetPassword();
-};
-	
-	
+#endif
 
-#endif //__LOGINDLG__
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _DIGITALPARENTDLG_H */

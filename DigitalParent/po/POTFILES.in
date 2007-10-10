@@ -9,7 +9,6 @@ src/controller.cc
 src/data_structure.cc
 src/database.cc
 src/main.cc
-src/login_dlg.cc
-src/player_dlg.cc
+src/DigitalParentDlg.cc
 
 

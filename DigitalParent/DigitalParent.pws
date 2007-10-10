@@ -1,8 +1,8 @@
 
 [filenumbers]
-0=87
-1=186
-2=51
+0=1
+1=33
+2=176
 3=132
 4=1
 
@@ -25,8 +25,9 @@ RunInTerminal=true
 clean before build=false
 
 [filelist]
-0=/Projects/DigitalParent/src/dbTestStub.cc
-1=/Projects/DigitalParent/src/database.cc
+0=/Projects/DigitalParent/src/DigitalParentDlg.cc
+1=/Projects/DigitalParent/include/DigitalParentDlg.h
+2=/Projects/DigitalParent/src/database.cc
 
 [Project Tree]
 0=0
