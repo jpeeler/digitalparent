@@ -147,7 +147,7 @@ bool Database::storeProfile(Profile *profile)
 	return true;
 }
 
-bool Database::removeProfile(Profile *profile)
+bool Database::deleteProfile(Profile *profile)
 {
 	tntdb::Statement query;
 	
@@ -231,7 +231,7 @@ bool Database::storeUser(User *user)
 	return true;
 }
 
-bool Database::removeUser(User *user)
+bool Database::deleteUser(User *user)
 {
 	tntdb::Statement query;
 	tntdb::Statement removeTimesQuery;
@@ -545,7 +545,7 @@ void DBTest::do_DBTest()
 	
 	
 	if(DELETE_PROFILE) {
-		if(!db.removeProfile(&returnProfile)) {
+		if(!db.deleteProfile(&returnProfile)) {
 			printf("\nDelete Profile\n");
 			exit(1);
 		}
@@ -553,7 +553,7 @@ void DBTest::do_DBTest()
 		
 	if(DELETE_USER)
 	{
-		if(!db.removeUser(&returnUser)) {
+		if(!db.deleteUser(&returnUser)) {
 			printf("\nDelete User\n");
 			exit(1);
 		}
