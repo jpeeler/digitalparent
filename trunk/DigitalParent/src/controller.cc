@@ -21,53 +21,74 @@
 // wrappers to database methods
 int Controller::loadCurrentUser(std::string& username, std::string& password)
 {
-	// call database methods to fetch info, change this
 	User* user = m_data.getUserLoggedIn();
-	user->setUserID(1);
+	user->setUser(username);
 	user->setPasswordHash(password);
-	user->setUser(username);	
+	m_database.getUser(user);
 	return 0;
 }
 
 bool Controller::storeCurrentUser()
 {
+	User* user = m_data.getUserLoggedIn();
+	m_database.storeUser(user);	
 	return true;
 }
 
 bool Controller::deleteCurrentUser()
 {
+	User* user = m_data.getUserLoggedIn();
+	m_database.deleteUser(user);
 	return true;
 }
 // -------------------------------------
 int Controller::loadProfile(int userID, int discID)
 {
+	Profile* profile = m_data.getProfile();
+	profile->setUserID(userID);
+	profile->setDiscID(discID);
+	m_database.getProfile(profile);
 	return 0;
 }
 
 bool Controller::storeProfile()
 {
+	Profile* profile = m_data.getProfile();
+	m_database.storeProfile(profile);
 	return true;
 }
 
 bool Controller::deleteProfile()
 {
+	Profile* profile = m_data.getProfile();
+	m_database.deleteProfile(profile);
 	return true;
 }
 // -------------------------------------
 int Controller::loadDisc(std::string& discName, long discLength, int numChapters)
 {
+	Disc* disc = m_data.getDisc();
+	disc->setDiscName(discName);
+	disc->setDiscLength(discLength);
+	disc->setDiscChapterNum(numChapters);
+	m_database.getDisc(disc);	
 	return 0;
 }
 
 bool Controller::storeDisc()
 {
+	Disc* disc = m_data.getDisc();
+	m_database.storeDisc(disc);
 	return true;
 }
 
+// should user be able to remove a disc from database?
+/*
 bool Controller::deleteDisc()
 {
 	return true;
 }
+*/
 // -------------------------------------
 // wrappers of data structures
 void Controller::c_setDiscID(int ID)

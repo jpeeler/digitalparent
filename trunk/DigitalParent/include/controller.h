@@ -18,6 +18,7 @@
 #define CONTROLLER_H
  
 #include "data_structure.h"
+#include "database.h"
  
 class Controller
 {
@@ -32,9 +33,8 @@ public:
 	
 	int loadDisc(std::string& discName, long discLength, int numChapters);
 	bool storeDisc();
-	bool deleteDisc();
-	// TODO: should user be able to remove a disc from database?
-	//void removeDisc(Disc *disc);
+	// should user be able to remove a disc from database?
+	//bool deleteDisc();
 
 	// controller disc wrapper methods
 	void c_setDiscID(int ID);
@@ -79,6 +79,8 @@ public:
 	
 private:
 	DataStructure m_data;
+	Database m_database; // added so that object is not re-instantiated
+                         // everytime a database operation is needed
 };
 
 class TestController

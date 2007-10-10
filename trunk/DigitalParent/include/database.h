@@ -21,15 +21,15 @@ class Database
 {
 public:
 	Database();
-		 ~Database();
+	~Database();
 
 	bool getProfile(Profile *profile);
 	bool storeProfile(Profile *profile);
-	bool removeProfile(Profile *profile);
+	bool deleteProfile(Profile *profile);
 
 	bool getUser(User *user);
 	bool storeUser(User *user);
-	bool removeUser(User *user);
+	bool deleteUser(User *user);
 
 	bool storeDisc(Disc *discInfo);
 	bool getDisc(Disc *disc);

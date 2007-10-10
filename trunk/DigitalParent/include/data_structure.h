@@ -194,7 +194,7 @@ private:
 	User m_userLoggedIn;
 	User m_userOther;
 	Disc m_disc;
-	Profile m_profile;	
+	Profile m_profile;
 };
 
 
