@@ -70,7 +70,8 @@ module.include.files=\
 	controller.h\
 	data_structure.h\
 	database.h\
-	login_dlg.h
+	login_dlg.h\
+	player_dlg.h
 
 module.source.name=src
 module.source.type=
@@ -79,7 +80,8 @@ module.source.files=\
 	data_structure.cc\
 	database.cc\
 	main.cc\
-	login_dlg.cc
+	login_dlg.cc\
+	player_dlg.cc
 
 module.pixmap.name=pixmaps
 module.pixmap.type=
