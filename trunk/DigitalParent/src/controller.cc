@@ -216,13 +216,43 @@ void Controller::addSkipTiming(long start, long stop, bool onlyAudio)
 void TestController::do_test()
 {
 	Controller theController;
-	const User* constUser = theController.m_data.getUserLoggedIn();
-	std::string usern="test";
-	std::string passw="pass";
-	theController.loadCurrentUser(usern,passw);
-	theController.c_setCurrentUserID(3);
+	//const User* constUser = theController.m_data.getUserLoggedIn();
 	//using setter method with const pointer should fail
 	//constUser->setUserID(5);
-	printf("User ID = %d\n",constUser->getUserID());
-	printf("Username = %s\n",constUser->getUser().c_str());
+	std::string usern="testuser";
+	std::string passw="testpass";
+	std::string file="/dev/null";
+	
+	theController.c_setCurrentUser(usern);
+	theController.c_setCurrentUserPasswordHash(passw);
+	theController.c_setCurrentUserIcon(file);
+	theController.c_setCurrentUserCanPlayUnknown(true);
+	theController.c_setCurrentUserMaxPlayLevel(4);
+	
+	
+	User *user = theController.m_data.getUserLoggedIn();
+	theController.storeCurrentUser();
+	
+	printf("Before database load:\n");
+	printf("User ID = %d\n",user->getUserID());
+	printf("Username = %s\n",user->getUser().c_str());
+	printf("Password = %s\n",user->getPasswordHash().c_str());
+	printf("Icon file = %s\n",user->getUserIcon().c_str());
+	printf("Play unknown? %d\n",user->getPlayUnknownDisc());
+	printf("Max play level = %d\n",user->getMaxPlayLevel());
+	printf("Last movie ID = %d\n",user->getLastMovieID());
+	printf("Last movie position = %ld\n",user->getLastMoviePos());
+	
+	theController.loadCurrentUser(usern,passw);
+	
+	printf("\nAfter database load (should be identical):\n");
+	printf("User ID = %d\n",user->getUserID());
+	printf("Username = %s\n",user->getUser().c_str());
+	printf("Password = %s\n",user->getPasswordHash().c_str());
+	printf("Icon file = %s\n",user->getUserIcon().c_str());
+	printf("Play unknown? %d\n",user->getPlayUnknownDisc());
+	printf("Max play level = %d\n",user->getMaxPlayLevel());
+	printf("Last movie ID = %d\n",user->getLastMovieID());
+	printf("Last movie position = %ld\n",user->getLastMoviePos());	
+	
 }

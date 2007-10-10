@@ -341,14 +341,10 @@ void DataTest::do_test()
 	long alongnum3 = 99999999;
 	int size;
 	
+	// Test disc object ----------------
 	Disc atest;
-	printf("%d\n",atest.getDiscID());
-	
-	// Test user object on the heap ----
-	User *auser2 = new User();
-	auser2->setUserID(34);
-	printf("%d\n",auser2->getUserID());
-	delete(auser2);
+	if (atest.getDiscID() != 0)
+		puts("DEBUG: disc ID not initialized to zero!");
 	
 	// Test user object ----------------
 	User auser;
@@ -389,10 +385,10 @@ void DataTest::do_test()
 	for (std::vector<SkipTime>::const_iterator it = aprofile.getSkipTimes().begin();
 		it!=aprofile.getSkipTimes().end(); ++it)
 	{
-		printf("%s\n", "an element:");
-		printf("%ld\n",it->getSkipStart());
-		printf("%ld\n",it->getSkipStop());
-		printf("%s\n\n", it->getAudioOnly() ? "true" : "false");
+		printf("%s\n", "A skiptime object:");
+		printf("skipstart: %ld\n",it->getSkipStart());
+		printf("skipstop: %ld\n",it->getSkipStop());
+		printf("audio only: %s\n\n", it->getAudioOnly() ? "true" : "false");
 	}
 	
 	aprofile.removeSkipTime(askiptime);
