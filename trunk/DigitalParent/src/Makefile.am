@@ -23,8 +23,7 @@ digitalparent_SOURCES = \
 	data_structure.cc\
 	database.cc\
 	main.cc\
-	login_dlg.cc\
-	player_dlg.cc
+	DigitalParentDlg.cc
 
 digitalparent_LDFLAGS = 
 
