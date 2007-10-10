@@ -8,6 +8,7 @@
 src/controller.cc
 src/data_structure.cc
 src/database.cc
-src/dbTestStub.cc
+src/main.cc
+src/login_dlg.cc
 
 

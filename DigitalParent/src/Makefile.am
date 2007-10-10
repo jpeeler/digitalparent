@@ -22,7 +22,8 @@ digitalparent_SOURCES = \
 	controller.cc\
 	data_structure.cc\
 	database.cc\
-	dbTestStub.cc
+	main.cc\
+	login_dlg.cc
 
 digitalparent_LDFLAGS = 
 
