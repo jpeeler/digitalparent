@@ -12,6 +12,9 @@ digitalparent_include_DATA = \
 	media_player_dlg.hh\
 	media_player_dlg_glade.hh\
 	psswrd_prompt_dlg.hh\
-	psswrd_prompt_dlg_glade.hh
+	psswrd_prompt_dlg_glade.hh\
+	controller.h\
+	data_structure.h\
+	database.h
 
 EXTRA_DIST = $(digitalparent_include_DATA)

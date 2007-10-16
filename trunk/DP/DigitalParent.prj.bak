@@ -73,8 +73,9 @@ module.include.files=\
 	media_player_dlg_glade.hh\
 	psswrd_prompt_dlg.hh\
 	psswrd_prompt_dlg_glade.hh\
-	window1.hh\
-	window1_glade.hh
+	controller.h\
+	data_structure.h\
+	database.h
 
 module.source.name=src
 module.source.type=
@@ -85,7 +86,10 @@ module.source.files=\
 	media_player_dlg.cc\
 	media_player_dlg_glade.cc\
 	psswrd_prompt_dlg.cc\
-	psswrd_prompt_dlg_glade.cc
+	psswrd_prompt_dlg_glade.cc\
+	controller.cc\
+	data_structure.cc\
+	database.cc
 
 module.pixmap.name=pixmaps
 module.pixmap.type=
@@ -106,8 +110,10 @@ module.doc.files=
 module.po.files=
 
 compiler.options.supports=
-compiler.options.include.paths=
-compiler.options.library.paths=
+compiler.options.include.paths=\
+	/Projects/DP/include
+compiler.options.library.paths=\
+	*/usr/lib/libtntdb.la
 compiler.options.libraries=
 compiler.options.libraries.selected=
 compiler.options.defines=
