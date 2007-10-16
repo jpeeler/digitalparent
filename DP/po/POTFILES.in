@@ -1,0 +1,16 @@
+# List of source files containing translatable strings.
+
+## Created by Anjuta - will be overwritten
+## If you don't want it to overwrite it,
+## 	Please disable it in the Anjuta project configuration
+
+# Source files
+src/digitalparent.cc
+src/login_dlg.cc
+src/login_dlg_glade.cc
+src/media_player_dlg.cc
+src/media_player_dlg_glade.cc
+src/psswrd_prompt_dlg.cc
+src/psswrd_prompt_dlg_glade.cc
+
+
