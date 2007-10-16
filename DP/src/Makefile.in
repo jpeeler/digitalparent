@@ -53,10 +53,12 @@ PROGRAMS = $(bin_PROGRAMS)
 am_digitalparent_OBJECTS = digitalparent.$(OBJEXT) login_dlg.$(OBJEXT) \
 	login_dlg_glade.$(OBJEXT) media_player_dlg.$(OBJEXT) \
 	media_player_dlg_glade.$(OBJEXT) psswrd_prompt_dlg.$(OBJEXT) \
-	psswrd_prompt_dlg_glade.$(OBJEXT)
+	psswrd_prompt_dlg_glade.$(OBJEXT) controller.$(OBJEXT) \
+	data_structure.$(OBJEXT) database.$(OBJEXT)
 digitalparent_OBJECTS = $(am_digitalparent_OBJECTS)
 am__DEPENDENCIES_1 =
-digitalparent_DEPENDENCIES = $(am__DEPENDENCIES_1)
+digitalparent_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	/usr/lib/libtntdb.la
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -208,7 +210,8 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 INCLUDES = \
-	$(PACKAGE_CFLAGS)
+	$(PACKAGE_CFLAGS)\
+	 -I/Projects/DP/include
 
 AM_CFLAGS = \
 	 -Wall\
@@ -225,11 +228,15 @@ digitalparent_SOURCES = \
 	media_player_dlg.cc\
 	media_player_dlg_glade.cc\
 	psswrd_prompt_dlg.cc\
-	psswrd_prompt_dlg_glade.cc
+	psswrd_prompt_dlg_glade.cc\
+	controller.cc\
+	data_structure.cc\
+	database.cc
 
 digitalparent_LDFLAGS = 
 digitalparent_LDADD = \
-	$(PACKAGE_LIBS)
+	$(PACKAGE_LIBS)\
+	 /usr/lib/libtntdb.la
 
 all: all-am
 
@@ -302,6 +309,9 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/controller.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/data_structure.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/database.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/digitalparent.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/login_dlg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/login_dlg_glade.Po@am__quote@

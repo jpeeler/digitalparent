@@ -1,8 +1,8 @@
 
 [filenumbers]
-0=6
-1=1
-2=1
+0=1
+1=154
+2=21
 3=1
 4=1
 5=50
@@ -31,13 +31,9 @@ RunInTerminal=true
 clean before build=false
 
 [filelist]
-0=/home/jmorey/Projects/DigitalParent/include/media_player_dlg_glade.hh
-1=/home/jmorey/Projects/DigitalParent/include/login_dlg_glade.hh
-2=/home/jmorey/Projects/DigitalParent/include/window1_glade.hh
-3=/home/jmorey/Projects/DigitalParent/include/window1.hh
-4=/home/jmorey/Projects/DigitalParent/include/login_dlg.hh
-5=/home/jmorey/Projects/DigitalParent/src/login_dlg_glade.cc
-6=/home/jmorey/Projects/DigitalParent/src/digitalparent.cc
+0=/Projects/DP/include/database.h
+1=/Projects/DP/src/database.cc
+2=/Projects/DP/src/digitalparent.cc
 
 [Project Tree]
 0=0

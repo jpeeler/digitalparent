@@ -5,7 +5,8 @@
 ## 	Please disable it in the Anjuta project configuration
 
 INCLUDES =\
-	$(PACKAGE_CFLAGS)
+	$(PACKAGE_CFLAGS)\
+	 -I/Projects/DP/include
 
 AM_CFLAGS =\
 	 -Wall\
@@ -24,10 +25,14 @@ digitalparent_SOURCES = \
 	media_player_dlg.cc\
 	media_player_dlg_glade.cc\
 	psswrd_prompt_dlg.cc\
-	psswrd_prompt_dlg_glade.cc
+	psswrd_prompt_dlg_glade.cc\
+	controller.cc\
+	data_structure.cc\
+	database.cc
 
 digitalparent_LDFLAGS = 
 
 digitalparent_LDADD = \
-	$(PACKAGE_LIBS)
+	$(PACKAGE_LIBS)\
+	 /usr/lib/libtntdb.la
 

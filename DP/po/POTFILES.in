@@ -12,5 +12,8 @@ src/media_player_dlg.cc
 src/media_player_dlg_glade.cc
 src/psswrd_prompt_dlg.cc
 src/psswrd_prompt_dlg_glade.cc
+src/controller.cc
+src/data_structure.cc
+src/database.cc
 
 
