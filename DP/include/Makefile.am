@@ -17,6 +17,7 @@ digitalparent_include_DATA = \
 	data_structure.h\
 	database.h\
 	welcome_dlg.hh\
-	welcome_dlg_glade.hh
+	welcome_dlg_glade.hh\
+	dp_gui.h
 
 EXTRA_DIST = $(digitalparent_include_DATA)

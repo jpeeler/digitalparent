@@ -13,7 +13,8 @@
 #include "media_player_dlg.hh"
 #include "psswrd_prompt_dlg.hh"
 #include "welcome_dlg.hh"
-#include "controller.h"
+
+#include "dp_gui.h"
 
 int main(int argc, char **argv)
 {  
