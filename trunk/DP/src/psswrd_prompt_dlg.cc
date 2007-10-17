@@ -7,6 +7,8 @@
 
 #include "config.h"
 #include "psswrd_prompt_dlg.hh"
+#include <iostream>
+#include <string.h>
 
 void psswrd_prompt_dlg::on_psswrd_edit_box_editing_done()
 {  
@@ -14,4 +16,6 @@ void psswrd_prompt_dlg::on_psswrd_edit_box_editing_done()
 
 void psswrd_prompt_dlg::on_login_icon_button_clicked()
 {  
+	std::string s = psswrd_edit_box->get_text();
+	std::cout<<s;
 }
