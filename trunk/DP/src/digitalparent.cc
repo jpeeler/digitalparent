@@ -12,6 +12,7 @@
 #include "login_dlg.hh"
 #include "media_player_dlg.hh"
 #include "psswrd_prompt_dlg.hh"
+#include "welcome_dlg.hh"
 #include "controller.h"
 
 int main(int argc, char **argv)
@@ -24,9 +25,14 @@ int main(int argc, char **argv)
    
    Gtk::Main m(&argc, &argv);
 
-psswrd_prompt_dlg *psswrd_prompt_dlg = new class psswrd_prompt_dlg();
-	m.run(*psswrd_prompt_dlg);
-delete psswrd_prompt_dlg;
+welcome_dlg *welcome_dlg = new class welcome_dlg();
+	m.run(*welcome_dlg);
+delete welcome_dlg;
+	
+	
+//psswrd_prompt_dlg *psswrd_prompt_dlg = new class psswrd_prompt_dlg();
+//	m.run(*psswrd_prompt_dlg);
+//delete psswrd_prompt_dlg;
 	
 	
 //media_player_dlg *media_player_dlg = new class media_player_dlg();

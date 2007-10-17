@@ -1,4 +1,4 @@
-// generated 2007/10/15 11:40:56 EDT by jmorey@jmorey-desktop.(none)
+// generated 2007/10/17 13:29:58 EDT by jmorey@jmorey-laptop.(none)
 // using glademm V2.6.0
 //
 // newer (non customized) versions of this file go to psswrd_prompt_dlg.cc_new
@@ -7,8 +7,6 @@
 
 #include "config.h"
 #include "psswrd_prompt_dlg.hh"
-#include <iostream>
-#include <string.h>
 
 void psswrd_prompt_dlg::on_psswrd_edit_box_editing_done()
 {  
@@ -16,6 +14,4 @@ void psswrd_prompt_dlg::on_psswrd_edit_box_editing_done()
 
 void psswrd_prompt_dlg::on_login_icon_button_clicked()
 {  
-	std::string s = psswrd_edit_box->get_text();
-	std::cout<<s;
 }
