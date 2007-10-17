@@ -24,8 +24,13 @@ int main(int argc, char **argv)
    
    Gtk::Main m(&argc, &argv);
 
-media_player_dlg *media_player_dlg = new class media_player_dlg();
-   m.run(*media_player_dlg);
-delete media_player_dlg;
+psswrd_prompt_dlg *psswrd_prompt_dlg = new class psswrd_prompt_dlg();
+	m.run(*psswrd_prompt_dlg);
+delete psswrd_prompt_dlg;
+	
+	
+//media_player_dlg *media_player_dlg = new class media_player_dlg();
+//   m.run(*media_player_dlg);
+//delete media_player_dlg;
    return 0;
 }
