@@ -75,7 +75,9 @@ module.include.files=\
 	psswrd_prompt_dlg_glade.hh\
 	controller.h\
 	data_structure.h\
-	database.h
+	database.h\
+	welcome_dlg.hh\
+	welcome_dlg_glade.hh
 
 module.source.name=src
 module.source.type=
@@ -89,7 +91,9 @@ module.source.files=\
 	psswrd_prompt_dlg_glade.cc\
 	controller.cc\
 	data_structure.cc\
-	database.cc
+	database.cc\
+	welcome_dlg.cc\
+	welcome_dlg_glade.cc
 
 module.pixmap.name=pixmaps
 module.pixmap.type=
