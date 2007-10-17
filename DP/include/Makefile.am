@@ -15,6 +15,8 @@ digitalparent_include_DATA = \
 	psswrd_prompt_dlg_glade.hh\
 	controller.h\
 	data_structure.h\
-	database.h
+	database.h\
+	welcome_dlg.hh\
+	welcome_dlg_glade.hh
 
 EXTRA_DIST = $(digitalparent_include_DATA)

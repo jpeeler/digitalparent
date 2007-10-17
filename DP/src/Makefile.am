@@ -28,7 +28,9 @@ digitalparent_SOURCES = \
 	psswrd_prompt_dlg_glade.cc\
 	controller.cc\
 	data_structure.cc\
-	database.cc
+	database.cc\
+	welcome_dlg.cc\
+	welcome_dlg_glade.cc
 
 digitalparent_LDFLAGS = 
 

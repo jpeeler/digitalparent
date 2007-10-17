@@ -54,7 +54,8 @@ am_digitalparent_OBJECTS = digitalparent.$(OBJEXT) login_dlg.$(OBJEXT) \
 	login_dlg_glade.$(OBJEXT) media_player_dlg.$(OBJEXT) \
 	media_player_dlg_glade.$(OBJEXT) psswrd_prompt_dlg.$(OBJEXT) \
 	psswrd_prompt_dlg_glade.$(OBJEXT) controller.$(OBJEXT) \
-	data_structure.$(OBJEXT) database.$(OBJEXT)
+	data_structure.$(OBJEXT) database.$(OBJEXT) \
+	welcome_dlg.$(OBJEXT) welcome_dlg_glade.$(OBJEXT)
 digitalparent_OBJECTS = $(am_digitalparent_OBJECTS)
 am__DEPENDENCIES_1 =
 digitalparent_DEPENDENCIES = $(am__DEPENDENCIES_1) \
@@ -231,7 +232,9 @@ digitalparent_SOURCES = \
 	psswrd_prompt_dlg_glade.cc\
 	controller.cc\
 	data_structure.cc\
-	database.cc
+	database.cc\
+	welcome_dlg.cc\
+	welcome_dlg_glade.cc
 
 digitalparent_LDFLAGS = 
 digitalparent_LDADD = \
@@ -319,6 +322,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/media_player_dlg_glade.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/psswrd_prompt_dlg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/psswrd_prompt_dlg_glade.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/welcome_dlg.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/welcome_dlg_glade.Po@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \

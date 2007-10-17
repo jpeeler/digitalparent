@@ -1,8 +1,8 @@
-# generated 2007/10/16 21:20:58 EDT by jmorey@jmorey-desktop.(none)
+# generated 2007/10/17 13:39:21 EDT by jmorey@jmorey-laptop.(none)
 # using glademm V2.6.0
 
 AC_PREREQ(2.50)
-AC_INIT(digitalparent, 0.0,[jmorey@jmorey-desktop.(none)])
+AC_INIT(digitalparent, 0.0,[jmorey@jmorey-laptop.(none)])
 AM_INIT_AUTOMAKE
 AC_CONFIG_HEADERS(config.h)
 
