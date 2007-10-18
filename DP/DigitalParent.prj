@@ -117,7 +117,8 @@ module.po.files=
 compiler.options.supports=
 compiler.options.include.paths=\
 	/Projects/DP/include
-compiler.options.library.paths=
+compiler.options.library.paths=\
+	/usr/include/vlc
 compiler.options.libraries=\
 	*/usr/lib/libtntdb.la
 compiler.options.libraries.selected=1 

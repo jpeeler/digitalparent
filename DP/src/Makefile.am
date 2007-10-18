@@ -32,7 +32,8 @@ digitalparent_SOURCES = \
 	welcome_dlg.cc\
 	welcome_dlg_glade.cc
 
-digitalparent_LDFLAGS = 
+digitalparent_LDFLAGS = \
+	 -L/usr/include/vlc
 
 digitalparent_LDADD = \
 	$(PACKAGE_LIBS)\

@@ -1,4 +1,4 @@
-// generated 2007/10/15 11:40:56 EDT by jmorey@jmorey-desktop.(none)
+// generated 2007/10/18 13:59:36 EDT by jmorey@jmorey-laptop.(none)
 // using glademm V2.6.0
 //
 // newer (non customized) versions of this file go to login_dlg.cc_new
@@ -26,4 +26,5 @@ void login_dlg::on_next_user_button_clicked()
 
 void login_dlg::on_admin_login_button_clicked()
 {  
+	hide();
 }

@@ -38,5 +38,5 @@ void welcome_dlg::on_welcome_next_button_clicked()
 	std::string question = secret_q_edit_box->get_text();
 	std::string answer = secret_a_edit_box->get_text();
 	if ( question == "" || answer == "" ) return;
-		
+	hide();
 }

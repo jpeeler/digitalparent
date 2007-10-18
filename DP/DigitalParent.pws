@@ -1,7 +1,7 @@
 
 [filenumbers]
-0=13
-1=30
+0=103
+1=37
 2=1
 3=1
 4=154
@@ -31,7 +31,7 @@ RunInTerminal=true
 clean before build=false
 
 [filelist]
-0=/Projects/DP/include/dp_gui.h
+0=/Projects/DP/src/media_player_dlg_glade.cc
 
 [Project Tree]
 0=0
