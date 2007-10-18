@@ -77,7 +77,8 @@ module.include.files=\
 	data_structure.h\
 	database.h\
 	welcome_dlg.hh\
-	welcome_dlg_glade.hh
+	welcome_dlg_glade.hh\
+	dp_gui.h
 
 module.source.name=src
 module.source.type=

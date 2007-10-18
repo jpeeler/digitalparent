@@ -1,4 +1,4 @@
-// generated 2007/10/15 11:40:56 EDT by jmorey@jmorey-desktop.(none)
+// generated 2007/10/18 15:52:33 EDT by jmorey@jmorey-laptop.(none)
 // using glademm V2.6.0
 //
 // newer (non customized) versions of this file go to media_player_dlg.cc_new
@@ -16,14 +16,6 @@ void media_player_dlg::on_stop_button_clicked()
 {  
 }
 
-void media_player_dlg::on_play_button_clicked()
-{  
-}
-
-void media_player_dlg::on_button5_clicked()
-{  
-}
-
 void media_player_dlg::on_previous_button_clicked()
 {  
 }
@@ -34,4 +26,13 @@ void media_player_dlg::on_cut_button_clicked()
 
 void media_player_dlg::on_next_button_clicked()
 {  
+}
+
+void media_player_dlg::on_pause_button_clicked()
+{  
+}
+
+void media_player_dlg::on_play_button_clicked()
+{  
+system("/Projects/DP/src/demo");	
 }
