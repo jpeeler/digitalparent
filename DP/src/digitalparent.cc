@@ -16,6 +16,13 @@
 
 #include "dp_gui.h"
 
+#include "controller.h"
+
+#define RUN_WINDOW false
+#define TEST_CONTROLLER false
+#define TEST_DATABASE true
+#define TEST_DATA_STRUCTURE false
+
 int main(int argc, char **argv)
 {  
 #if defined(ENABLE_NLS)
@@ -23,6 +30,26 @@ int main(int argc, char **argv)
    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
    textdomain (GETTEXT_PACKAGE);
 #endif //ENABLE_NLS
+
+#if TEST_CONTROLLER
+	printf("\n------ Begin Controller Test ------\n\n");
+	TestController::do_test();
+	printf("\n------- End Controller Test -------\n\n");
+#endif
+	
+#if TEST_DATABASE
+	printf("\n------ Begin Database Test ------\n\n");
+	DBTest::do_DBTest();
+	printf("\n------- End Database Test -------\n\n");
+#endif
+	
+#if TEST_DATA_STRUCTURE
+	printf("\n------ Begin Data Structure Test ------\n\n");
+	DataTest::do_test();
+	printf("\n------- End Data Structure Test -------\n\n");
+#endif
+	
+#if RUN_WINDOW
    
    Gtk::Main m(&argc, &argv);
 
@@ -41,6 +68,8 @@ delete login_dlg;
 media_player_dlg *media_player_dlg = new class media_player_dlg();
    m.run(*media_player_dlg);
 delete media_player_dlg;
+
+#endif
 
     return 0;
 }
