@@ -19,6 +19,15 @@
 // -----------------------------------------------------------------------------
 // Disc class
 
+void Disc::clear()
+{
+	m_discID = 0;
+	m_disc_name = "";
+	m_disc_length = 0;
+	m_disc_chapters = 0;
+    m_disc_rating = 0;
+}
+
 void Disc::setDiscID(int ID)
 {
 	m_discID = ID;
@@ -71,6 +80,18 @@ const int Disc::getDiscRating() const
 
 // -----------------------------------------------------------------------------
 // User class
+
+void User::clear()
+{
+	m_userID =0;
+    m_username = "";
+	m_iconfile = "";
+	m_password = "";
+    m_play_unknown = false;
+	m_max_play_level = 0;
+    m_last_movie_ID = 0;
+    m_last_movie_pos = 0;
+}
 
 void User::setUserID(int ID)
 {
@@ -155,6 +176,13 @@ const long User::getLastMoviePos() const
 // -----------------------------------------------------------------------------
 // class SkipTime
 
+void SkipTime::clear()
+{
+	m_start_time = 0;
+    m_stop_time = 0;
+    m_audio_only = false;
+}
+
 void SkipTime::setSkipStart(long start)
 {
 	m_start_time = start;
@@ -189,6 +217,15 @@ const bool SkipTime::getAudioOnly() const
 
 // -----------------------------------------------------------------------------
 // Profile class
+
+void Profile::clear()
+{
+	m_profileID = 0;
+	m_userID = 0;
+    m_discID = 0;
+	m_skip_times.clear(); // empties vector of SkipTime objects
+	m_skip_chapters.clear(); // empties vector of ints
+}
 
 void Profile::setProfileID(int ID)
 {
@@ -295,6 +332,11 @@ const Disc* DataStructure::getDisc() const
 	return &m_disc;
 }
 
+void DataStructure::clearDisc()
+{
+	m_disc.clear();
+}
+
 User* DataStructure::getUserLoggedIn()
 {
 	return &m_userLoggedIn;
@@ -303,6 +345,11 @@ User* DataStructure::getUserLoggedIn()
 const User* DataStructure::getUserLoggedIn() const
 {
 	return &m_userLoggedIn;
+}
+
+void DataStructure::clearUserLoggedIn()
+{
+	m_userLoggedIn.clear();
 }
 
 User* DataStructure::getUserOther()
@@ -315,6 +362,11 @@ const User* DataStructure::getUserOther() const
 	return &m_userOther;
 }
 
+void DataStructure::clearUserOther()
+{
+	m_userOther.clear();
+}
+
 Profile* DataStructure::getProfile()
 {
 	return &m_profile;
@@ -323,6 +375,11 @@ Profile* DataStructure::getProfile()
 const Profile* DataStructure::getProfile() const
 {
 	return &m_profile;
+}
+
+void DataStructure::clearProfile()
+{
+	m_profile.clear();
 }
 // -----------------------------------------------------------------------------
 // DataTest testbench
