@@ -31,6 +31,8 @@ public:
              m_disc_rating(0)
 	{}
 	~Disc() {}
+		
+	void clear(); // clears object member variables
 
 	void setDiscID(int ID);
 	const int getDiscID() const;
@@ -69,6 +71,8 @@ public:
              m_last_movie_pos(0)
 	{}
 	~User() {}
+		
+	void clear(); // clears object member variables
 
 	void setUserID(int ID);
 	const int getUserID() const;
@@ -114,6 +118,8 @@ public:
                  m_audio_only(false)
 	{}
 	~SkipTime() {}
+		
+	void clear(); // clears object member variables
 
 	void setSkipStart(long start);
 	const long getSkipStart() const;
@@ -141,6 +147,8 @@ public:
                 m_discID(0)
 	{}
 	~Profile() {}
+		
+	void clear(); // clears object member variables
 
 	void setProfileID(int ID);
 	const int getProfileID() const;
@@ -180,15 +188,19 @@ class DataStructure
 public:
 	Disc* getDisc();
 	const Disc* getDisc() const;
+	void clearDisc();
 
 	User* getUserLoggedIn();
 	const User* getUserLoggedIn() const;
+	void clearUserLoggedIn();
 
 	User* getUserOther();
 	const User* getUserOther() const;
+	void clearUserOther();
 
 	Profile* getProfile();
 	const Profile* getProfile() const;
+	void clearProfile();
 
 private:
 	User m_userLoggedIn;
