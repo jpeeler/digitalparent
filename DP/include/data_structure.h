@@ -136,6 +136,15 @@ private:
 	long m_start_time;
 	long m_stop_time;
 	bool m_audio_only;
+
+};
+
+struct skipSortAscending
+{
+	bool operator()(const SkipTime& rpStart, const SkipTime& rpEnd) const
+   	{
+		return rpStart.getSkipStart() < rpEnd.getSkipStart();
+   	}
 };
 
 
@@ -166,6 +175,7 @@ public:
 	void addSkipTime(SkipTime skip_time);
 	void removeSkipTime(SkipTime skip_time);
 	const std::vector<SkipTime>& getSkipTimes() const;
+		
 
 private:
 	int m_profileID;
