@@ -270,6 +270,8 @@ const int Profile::getDiscID() const
 void Profile::addSkipChapter(int chapter)
 {
 	m_skip_chapters.push_back(chapter);
+	
+	std::sort(m_skip_chapters.begin(), m_skip_chapters.end());
 }
 
 void Profile::removeSkipChapter(int chapter)
@@ -292,6 +294,8 @@ const std::vector<int>& Profile::getSkipChapters() const
 void Profile::addSkipTime(SkipTime skip_time)
 {
 	m_skip_times.push_back(skip_time);
+	
+	std::sort(m_skip_times.begin(), m_skip_times.end(), skipSortAscending());
 }
 
 void Profile::removeSkipTime(SkipTime skip_time)
