@@ -215,6 +215,16 @@ const bool SkipTime::getAudioOnly() const
 	return m_audio_only;
 }
 
+bool SkipTime::operator==(const SkipTime& other)
+{
+	if (m_start_time == other.m_start_time &&
+		m_stop_time == other.m_stop_time &&
+		m_audio_only == other.m_audio_only)
+		return true;
+	else
+		return false;
+}
+
 // -----------------------------------------------------------------------------
 // Profile class
 
@@ -310,16 +320,6 @@ const std::vector<SkipTime>& Profile::getSkipTimes() const
 	return m_skip_times;
 }
 
-bool SkipTime::operator==(const SkipTime& other)
-{
-	if (m_start_time == other.m_start_time &&
-		m_stop_time == other.m_stop_time &&
-		m_audio_only == other.m_audio_only)
-		return true;
-	else
-		return false;
-}
-
 // -----------------------------------------------------------------------------
 // DataStructure class
 Disc* DataStructure::getDisc()
@@ -393,50 +393,168 @@ void DataTest::do_test()
 	const int anumber = 4;
 	std::string astring = "Jeff";
 	std::string ahash = "a123456789";
+	std::string discname = "disc_name";
+	std::string iconpath = "/tmp/iconfile.png";
 	long alongnum = 12312984;
 	long alongnum2 = 18888888;
 	long alongnum3 = 99999999;
 	int size;
 	
 	// Test disc object ----------------
-	Disc atest;
-	if (atest.getDiscID() != 0)
-		puts("DEBUG: disc ID not initialized to zero!");
+	Disc adisc;
+	adisc.setDiscID(5);
+	adisc.setDiscName(discname);
+	adisc.setDiscLength(alongnum);
+	adisc.setDiscChapterNum(3);
+	adisc.setDiscRating(1);
+	
+	if (adisc.getDiscID() != 5)
+		puts("ERROR: adisc.getDiscID");
+	if (adisc.getDiscName() != discname)
+		puts("ERROR: atest.getDiscName");
+	if (adisc.getDiscLength() != alongnum)
+		puts("ERROR: atest.getDiscLength");
+	if (adisc.getDiscChapterNum() != 3)
+		puts("ERROR: atest.getDiscChapterNum");
+	if (adisc.getDiscRating() != 1)
+		puts("ERROR: atest.getDiscRating");
+	
+	adisc.clear(); // clear data structure
+	if (adisc.getDiscID() != 0)
+		puts("ERROR_C: adisc.getDiscID");
+	if (adisc.getDiscName() != "")
+		puts("ERROR_C: atest.getDiscName");
+	if (adisc.getDiscLength() != 0)
+		puts("ERROR_C: atest.getDiscLength");
+	if (adisc.getDiscChapterNum() != 0)
+		puts("ERROR_C: atest.getDiscChapterNum");
+	if (adisc.getDiscRating() != 0)
+		puts("ERROR_C: atest.getDiscRating");
 	
 	// Test user object ----------------
 	User auser;
 	auser.setUserID(anumber);
-	if (auser.getUserID() != anumber)
-		puts("DEBUG: problem with UserID");
-	
 	auser.setUser(astring);
-	if (auser.getUser() != astring)
-		puts("DEBUG: problem with User");
-	
 	auser.setPasswordHash(ahash);
-	if (auser.getPasswordHash() != ahash)
-		puts("DEBUG: problem with password");
+	auser.setUserIcon(iconpath);
+	auser.setPlayUnknownDisc(true);
+	auser.setMaxPlayLevel(4);
+	auser.setLastMovieID(345);
+	auser.setLastMoviePos(2312343);
 	
-	// Test Profile object ------------
+	if (auser.getUserID() != anumber)
+		puts("ERROR: auser.getUserID");	
+	if (auser.getUser() != astring)
+		puts("ERROR: auser.getUser");	
+	if (auser.getPasswordHash() != ahash)
+		puts("ERROR: auser.getPasswordHash");
+	if (auser.getUserIcon() != iconpath)
+		puts("ERROR: auser.getUserIcon");
+	if (auser.getPlayUnknownDisc() != true)
+		puts("ERROR: auser.getPlayUnknownDisc");
+	if (auser.getMaxPlayLevel() != 4)
+		puts("ERROR: auser.getMaxPlayLevel");
+	if (auser.getLastMovieID() != 345)
+		puts("ERROR: auser.getLastMovieID");
+	if (auser.getLastMoviePos() != 2312343)
+		puts("ERROR: auser.getLastMoviePos");
+	
+	auser.clear();
+	if (auser.getUserID() != 0)
+		puts("ERROR_C: auser.getUserID");	
+	if (auser.getUser() != "")
+		puts("ERROR_C: auser.getUser");	
+	if (auser.getPasswordHash() != "")
+		puts("ERROR_C: auser.getPasswordHash");
+	if (auser.getUserIcon() != "")
+		puts("ERROR_C: auser.getUserIcon");
+	if (auser.getPlayUnknownDisc() != false)
+		puts("ERROR_C: auser.getPlayUnknownDisc");
+	if (auser.getMaxPlayLevel() != 0)
+		puts("ERROR_C: auser.getMaxPlayLevel");
+	if (auser.getLastMovieID() != 0)
+		puts("ERROR_C: auser.getLastMovieID");
+	if (auser.getLastMoviePos() != 0)
+		puts("ERROR_C: auser.getLastMoviePos");
+	
+	// Test SkipTime object ------------
 	SkipTime askiptime;
 	askiptime.setSkipStart(alongnum);
 	askiptime.setSkipStop(alongnum2);
 	askiptime.setAudioOnly(false);
 	
+	if (askiptime.getSkipStart() != alongnum)
+		puts("ERROR: askiptime.getSkipStart");
+	if (askiptime.getSkipStop() != alongnum2)
+		puts("ERROR: askiptime.getSkipStop");
+	if (askiptime.getAudioOnly() != false)
+		puts("ERROR: askiptime.getAudioOnly");
+	
+	askiptime.clear();
+	if (askiptime.getSkipStart() != 0)
+		puts("ERROR_C: askiptime.getSkipStart");
+	if (askiptime.getSkipStop() != 0)
+		puts("ERROR_C: askiptime.getSkipStop");
+	if (askiptime.getAudioOnly() != false)
+		puts("ERROR_C: askiptime.getAudioOnly");
+	
+	// Test Profile object ------------
+	// set SkipTime object to something other than default values
+	askiptime.setSkipStart(alongnum);
+	askiptime.setSkipStop(alongnum2);
+	askiptime.setAudioOnly(false);
+	
+	// create another SkipTime object
 	SkipTime askiptime2;
 	askiptime2.setSkipStart(alongnum2);
 	askiptime2.setSkipStop(alongnum3);
-	askiptime2.setAudioOnly(false);
+	askiptime2.setAudioOnly(true);
 	
+	// add SkipTime object to newly created profile object
 	Profile aprofile;
 	aprofile.addSkipTime(askiptime);
+	
+	aprofile.setProfileID(345);
+	aprofile.setUserID(543);
+	aprofile.setDiscID(111);
+	aprofile.addSkipChapter(9);
+	
+	if (aprofile.getProfileID() != 345)
+		puts("ERROR: aprofile.getProfileID");
+	if (aprofile.getUserID() != 543)
+		puts("ERROR: aprofile.getUserID");
+	if (aprofile.getDiscID() != 111)
+		puts("ERROR: aprofile.getDiscID");
+	if (aprofile.getSkipChapters().at(0) != 9)
+		puts("ERROR: aprofile.getSkipChapters");
+	if (aprofile.getSkipTimes().at(0).getSkipStart() != askiptime.getSkipStart() ||
+		aprofile.getSkipTimes().at(0).getSkipStop() != askiptime.getSkipStop() ||
+		aprofile.getSkipTimes().at(0).getAudioOnly() != askiptime.getAudioOnly())
+		puts("ERROR: aprofile.getSkipTimes");
+	aprofile.clear();
+	if (aprofile.getProfileID() != 0)
+		puts("ERROR_C: aprofile.getProfileID");
+	if (aprofile.getUserID() != 0)
+		puts("ERROR_C: aprofile.getUserID");
+	if (aprofile.getDiscID() != 0)
+		puts("ERROR_C: aprofile.getDiscID");
+	if (aprofile.getSkipChapters().size() != 0)
+		puts("ERROR_C: aprofile.getSkipChapters");
+	if (aprofile.getSkipTimes().size() != 0)
+		puts("ERROR_C: aprofile.getSkipTimes");
 	
 	// since this time was never added, shouldn't effect anything
 	aprofile.removeSkipTime(askiptime2);
 	
+	// removed cleared SkipTime object
+	aprofile.removeSkipTime(askiptime);
+	
+	// add valid non-cleared SkipTime object
+	aprofile.addSkipTime(askiptime2);
+	
 	size = aprofile.getSkipTimes().size();
 	if (size != 1)
-		puts("DEBUG: problem with profile");
+		puts("ERROR: aprofile.getSkipTimes().size()");
 	
 	// check out the vector
 	for (std::vector<SkipTime>::const_iterator it = aprofile.getSkipTimes().begin();
@@ -448,9 +566,9 @@ void DataTest::do_test()
 		printf("audio only: %s\n\n", it->getAudioOnly() ? "true" : "false");
 	}
 	
-	aprofile.removeSkipTime(askiptime);
+	aprofile.removeSkipTime(askiptime2);
 	size = aprofile.getSkipTimes().size();
 	if (size != 0)
-		puts("DEBUG: problem with profile");
+		puts("ERROR_C: aprofile.getSkipTimes().size()");
 	
 }
