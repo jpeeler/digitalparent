@@ -340,17 +340,13 @@ bool Database::getDisc(Disc *disc)
  *    3) For each get*() method, ensure that the objects returned
  *       contain the proper sample data from the database.
  *    4) Remove sample data inserted in (2) using the remove*() commands.
- *    5) For each get*() method, attempt to read data not in the database
- *       (as if querying for information on a disc that has not been
- *       inserted yet).
- *    6) Test behavior in the event that the database file is unreadable.
 **/
 
 #define TEST_USER true
 #define TEST_DISC true
 #define TEST_PROFILE true
-#define DELETE_PROFILE false
-#define DELETE_USER false
+#define DELETE_PROFILE true
+#define DELETE_USER true
 
 void DBTest::do_DBTest()
 {
@@ -381,19 +377,19 @@ void DBTest::do_DBTest()
    sampleUser.setMaxPlayLevel(2);
    sampleUser.setLastMoviePos(4321);
 
-   skip1.setSkipStart(1300);
-   skip1.setSkipStop(1403);
+   skip1.setSkipStart(2100);
+   skip1.setSkipStop(2203);
    skip1.setAudioOnly(false);
 
-   skip2.setSkipStart(2100);
-   skip2.setSkipStop(2403);
+   skip2.setSkipStart(1200);
+   skip2.setSkipStop(1303);
    skip2.setAudioOnly(true);
 
    //note: will need to set userID, discID once User and Disc
    //are inserted and IDs assigned
+   sampleProfile.addSkipChapter(12);
    sampleProfile.addSkipChapter(2);
    sampleProfile.addSkipChapter(5);
-   sampleProfile.addSkipChapter(12);
    sampleProfile.addSkipTime(skip1);
    sampleProfile.addSkipTime(skip2);
 
@@ -535,6 +531,26 @@ void DBTest::do_DBTest()
 	   }
 	   
 	   //add checks for skipped chapters and skipped times
+	   if(!(sampleProfile.getSkipChapters() == returnProfile.getSkipChapters())) {
+		   printf("\nProfile Skip Chapters\n");
+		   exit(1);
+	   }
+	   
+	   std::vector<SkipTime> sampleSkips = sampleProfile.getSkipTimes();
+	   std::vector<SkipTime> returnSkips = returnProfile.getSkipTimes();
+	   
+	   if(sampleSkips.size() != returnSkips.size()) {
+		   printf("\nProfile Skip Times\n");
+		   exit(1);
+	   }
+	   else {
+		   for(unsigned int i = 0; i < sampleSkips.size(); i++) {
+			   if(!(sampleSkips[i] == returnSkips[i])) {
+				   printf("\nProfile Skip Times\n");
+				   exit(1);
+			   }
+		   }
+	   }
 	
 	   //if we've gotten this far, the Profile is correct
 	   printf("\nProfile good!\n");
@@ -558,19 +574,4 @@ void DBTest::do_DBTest()
 			exit(1);
 		}
 	}
-   /**
-    * For each element, compare to see if data is the same
-   **/
-   
-   
-   
-   
-   
-   
-   /**
-    * Test what will happen if get*() is called with data that is
-    * not in database.
-    * Also test what happens when the database file cannot be accessed.
-   **/
-
 }
