@@ -15,7 +15,6 @@
 #include "welcome_dlg.hh"
 
 #include "dp_gui.h"
-
 #include "controller.h"
 
 #define RUN_WINDOW false
@@ -30,6 +29,8 @@ int main(int argc, char **argv)
    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
    textdomain (GETTEXT_PACKAGE);
 #endif //ENABLE_NLS
+
+   m_control = new class Controller();
 
 #if TEST_CONTROLLER
 	printf("\n------ Begin Controller Test ------\n\n");
@@ -50,12 +51,32 @@ int main(int argc, char **argv)
 #endif
 	
 #if RUN_WINDOW
-   
    Gtk::Main m(&argc, &argv);
-
-welcome_dlg *welcome_dlg = new class welcome_dlg();
-	m.run(*welcome_dlg);	
-delete welcome_dlg;
+   m_mode = START;
+   welcome_dlg *welcome_dlg; 
+   while ( m_mode != STOP )
+   {
+	   switch ( m_mode )
+	   {
+		   case START:			   
+			   welcome_dlg = new class welcome_dlg();			
+			   m.run(*welcome_dlg);
+			   delete welcome_dlg;
+			   m_mode = LOGIN;
+			   //load users
+		   	   //if ( users exist ) m_mode = LOGIN		   		
+		   	   //else m_mode = RUNONCE
+		   break;
+			   
+		   case LOGIN:
+			   m_mode = STOP;
+		   break;
+			
+	   	   default:
+			   //do something
+		   break;
+	   }
+   }   
 
 login_dlg *login_dlg = new class login_dlg();
 	m.run(*login_dlg);	
