@@ -17,9 +17,9 @@
 #include "dp_gui.h"
 #include "controller.h"
 
-#define RUN_WINDOW false
+#define RUN_WINDOW true
 #define TEST_CONTROLLER false
-#define TEST_DATABASE true
+#define TEST_DATABASE false
 #define TEST_DATA_STRUCTURE false
 
 int main(int argc, char **argv)
@@ -53,42 +53,67 @@ int main(int argc, char **argv)
 #if RUN_WINDOW
    Gtk::Main m(&argc, &argv);
    m_mode = START;
-   welcome_dlg *welcome_dlg; 
+   welcome_dlg *welcome_dlg;
+   psswrd_prompt_dlg *psswrd_prompt_dlg;  
+   login_dlg *login_dlg;   
+   media_player_dlg *media_player_dlg;
    while ( m_mode != STOP )
    {
 	   switch ( m_mode )
 	   {
-		   case START:			   
-			   welcome_dlg = new class welcome_dlg();			
-			   m.run(*welcome_dlg);
-			   delete welcome_dlg;
-			   m_mode = LOGIN;
+		   case START:		   
+			   m_mode = RUNONCE;
 			   //load users
 		   	   //if ( users exist ) m_mode = LOGIN		   		
 		   	   //else m_mode = RUNONCE
 		   break;
+		   
+		   case RUNONCE:
+			   welcome_dlg = new class welcome_dlg();
+				   m.run(*welcome_dlg);
+			   delete welcome_dlg;
+			   m_mode = LOGIN;
+		   break;		
 			   
 		   case LOGIN:
+			   login_dlg =  new class login_dlg();
+				   m.run(*login_dlg);
+			   delete login_dlg;
+			   m_mode = USER_PLAY;
+		   break;
+		   
+		   case PROMPT_PASSWORD:
+			   psswrd_prompt_dlg = new class psswrd_prompt_dlg();
+				   m.run(*psswrd_prompt_dlg);
+			   delete psswrd_prompt_dlg;
+		   break;
+		
+		   case USER_PLAY:
+			   media_player_dlg = new class media_player_dlg();
+				   m.run(*media_player_dlg);
+			   delete media_player_dlg;
 			   m_mode = STOP;
 		   break;
-			
+			   
+		   case ADMIN_PLAY:
+			   //run media player in admin mode;
+		   	   m_mode = USER_PLAY;  //temporary
+		   break;
+		   
+		   case EDIT_USER:
+			   // pull up edit user dlg;
+		   m_mode = LOGIN;
+		   break;
+			   
 	   	   default:
-			   //do something
+			   //do nothing, should exit while loop
 		   break;
 	   }
    }   
 
-login_dlg *login_dlg = new class login_dlg();
-	m.run(*login_dlg);	
-delete login_dlg;
-
 //psswrd_prompt_dlg *psswrd_prompt_dlg = new class psswrd_prompt_dlg();
 //	m.run(*psswrd_prompt_dlg);
 //delete psswrd_prompt_dlg;	
-	
-media_player_dlg *media_player_dlg = new class media_player_dlg();
-   m.run(*media_player_dlg);
-delete media_player_dlg;
 
 #endif
 
