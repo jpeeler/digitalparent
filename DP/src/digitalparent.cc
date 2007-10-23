@@ -10,17 +10,23 @@
 #include <glib/gi18n.h>
 
 #include "login_dlg.hh"
+
+#include "login_dlg.hh"
 #include "media_player_dlg.hh"
 #include "psswrd_prompt_dlg.hh"
 #include "welcome_dlg.hh"
 
 #include "dp_gui.h"
+
 #include "controller.h"
 
-#define RUN_WINDOW true
+#include "libvlc.h"
+
+#define RUN_WINDOW false
 #define TEST_CONTROLLER false
 #define TEST_DATABASE false
 #define TEST_DATA_STRUCTURE false
+#define TEST_WINDOWS true
 
 int main(int argc, char **argv)
 {  
@@ -29,7 +35,7 @@ int main(int argc, char **argv)
    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
    textdomain (GETTEXT_PACKAGE);
 #endif //ENABLE_NLS
-
+  
    m_control = new class Controller();
 
 #if TEST_CONTROLLER
@@ -111,10 +117,26 @@ int main(int argc, char **argv)
 	   }
    }   
 
+
+#endif
+   
+#if TEST_WINDOWS
+   Gtk::Main m(&argc, &argv);
+   //~ welcome_dlg *welcome_dlg = new class welcome_dlg();
+	//~ m.run(*welcome_dlg);	
+//~ delete welcome_dlg;
+
+//~ login_dlg *login_dlg = new class login_dlg();
+	//~ m.run(*login_dlg);	
+//~ delete login_dlg;
+
 //psswrd_prompt_dlg *psswrd_prompt_dlg = new class psswrd_prompt_dlg();
 //	m.run(*psswrd_prompt_dlg);
 //delete psswrd_prompt_dlg;	
 
+media_player_dlg *media_player_dlg = new class media_player_dlg();
+   m.run(*media_player_dlg);
+delete media_player_dlg;
 #endif
 
     return 0;
