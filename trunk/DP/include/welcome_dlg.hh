@@ -11,14 +11,24 @@
 
 #ifndef _WELCOME_DLG_HH
 #  include "welcome_dlg_glade.hh"
+#include <string.h>
 #  define _WELCOME_DLG_HH
 class welcome_dlg : public welcome_dlg_glade
 {  
-        
+       
+	public:
+		std::string get_password(){ return m_password };
         void on_init_password_edit_box_editing_done();
         void on_repeat_password_edit_box_editing_done();
         void on_secret_q_edit_box_editing_done();
         void on_secret_a_edit_box_editing_done();
         void on_welcome_next_button_clicked();
+	
+	private:
+		std::string m_password;
+		std::string m_question;
+		std::string m_answer;
+	
+	
 };
 #endif

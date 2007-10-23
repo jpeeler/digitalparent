@@ -37,11 +37,14 @@ public:
 #include <gtkmm/button.h>
 #include <gtkmm/fixed.h>
 #include <gtkmm/box.h>
+#include <string.h>
 
+		
 class welcome_dlg_glade : public Gtk::Window
 {  
         
         GlademmData *gmm_data;
+		welcome_data *gw_data;
 public:
         class Gtk::Window * welcome_dlg;
         class Gtk::Label * welcome_label;
@@ -49,13 +52,14 @@ public:
         class Gtk::Label * init_password_label;
         class Gtk::Label * repeat_password_label;
         class Gtk::Entry * repeat_password_edit_box;
-        class Gtk::Label * secret_question_label;
+        class Gtk::Labeconnect(SigC::slot(l * secret_question_label;
         class Gtk::Label * secret_answer_label;
         class Gtk::Entry * secret_q_edit_box;
         class Gtk::Entry * secret_a_edit_box;
         class Gtk::Button * welcome_next_button;
         class Gtk::Fixed * fixed6;
-        class Gtk::VBox * vbox2;
+        class Gtk::VBox * vbox2;		
+				
 protected:
         
         welcome_dlg_glade();
@@ -64,8 +68,9 @@ protected:
 private:
         virtual void on_init_password_edit_box_editing_done() = 0;
         virtual void on_repeat_password_edit_box_editing_done() = 0;
-        virtual void on_secret_q_edit_box_editing_done() = 0;
+        virtual void on_secretstd::string &m_password_q_edit_box_editing_done() = 0;
         virtual void on_secret_a_edit_box_editing_done() = 0;
         virtual void on_welcome_next_button_clicked() = 0;
+		
 };
 #endif
