@@ -28,15 +28,24 @@ void welcome_dlg::on_secret_a_edit_box_editing_done()
 void welcome_dlg::on_welcome_next_button_clicked()
 {  
 	std::string password = init_password_edit_box->get_text();
-	std::string confirm = repeat_password_edit_box->get_text();
+	std::string confirm = repeat_password_edit_box->get_text();		
+	
 	if ( password != confirm || password == "" || confirm == "" )
 	{
+		welcome_hint_label->set_text("passwords do not match!");
 		init_password_edit_box->set_text("");
 		repeat_password_edit_box->set_text("");
 		return;
 	}
+	
 	std::string question = secret_q_edit_box->get_text();
 	std::string answer = secret_a_edit_box->get_text();
-	if ( question == "" || answer == "" ) return;
+	
+	if ( question == "" || answer == "" ) 
+	{
+		welcome_hint_label->set_text("question and answer must have at least one character!");
+		return;	
+	}
+	
 	hide();
 }

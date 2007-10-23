@@ -11,6 +11,7 @@
 
 #ifndef _WELCOME_DLG_HH
 #  include "welcome_dlg_glade.hh"
+#include <string.h>
 #  define _WELCOME_DLG_HH
 class welcome_dlg : public welcome_dlg_glade
 {  
