@@ -25,5 +25,6 @@ class media_player_dlg : public media_player_dlg_glade
         void on_rewind_button_clicked();
         void on_previous_button_clicked();
 		void on_cut_button_toggled();
+		void on_playlist_button_toggled();
 };
 #endif
