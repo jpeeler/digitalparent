@@ -16,17 +16,18 @@
 #include "psswrd_prompt_dlg.hh"
 #include "welcome_dlg.hh"
 
+
 #include "dp_gui.h"
 
 #include "controller.h"
-
-#include "libvlc.h"
 
 #define RUN_WINDOW false
 #define TEST_CONTROLLER false
 #define TEST_DATABASE false
 #define TEST_DATA_STRUCTURE false
 #define TEST_WINDOWS true
+
+
 
 int main(int argc, char **argv)
 {  
@@ -134,9 +135,13 @@ int main(int argc, char **argv)
 //	m.run(*psswrd_prompt_dlg);
 //delete psswrd_prompt_dlg;	
 
+
+   
 media_player_dlg *media_player_dlg = new class media_player_dlg();
    m.run(*media_player_dlg);
 delete media_player_dlg;
+
+
 #endif
 
     return 0;
