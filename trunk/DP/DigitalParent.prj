@@ -78,7 +78,10 @@ module.include.files=\
 	database.h\
 	welcome_dlg.hh\
 	welcome_dlg_glade.hh\
-	dp_gui.h
+	dp_gui.h\
+	playlist_dlg_glade.hh\
+	playlist_dlg.hh\
+	std_errors.h
 
 module.source.name=src
 module.source.type=
@@ -94,7 +97,9 @@ module.source.files=\
 	data_structure.cc\
 	database.cc\
 	welcome_dlg.cc\
-	welcome_dlg_glade.cc
+	welcome_dlg_glade.cc\
+	playlist_dlg.cc\
+	playlist_dlg_glade.cc
 
 module.pixmap.name=pixmaps
 module.pixmap.type=
@@ -117,13 +122,13 @@ module.po.files=
 compiler.options.supports=
 compiler.options.include.paths=\
 	/Projects/DP/include
-compiler.options.library.paths=\
-	/usr/include/vlc
+compiler.options.library.paths=
 compiler.options.libraries=\
-	*/usr/lib/libtntdb.la
-compiler.options.libraries.selected=1 
+	*/usr/lib/libtntdb.la\
+	vlc
+compiler.options.libraries.selected=1 1 
 compiler.options.defines=
-compiler.options.defines.selected=1 
+compiler.options.defines.selected=1 1 
 compiler.options.warning.buttons=0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 
 compiler.options.optimize.buttons=1 0 0 0 
 compiler.options.other.buttons=1 0 
