@@ -10,8 +10,6 @@
 #include <glib/gi18n.h>
 
 #include "login_dlg.hh"
-
-#include "login_dlg.hh"
 #include "media_player_dlg.hh"
 #include "psswrd_prompt_dlg.hh"
 #include "welcome_dlg.hh"
