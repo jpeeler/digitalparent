@@ -373,6 +373,62 @@ int Database::deleteUser(User *user)
 	return SUCCESS;
 }
 
+std::vector <std::string> Database::getUserList()
+{
+	std::vector <std::string> returnList;
+	tntdb::Statement query;
+	tntdb::Row row;
+	
+	query = conn.prepare("SELECT Username FROM Users ORDER BY Username DESC");	
+
+	try
+	{
+		for(tntdb::Statement::const_iterator cursor = query.begin();
+			cursor != query.end(); ++cursor)
+	   {
+		   //for each user, add username to return vector
+		   row = *cursor;
+		   returnList.push_back(row[0]);
+	   }
+	}
+	catch(tntdb::Error &e)
+	{
+		returnList.clear();
+		return returnList;
+	}
+	
+	
+	return returnList;
+}
+
+std::vector <std::string> Database::getIconList()
+{
+	std::vector <std::string> returnList;
+	tntdb::Statement query;
+	tntdb::Row row;
+	
+	query = conn.prepare("SELECT User_Icon, Username FROM Users ORDER BY Username DESC");	
+
+	try
+	{
+		for(tntdb::Statement::const_iterator cursor = query.begin();
+			cursor != query.end(); ++cursor)
+	   {
+		   //for each user, add icon to return vector
+		   row = *cursor;
+		   returnList.push_back(row[0]);
+	   }
+	}
+	catch(tntdb::Error &e)
+	{
+		returnList.clear();
+		return returnList;
+	}
+	
+	
+	return returnList;
+}
+
 int Database::storeDisc(Disc *discInfo)
 {
 	tntdb::Statement query;
@@ -542,10 +598,12 @@ void DBTest::do_DBTest()
    	Profile sampleProfile, returnProfile;
    	User sampleUser, returnUser;
    	SkipTime skip1, skip2;
+	std::vector <std::string> userList;
+	std::vector <std::string> iconList;
 	
  
    	std::string discname = "We Were Soldiers";
-   	std::string username = "TestUser2";
+   	std::string username = "aUser2";
    	std::string pwdhash = "#PWDHasH!";
    	std::string iconfile = "/filename";
    	/**
@@ -602,6 +660,38 @@ void DBTest::do_DBTest()
       printf("\nInsert Profile\n");
       exit(1);
    }
+   
+   //enter second user
+   username = "Jimmy";
+   pwdhash = "pwdGoesHere";
+   iconfile = "/home/jimmy/icon";
+   sampleUser.setUser(username);
+   sampleUser.setPasswordHash(pwdhash);
+   sampleUser.setUserIcon(iconfile);
+   sampleUser.setPlayUnknownDisc(true);
+   sampleUser.setMaxPlayLevel(5);
+   sampleUser.setLastMoviePos(3321);
+   sampleUser.setUserID(0);
+   
+   if(SUCCESS != db.storeUser(&sampleUser)) {
+      printf("\nInsert User 2\n");
+      exit(1);
+   }
+   
+   //try getting user and icon lists
+   userList = db.getUserList();
+   iconList = db.getIconList();
+   
+   if(userList.size() != 2 || 0 != (userList[1]).compare(sampleUser.getUser())) {
+	   printf("\nUser List %s\n", (userList[1]).c_str());
+	   exit(1);
+   }
+   if(iconList.size() != 2 || 0 != (iconList[1]).compare(sampleUser.getUserIcon())) {
+	   printf("\nIcon List\n");
+	   exit(1);
+   }
+   
+   
    
    //set up necessary info in return objects for get* functions
    returnUser.setUser(username);
