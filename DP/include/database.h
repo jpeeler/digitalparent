@@ -31,11 +31,13 @@ public:
 	int getUser(User *user);
 	int storeUser(User *user);
 	int deleteUser(User *user);
+	std::vector <std::string> getUserList();
+	std::vector <std::string> getIconList();
 
 	int storeDisc(Disc *discInfo);
 	int getDisc(Disc *disc);
 
-   void printErrorMessage(int errorNumber);
+    void printErrorMessage(int errorNumber);
 
 private:
 	tntdb::Connection conn;
