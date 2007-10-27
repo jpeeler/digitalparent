@@ -8,32 +8,49 @@
 #include "config.h"
 #include "media_player_dlg.hh"
 #include "playlist_dlg.hh"
-//#include "playlist_dlg_glade.hh"
+#include "media_chooser_dlg.hh"
+
 #include <vlc/libvlc.h>
 
 
-libvlc_exception_t excp;
-libvlc_instance_t *inst;
-char *filename = "/home/ctemple/clemson/ece453/Marisa Tomei Hanes Commercial.gvi";
+//~ libvlc_exception_t excp;
+//~ libvlc_instance_t *inst;
+//char *filename = "/home/ctemple/clemson/ece453/Marisa Tomei Hanes Commercial.gvi";
+char *filename ="/media/cdrom0";
 char **test =NULL;
-const char *playtimes[2]={":start-time=1",":stop-time=5"};
-const char *playtimes2[2]={":start-time=11",":stop-time=15"};
+const char *playtimes[2]={":start-time=0",":stop-time=30"};
+const char *playtimes2[2]={":start-time=45",":stop-time=60"};
 int item;
 int id;
 bool firstTime = false;
 playlist_dlg *playlist_dlg;
+media_chooser_dlg *media_chooser;
+bool audioSkipped=false;
 Gtk::CheckButton * checkbutton;
 
 
 
-void media_player_dlg::on_open_media_button_clicked()
-{  
+void media_player_dlg::init()
+{
 	libvlc_exception_init(&excp);
   	inst = libvlc_new (0, test, &excp);
+	id = libvlc_get_vlc_id(inst);
+	volume_slider->set_value(libvlc_audio_get_volume(inst,&excp));
+}
+
+void media_player_dlg::on_open_media_button_clicked()
+{  
+	//~ libvlc_exception_init(&excp);
+  	//~ inst = libvlc_new (0, test, &excp);
   	//item= libvlc_playlist_add(inst,filename,NULL,&excp);
+	if(inst==NULL){
+	printf("VLC set up\n");
+	init();
+	}
 	item = libvlc_playlist_add_extended (inst, filename, NULL,2,playtimes, &excp);
 	libvlc_playlist_add_extended (inst, filename, NULL,2,playtimes2, &excp);
-	id = libvlc_get_vlc_id(inst);
+	media_chooser =  new class media_chooser_dlg();
+	media_chooser->show();
 	
 }
 
@@ -54,11 +71,14 @@ void media_player_dlg::on_rewind_button_clicked()
 	VLC_SpeedSlower(id);
 }
 
-void media_player_dlg::on_cut_button_toggled()
+void media_player_dlg::on_cut_video_toggled()
 {  
 	int time;
-	time = VLC_TimeGet(id);
-	printf("Play time:  %d\n",time);
+	//time = libvlc_vlm_get_media_time(inst,filename,time,&excp);
+	time=VLC_TimeGet(id);
+	time_slider->set_value(VLC_TimeGet(id));
+	printf("Video Lenght: %d\n",VLC_LengthGet(id));
+	printf("Video time:  %d\n",time);
 }
 
 void media_player_dlg::on_next_button_clicked()
@@ -79,15 +99,13 @@ void media_player_dlg::on_pause_button_clicked()
 void media_player_dlg::on_play_button_clicked()
 {  
 	  libvlc_playlist_play (inst, item, 0, NULL, &excp);
-	hscale1->set_value(0);
+	time_slider->set_value(0);
 }
 
-void media_player_dlg::on_hscale1_value_changed()
+void media_player_dlg::on_time_slider_value_changed()
 {  
-	printf("Length: %d\n" , VLC_LengthGet(id));
-	printf("hscale Value: %f\n", hscale1->get_value());
-	hscale1->set_range(0,VLC_LengthGet(id));	
-	VLC_TimeSet(id,(int)hscale1->get_value(),false);
+	time_slider->set_range(0,VLC_LengthGet(id));	
+	VLC_TimeSet(id,(int)time_slider->get_value(),false);
 }
 
 void media_player_dlg::on_playlist_button_toggled()
@@ -97,7 +115,7 @@ void media_player_dlg::on_playlist_button_toggled()
 		firstTime= true;
 	}
 	if(playlist_button->get_active()){
-		for(int i=0; i< sizeof playtimes/sizeof *playtimes; i++){
+		for(uint i=0; i< sizeof playtimes/sizeof *playtimes; i++){
 printf("i: %d\n", i);
 			checkbutton = new class Gtk::CheckButton(playtimes[i]);
 			playlist_dlg->vbox4->pack_end(*checkbutton, Gtk::PACK_EXPAND_WIDGET, 0);
@@ -107,4 +125,29 @@ printf("i: %d\n", i);
 	else{
 			playlist_dlg->hide();
 	}
+}
+
+
+void media_player_dlg::on_volume_slider_value_changed()
+{  
+	libvlc_audio_set_volume(inst,(int)volume_slider->get_value(),&excp);
+}
+
+void media_player_dlg::on_Logout_clicked()
+{  
+}
+
+void media_player_dlg::on_cut_audio_toggled()
+{  
+	int time;
+	//time = libvlc_vlm_get_media_time(inst,filename,time,&excp);
+	time=VLC_TimeGet(id);
+	printf("Audio time:  %d\n",time);
+}
+
+void media_player_dlg::on_mute_button_toggled()
+{  
+	if(!audioSkipped){
+		VLC_VolumeMute(id);
+	} 
 }
