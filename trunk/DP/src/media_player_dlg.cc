@@ -47,10 +47,11 @@ void media_player_dlg::on_open_media_button_clicked()
 	printf("VLC set up\n");
 	init();
 	}
+	
 	item = libvlc_playlist_add_extended (inst, filename, NULL,2,playtimes, &excp);
 	libvlc_playlist_add_extended (inst, filename, NULL,2,playtimes2, &excp);
-	media_chooser =  new class media_chooser_dlg();
-	media_chooser->show();
+	//media_chooser =  new class mFILE_CHOOSER_ACTION_OPENedia_chooser_dlg("Choose File",Gtk::FILE_CHOOSER_ACTION_OPEN);
+	//media_chooser->show();
 	
 }
 
