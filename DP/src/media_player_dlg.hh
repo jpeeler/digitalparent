@@ -11,20 +11,30 @@
 
 #ifndef _MEDIA_PLAYER_DLG_HH
 #  include "media_player_dlg_glade.hh"
+#include <vlc/libvlc.h>
 #  define _MEDIA_PLAYER_DLG_HH
 class media_player_dlg : public media_player_dlg_glade
 {  
         
-        void on_hscale1_value_changed();
-        void on_open_media_button_clicked();
-        void on_next_button_clicked();
-        void on_fastforward_button_clicked();
-        void on_play_button_clicked();
-        void on_pause_button_clicked();
-        void on_stop_button_clicked();
-        void on_rewind_button_clicked();
+        
+        void on_volume_slider_value_changed();
         void on_previous_button_clicked();
-		void on_cut_button_toggled();
-		void on_playlist_button_toggled();
+        void on_rewind_button_clicked();
+        void on_stop_button_clicked();
+        void on_pause_button_clicked();
+        void on_play_button_clicked();
+        void on_fastforward_button_clicked();
+        void on_next_button_clicked();
+        void on_mute_button_toggled();
+        void on_open_media_button_clicked();
+        void on_Logout_clicked();
+        void on_cut_audio_toggled();
+        void on_playlist_button_toggled();
+        void on_time_slider_value_changed();
+        void on_cut_video_toggled();
+		void init();
+		
+	libvlc_exception_t excp;
+	libvlc_instance_t *inst;
 };
 #endif
