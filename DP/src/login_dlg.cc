@@ -7,6 +7,9 @@
 
 #include "config.h"
 #include "login_dlg.hh"
+#include "controller.h"
+#include "std_errors.h"
+extern Controller* useController();
 
 void login_dlg::on_admin_psswrd_edit_box_editing_done()
 {  
@@ -18,6 +21,17 @@ void login_dlg::on_previous_user_button_clicked()
 
 void login_dlg::on_admin_login_button_clicked()
 {  
+	std::string password = admin_psswrd_edit_box->get_text();
+	if ( password == "" ) return;
+	std::string admin = "admin";
+	int status = 
+		useController()->loadCurrentUser(admin,password);
+	if ( status == DB_BAD_PASSWORD )
+	{
+		login_hint_label->set_text("incorrect password");
+		return;
+	}
+	hide();
 }
 
 void login_dlg::on_next_user_button_clicked()
