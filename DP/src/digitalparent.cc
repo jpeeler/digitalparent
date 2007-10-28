@@ -16,12 +16,12 @@
 #include "dp_gui.h"
 #include "controller.h"
 
-#define RUN_WINDOW false
+#define RUN_WINDOW true
 #define TEST_CONTROLLER false
 #define TEST_DATABASE false
 #define TEST_DATA_STRUCTURE false
 #define TEST_WINDOWS false
-#define SHOW_WELCOME true
+#define SHOW_WELCOME false
 
 // the one and only controller
 Controller m_control;
@@ -48,24 +48,40 @@ int main(int argc, char **argv)
    psswrd_prompt_dlg *psswrd_prompt_dlg;  
    login_dlg *login_dlg;   
    media_player_dlg *media_player_dlg;
+	
    while ( m_mode != STOP )
    {
 	   switch ( m_mode )
 	   {
-		   case START:		   
-			   m_mode = RUNONCE;
-			   //load users
-		   	   //if ( users exist ) m_mode = LOGIN		   		
-		   	   //else m_mode = RUNONCE
+		   case START:
+		   {
+			   std::string password = "";							   
+			   std::string admin = "admin";	   
+			   int status = 
+			   		useController()->loadCurrentUser(admin,password);
+		   	   switch( status )
+			   {
+				   case DB_UNKNOWN_USER:
+					   m_mode = RUNONCE;
+				   break;
+				   case DB_BAD_PASSWORD:
+					   m_mode = LOGIN;
+				   break;				   
+				   default:
+					   // figure this out later
+				   break;
+			   }
+		   			   
 		   break;
-		   
+		   }		   
 		   case RUNONCE:
+		   {
 			   welcome_dlg = new class welcome_dlg();
 				   m.run(*welcome_dlg);
 			   delete welcome_dlg;
 			   m_mode = LOGIN;
-		   break;		
-			   
+		   break;
+		   }			   
 		   case LOGIN:
 			   login_dlg =  new class login_dlg();
 				   m.run(*login_dlg);
@@ -80,7 +96,7 @@ int main(int argc, char **argv)
 		   break;
 		
 		   case USER_PLAY:
-			   media_player_dlg = new class media_player_dlg(&m_control);
+			   media_player_dlg = new class media_player_dlg();
 				   m.run(*media_player_dlg);
 			   delete media_player_dlg;
 			   m_mode = STOP;
@@ -156,6 +172,11 @@ delete media_player_dlg;
 	welcome_dlg *welcome_dlg = new class welcome_dlg();
 		m.run(*welcome_dlg);
 	delete welcome_dlg;
+	
+	const User *auser = useController()->c_getUserLoggedIn();
+	printf("%s",auser->getPasswordHash().c_str());
+
+	
 #endif
 	
     return 0;
