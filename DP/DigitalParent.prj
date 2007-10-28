@@ -67,8 +67,6 @@ preferences.indent.closing=0
 module.include.name=include
 module.include.type=
 module.include.files=\
-	login_dlg.hh\
-	login_dlg_glade.hh\
 	media_player_dlg.hh\
 	media_player_dlg_glade.hh\
 	psswrd_prompt_dlg.hh\
@@ -103,7 +101,9 @@ module.source.files=\
 	playlist_dlg.cc\
 	playlist_dlg_glade.cc\
 	media_chooser_dlg.cc\
-	media_chooser_dlg_glade.cc
+	media_chooser_dlg_glade.cc\
+	login_dlg.hh\
+	login_dlg_glade.hh
 
 module.pixmap.name=pixmaps
 module.pixmap.type=
