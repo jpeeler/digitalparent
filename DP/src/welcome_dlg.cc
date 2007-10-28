@@ -7,7 +7,9 @@
 
 #include "config.h"
 #include "welcome_dlg.hh"
+#include "controller.h"
 #include <string.h>
+extern Controller *useController();
 
 
 void welcome_dlg::on_init_password_edit_box_editing_done()
@@ -30,8 +32,7 @@ void welcome_dlg::on_welcome_next_button_clicked()
 {  
 	std::string password = init_password_edit_box->get_text();
 	std::string confirm = repeat_password_edit_box->get_text();		
-	m_DPClipboard = Gtk::Clipboard::get();
-	Glib::ustring entry_string;
+	
 	if ( password != confirm || password == "" || confirm == "" )
 	{
 		welcome_hint_label->set_text("passwords do not match!");
@@ -47,8 +48,12 @@ void welcome_dlg::on_welcome_next_button_clicked()
 	{
 		welcome_hint_label->set_text("question and answer must have at least one character!");
 		return;	
-	}
-	entry_string = password;
-	m_DPClipboard->set_text(entry_string);
+	}	
+	std::string user = "admin";
+	
+	useController()->c_setCurrentUser( user );			
+	useController()->c_setCurrentUserPasswordHash( password );
+	if(!useController()->storeCurrentUser())
+		welcome_hint_label->set_text("can't create user");
 	hide();
 }
