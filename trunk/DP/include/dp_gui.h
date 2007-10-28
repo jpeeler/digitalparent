@@ -22,11 +22,5 @@ Controller *m_control;
 MODE m_mode;
 Glib::RefPtr<Gtk::Clipboard> m_DPClipboard;
 
-class DP_Gui
-{
-	
-public:
-	void on_welcome_text_received(const Glib::ustring& text);
-};
 
 #endif //__DP_GUI__
