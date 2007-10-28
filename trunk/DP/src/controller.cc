@@ -24,22 +24,19 @@ int Controller::loadCurrentUser(std::string& username, std::string& password)
 	User* user = m_data.getUserLoggedIn();
 	user->setUser(username);
 	user->setPasswordHash(password);
-	m_database.getUser(user);
-	return 0;
+	return(m_database.getUser(user));
 }
 
-bool Controller::storeCurrentUser()
+int Controller::storeCurrentUser()
 {
 	User* user = m_data.getUserLoggedIn();
-	m_database.storeUser(user);	
-	return true;
+	return (m_database.storeUser(user));
 }
 
-bool Controller::deleteCurrentUser()
+int Controller::deleteCurrentUser()
 {
 	User* user = m_data.getUserLoggedIn();
-	m_database.deleteUser(user);
-	return true;
+	return (m_database.deleteUser(user));
 }
 // -------------------------------------
 int Controller::loadProfile(int userID, int discID)
@@ -47,22 +44,19 @@ int Controller::loadProfile(int userID, int discID)
 	Profile* profile = m_data.getProfile();
 	profile->setUserID(userID);
 	profile->setDiscID(discID);
-	m_database.getProfile(profile);
-	return 0;
+	return (m_database.getProfile(profile));
 }
 
-bool Controller::storeProfile()
+int Controller::storeProfile()
 {
 	Profile* profile = m_data.getProfile();
-	m_database.storeProfile(profile);
-	return true;
+	return (m_database.storeProfile(profile));
 }
 
-bool Controller::deleteProfile()
+int Controller::deleteProfile()
 {
 	Profile* profile = m_data.getProfile();
-	m_database.deleteProfile(profile);
-	return true;
+	return (m_database.deleteProfile(profile));
 }
 // -------------------------------------
 int Controller::loadDisc(std::string& discName, long discLength, int numChapters)
@@ -71,15 +65,13 @@ int Controller::loadDisc(std::string& discName, long discLength, int numChapters
 	disc->setDiscName(discName);
 	disc->setDiscLength(discLength);
 	disc->setDiscChapterNum(numChapters);
-	m_database.getDisc(disc);	
-	return 0;
+	return (m_database.getDisc(disc));
 }
 
-bool Controller::storeDisc()
+int Controller::storeDisc()
 {
 	Disc* disc = m_data.getDisc();
-	m_database.storeDisc(disc);
-	return true;
+	return (m_database.storeDisc(disc));
 }
 
 // should user be able to remove a disc from database?
@@ -90,7 +82,7 @@ bool Controller::deleteDisc()
 }
 */
 // -------------------------------------
-// wrappers of data structures
+// wrappers of disc
 void Controller::c_setDiscID(int ID)
 {
 	Disc* disc = m_data.getDisc();
@@ -121,6 +113,7 @@ void Controller::c_setDiscRating(int rating)
 	disc->setDiscRating(rating);
 }
 
+// wrappers for user logged in
 void Controller::c_setCurrentUserID(int ID)
 {
 	User* user = m_data.getUserLoggedIn();
@@ -164,6 +157,55 @@ void Controller::c_setCurrentUserLastMovieID(int ID)
 }
 
 void Controller::c_setCurrentUserLastMoviePos(long position)
+{
+	User* user = m_data.getUserLoggedIn();
+	user->setLastMoviePos(position);
+}
+
+// controller other user wrapper methods
+void Controller::c_setOtherUserID(int ID)
+{
+	User* user = m_data.getUserLoggedIn();
+	user->setUserID(ID);
+}
+
+void Controller::c_setOtherUser(std::string& username)
+{
+	User* user = m_data.getUserLoggedIn();
+	user->setUser(username);
+}
+
+void Controller::c_setOtherUserPasswordHash(std::string& hash)
+{
+	User* user = m_data.getUserLoggedIn();
+	user->setPasswordHash(hash);
+}
+
+void Controller::c_setOtherUserIcon(std::string& file)
+{
+	User* user = m_data.getUserLoggedIn();
+	user->setUserIcon(file);
+}
+
+void Controller::c_setOtherUserCanPlayUnknown(bool flag)
+{
+	User* user = m_data.getUserLoggedIn();
+	user->setPlayUnknownDisc(flag);
+}
+
+void Controller::c_setOtherUserMaxPlayLevel(int level)
+{
+	User* user = m_data.getUserLoggedIn();
+	user->setMaxPlayLevel(level);
+}
+
+void Controller::c_setOtherUserLastMovieID(int ID)
+{
+	User* user = m_data.getUserLoggedIn();
+	user->setLastMovieID(ID);
+}
+
+void Controller::c_setOtherUserLastMoviePos(long position)
 {
 	User* user = m_data.getUserLoggedIn();
 	user->setLastMoviePos(position);
@@ -218,10 +260,22 @@ const Disc* Controller::c_getDisc() const
 {
 	return m_data.getDisc();
 }
+
+void Controller::c_clearDisc()
+{
+	Disc* disc = m_data.getDisc();
+	disc->clear();
+}
 	
 const User* Controller::c_getUserLoggedIn() const
 {
 	return m_data.getUserLoggedIn();
+}
+
+void Controller::c_clearUserLoggedIn()
+{
+	User* user = m_data.getUserLoggedIn();
+	user->clear();
 }
 
 const User* Controller::c_getUserOther() const
@@ -229,9 +283,21 @@ const User* Controller::c_getUserOther() const
 	return m_data.getUserOther();
 }
 
+void Controller::c_clearUserOther()
+{
+	User *other = m_data.getUserOther();
+	other->clear();
+}
+
 const Profile* Controller::c_getProfile() const
 {
 	return m_data.getProfile();
+}
+
+void Controller::c_clearProfile()
+{
+	Profile *profile = m_data.getProfile();
+	profile->clear();
 }
 
 void TestController::do_test()

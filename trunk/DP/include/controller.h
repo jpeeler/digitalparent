@@ -24,17 +24,15 @@ class Controller
 {
 public:
 	int loadCurrentUser(std::string& username, std::string& password);
-	bool storeCurrentUser();
-	bool deleteCurrentUser();
+	int storeCurrentUser();
+	int deleteCurrentUser();
 
 	int loadProfile(int userID, int discID);
-	bool storeProfile();
-	bool deleteProfile();
+	int storeProfile();
+	int deleteProfile();
 	
 	int loadDisc(std::string& discName, long discLength, int numChapters);
-	bool storeDisc();
-	// should user be able to remove a disc from database?
-	//bool deleteDisc();
+	int storeDisc();
 
 	// controller disc wrapper methods
 	void c_setDiscID(int ID);
@@ -53,7 +51,15 @@ public:
 	void c_setCurrentUserLastMovieID(int ID);
 	void c_setCurrentUserLastMoviePos(long position);
 	
-	// TODO: need to set options on other user object?
+	// controller other user wrapper methods
+	void c_setOtherUserID(int ID);
+	void c_setOtherUser(std::string& username);
+	void c_setOtherUserPasswordHash(std::string& hash);
+	void c_setOtherUserIcon(std::string& file);
+	void c_setOtherUserCanPlayUnknown(bool flag);
+	void c_setOtherUserMaxPlayLevel(int level);
+	void c_setOtherUserLastMovieID(int ID);
+	void c_setOtherUserLastMoviePos(long position);
 	
 	// controller profile wrapper methods
 	void c_setProfileID(int ID);
@@ -63,16 +69,16 @@ public:
 	void c_removeSkipChapter(int chapter);
 	
 	const Disc* c_getDisc() const;
-	//void c_clearDisc();
+	void c_clearDisc();
 
 	const User* c_getUserLoggedIn() const;
-	//void c_clearUserLoggedIn();
+	void c_clearUserLoggedIn();
 
 	const User* c_getUserOther() const;
-	//void c_clearUserOther();
+	void c_clearUserOther();
 
 	const Profile* c_getProfile() const;
-	//void c_clearProfile();
+	void c_clearProfile();
 	
 	// replaced by non-wrapper method
 	/*
