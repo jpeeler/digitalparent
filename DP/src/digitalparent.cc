@@ -5,12 +5,9 @@
 
 // This file is for your program, I won't touch it again!
 
-#include <config.h>
 #include <gtkmm/main.h>
 #include <glib/gi18n.h>
 #include <iostream>
-//#include <sigc++/signal.h>
-//#include <sigc++/sigc++.h>
 
 #include "login_dlg.hh"
 #include "media_player_dlg.hh"
@@ -26,11 +23,15 @@
 #define TEST_WINDOWS false
 #define SHOW_WELCOME true
 
+// the one and only controller
+Controller m_control;
 
-void on_welcome_text_received(const Glib::ustring& text)
+// global function to allow all objects to access controller
+Controller* useController()
 {
-	std::cout<<text;
+	return &m_control;
 }
+
 
 int main(int argc, char **argv)
 {  
@@ -38,10 +39,7 @@ int main(int argc, char **argv)
    bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
    textdomain (GETTEXT_PACKAGE);
-#endif //ENABLE_NLS
-  
-   m_control = new class Controller();
-   m_DPClipboard = Gtk::Clipboard::get();   
+#endif //ENABLE_NLS   
 
 #if RUN_WINDOW
    Gtk::Main m(&argc, &argv);
@@ -82,7 +80,7 @@ int main(int argc, char **argv)
 		   break;
 		
 		   case USER_PLAY:
-			   media_player_dlg = new class media_player_dlg();
+			   media_player_dlg = new class media_player_dlg(&m_control);
 				   m.run(*media_player_dlg);
 			   delete media_player_dlg;
 			   m_mode = STOP;
@@ -109,9 +107,13 @@ int main(int argc, char **argv)
    
 #if TEST_WINDOWS
    Gtk::Main m(&argc, &argv);
-   //~ welcome_dlg *welcome_dlg = new class welcome_dlg();
-	//~ m.run(*welcome_dlg);	
-//~ delete welcome_dlg;
+    welcome_dlg *welcome_dlg = new class welcome_dlg();
+	 m.run(*welcome_dlg);	
+ delete welcome_dlg;
+	
+	// some example controller usage:
+	//const User *auser = useController()->c_getUserLoggedIn();
+	//printf("%s",auser->getPasswordHash().c_str());
 
 //~ login_dlg *login_dlg = new class login_dlg();
 	//~ m.run(*login_dlg);	
@@ -122,10 +124,11 @@ int main(int argc, char **argv)
 //delete psswrd_prompt_dlg;	
 
 
-   
+/*   
 media_player_dlg *media_player_dlg = new class media_player_dlg();
    m.run(*media_player_dlg);
 delete media_player_dlg;
+*/
 
 #endif
 
@@ -153,8 +156,6 @@ delete media_player_dlg;
 	welcome_dlg *welcome_dlg = new class welcome_dlg();
 		m.run(*welcome_dlg);
 	delete welcome_dlg;
-	Glib::ustring clip_text;
-	//m_DPClipboard->request_text(SigC::slot(*gui,&DP_Gui::on_welcome_text_received));
 #endif
 	
     return 0;
