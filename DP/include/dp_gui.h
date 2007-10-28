@@ -18,9 +18,7 @@ typedef enum {
 } MODE;
 User *m_current_user;
 std::vector<User> *m_user_list;
-Controller *m_control;
 MODE m_mode;
-Glib::RefPtr<Gtk::Clipboard> m_DPClipboard;
 
 
 #endif //__DP_GUI__
