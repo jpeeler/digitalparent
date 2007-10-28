@@ -70,8 +70,7 @@ int main(int argc, char **argv)
 				   default:
 					   // figure this out later
 				   break;
-			   }
-		   			   
+			   }		   			   
 		   break;
 		   }		   
 		   case RUNONCE:
@@ -83,25 +82,35 @@ int main(int argc, char **argv)
 		   break;
 		   }			   
 		   case LOGIN:
+		   {
 			   login_dlg =  new class login_dlg();
 				   m.run(*login_dlg);
 			   delete login_dlg;
 			   m_mode = USER_PLAY;
+			   std::string test = "login";
+			   std::cout << test;
 		   break;
-		   
+		   }		   
 		   case PROMPT_PASSWORD:
+		   {
+			   std::string test = "prompt_password";
+			   std::cout << test;
 			   psswrd_prompt_dlg = new class psswrd_prompt_dlg();
 				   m.run(*psswrd_prompt_dlg);
 			   delete psswrd_prompt_dlg;
+		   }
 		   break;
 		
 		   case USER_PLAY:
+		   {
+			   std::string test = "user_play";
+			   std::cout << test;
 			   media_player_dlg = new class media_player_dlg();
 				   m.run(*media_player_dlg);
 			   delete media_player_dlg;
 			   m_mode = STOP;
 		   break;
-			   
+		   }			   
 		   case ADMIN_PLAY:
 			   //run media player in admin mode;
 		   	   m_mode = USER_PLAY;  //temporary
