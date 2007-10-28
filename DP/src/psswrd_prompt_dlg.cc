@@ -14,4 +14,6 @@ void psswrd_prompt_dlg::on_psswrd_edit_box_editing_done()
 
 void psswrd_prompt_dlg::on_login_icon_button_clicked()
 {  
+	m_DPClipboard = Gtk::Clipboard::get();
+	
 }

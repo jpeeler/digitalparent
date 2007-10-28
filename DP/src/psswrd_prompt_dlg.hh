@@ -17,5 +17,6 @@ class psswrd_prompt_dlg : public psswrd_prompt_dlg_glade
         
         void on_psswrd_edit_box_editing_done();
         void on_login_icon_button_clicked();
+	Glib::RefPtr<Gtk::Clipboard> m_DPClipboard;
 };
 #endif

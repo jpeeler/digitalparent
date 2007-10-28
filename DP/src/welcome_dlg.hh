@@ -21,5 +21,6 @@ class welcome_dlg : public welcome_dlg_glade
         void on_secret_q_edit_box_editing_done();
         void on_secret_a_edit_box_editing_done();
         void on_welcome_next_button_clicked();
+	Glib::RefPtr<Gtk::Clipboard> m_DPClipboard;
 };
 #endif
