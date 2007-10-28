@@ -35,7 +35,7 @@ void welcome_dlg::on_welcome_next_button_clicked()
 	
 	if ( password != confirm || password == "" || confirm == "" )
 	{
-		welcome_hint_label->set_text("passwords do not match!");
+		//welcome_hint_label->set_text("passwords do not match!");
 		init_password_edit_box->set_text("");
 		repeat_password_edit_box->set_text("");
 		return;
@@ -46,7 +46,7 @@ void welcome_dlg::on_welcome_next_button_clicked()
 	
 	if ( question == "" || answer == "" ) 
 	{
-		welcome_hint_label->set_text("question and answer must have at least one character!");
+		//welcome_hint_label->set_text("question and answer must have at least one character!");
 		return;	
 	}	
 	std::string user = "admin";
@@ -54,6 +54,6 @@ void welcome_dlg::on_welcome_next_button_clicked()
 	useController()->c_setCurrentUser( user );			
 	useController()->c_setCurrentUserPasswordHash( password );
 	if(!useController()->storeCurrentUser())
-		welcome_hint_label->set_text("can't create user");
+		//welcome_hint_label->set_text("can't create user");
 	hide();
 }
