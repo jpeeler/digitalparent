@@ -8,24 +8,28 @@
 #include <config.h>
 #include <gtkmm/main.h>
 #include <glib/gi18n.h>
+#include <iostream>
+#include <sigc++/signal.h>
 
 #include "login_dlg.hh"
 #include "media_player_dlg.hh"
 #include "psswrd_prompt_dlg.hh"
 #include "welcome_dlg.hh"
-
-
 #include "dp_gui.h"
-
 #include "controller.h"
 
 #define RUN_WINDOW false
 #define TEST_CONTROLLER false
 #define TEST_DATABASE false
 #define TEST_DATA_STRUCTURE false
-#define TEST_WINDOWS true
+#define TEST_WINDOWS false
+#define SHOW_WELCOME true
 
 
+void DP_Gui::on_welcome_text_received(const Glib::ustring& text)
+{
+	std::cout<<text;
+}
 
 int main(int argc, char **argv)
 {  
@@ -36,25 +40,9 @@ int main(int argc, char **argv)
 #endif //ENABLE_NLS
   
    m_control = new class Controller();
+   m_DPClipboard = Gtk::Clipboard::get();
 
-#if TEST_CONTROLLER
-	printf("\n------ Begin Controller Test ------\n\n");
-	TestController::do_test();
-	printf("\n------- End Controller Test -------\n\n");
-#endif
-	
-#if TEST_DATABASE
-	printf("\n------ Begin Database Test ------\n\n");
-	DBTest::do_DBTest();
-	printf("\n------- End Database Test -------\n\n");
-#endif
-	
-#if TEST_DATA_STRUCTURE
-	printf("\n------ Begin Data Structure Test ------\n\n");
-	DataTest::do_test();
-	printf("\n------- End Data Structure Test -------\n\n");
-#endif
-	
+
 #if RUN_WINDOW
    Gtk::Main m(&argc, &argv);
    m_mode = START;
@@ -139,8 +127,35 @@ media_player_dlg *media_player_dlg = new class media_player_dlg();
    m.run(*media_player_dlg);
 delete media_player_dlg;
 
-
 #endif
 
+  
+#if TEST_CONTROLLER
+	printf("\n------ Begin Controller Test ------\n\n");
+	TestController::do_test();
+	printf("\n------- End Controller Test -------\n\n");
+#endif
+	
+#if TEST_DATABASE
+	printf("\n------ Begin Database Test ------\n\n");
+	DBTest::do_DBTest();
+	printf("\n------- End Database Test -------\n\n");
+#endif
+	
+#if TEST_DATA_STRUCTURE
+	printf("\n------ Begin Data Structure Test ------\n\n");
+	DataTest::do_test();
+	printf("\n------- End Data Structure Test -------\n\n");
+#endif
+
+#if SHOW_WELCOME
+	Gtk::Main m(&argc, &argv);
+	welcome_dlg *welcome_dlg = new class welcome_dlg();
+		m.run(*welcome_dlg);
+	delete welcome_dlg;
+	Glib::ustring clip_text;
+	m_DPClipboard->request_text(sigC::ptr_fun(&DP_Gui::on_welcome_text_received));
+#endif
+	
     return 0;
 }
