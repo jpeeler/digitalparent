@@ -9,7 +9,8 @@
 #include <gtkmm/main.h>
 #include <glib/gi18n.h>
 #include <iostream>
-#include <sigc++/signal.h>
+//#include <sigc++/signal.h>
+//#include <sigc++/sigc++.h>
 
 #include "login_dlg.hh"
 #include "media_player_dlg.hh"
@@ -26,7 +27,7 @@
 #define SHOW_WELCOME true
 
 
-void DP_Gui::on_welcome_text_received(const Glib::ustring& text)
+void on_welcome_text_received(const Glib::ustring& text)
 {
 	std::cout<<text;
 }
@@ -40,8 +41,7 @@ int main(int argc, char **argv)
 #endif //ENABLE_NLS
   
    m_control = new class Controller();
-   m_DPClipboard = Gtk::Clipboard::get();
-
+   m_DPClipboard = Gtk::Clipboard::get();   
 
 #if RUN_WINDOW
    Gtk::Main m(&argc, &argv);
@@ -154,7 +154,7 @@ delete media_player_dlg;
 		m.run(*welcome_dlg);
 	delete welcome_dlg;
 	Glib::ustring clip_text;
-	m_DPClipboard->request_text(sigC::ptr_fun(&DP_Gui::on_welcome_text_received));
+	//m_DPClipboard->request_text(SigC::slot(*gui,&DP_Gui::on_welcome_text_received));
 #endif
 	
     return 0;
