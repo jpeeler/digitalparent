@@ -62,6 +62,18 @@ public:
 	void c_addSkipChapter(int chapter);
 	void c_removeSkipChapter(int chapter);
 	
+	const Disc* c_getDisc() const;
+	//void c_clearDisc();
+
+	const User* c_getUserLoggedIn() const;
+	//void c_clearUserLoggedIn();
+
+	const User* c_getUserOther() const;
+	//void c_clearUserOther();
+
+	const Profile* c_getProfile() const;
+	//void c_clearProfile();
+	
 	// replaced by non-wrapper method
 	/*
 	void c_setSkipStart(long start);

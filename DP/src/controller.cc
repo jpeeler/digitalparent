@@ -213,6 +213,27 @@ void Controller::addSkipTiming(long start, long stop, bool onlyAudio)
 	profile->addSkipTime(askiptime);
 }
 
+//DataStructure wrapper methods
+const Disc* Controller::c_getDisc() const
+{
+	return m_data.getDisc();
+}
+	
+const User* Controller::c_getUserLoggedIn() const
+{
+	return m_data.getUserLoggedIn();
+}
+
+const User* Controller::c_getUserOther() const
+{
+	return m_data.getUserOther();
+}
+
+const Profile* Controller::c_getProfile() const
+{
+	return m_data.getProfile();
+}
+
 void TestController::do_test()
 {
 	Controller theController;
