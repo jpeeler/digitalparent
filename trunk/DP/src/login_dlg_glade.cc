@@ -211,10 +211,10 @@ login_dlg_glade::login_dlg_glade(
    user_icon_select_button_2->show();
    user_button3_icon->show();
    user_icon_select_button_3->show();
-   secret_q_edit_box->show();
-   secret_a_edit_box->show();
-   secret_question_label->show();
-   secret_answer_label->show();
+   //secret_q_edit_box->show();
+   //secret_a_edit_box->show();
+   //secret_question_label->show();
+   //secret_answer_label->show();
    login_hint_label->show();
    user_button1_icon->show();
    user_icon_select_button_1->show();
