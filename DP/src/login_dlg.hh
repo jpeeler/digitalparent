@@ -13,8 +13,7 @@
 #  include "login_dlg_glade.hh"
 #  define _LOGIN_DLG_HH
 class login_dlg : public login_dlg_glade
-{  
-        
+{          
         void on_admin_psswrd_edit_box_editing_done();
         void on_previous_user_button_clicked();
         void on_admin_login_button_clicked();
@@ -22,5 +21,7 @@ class login_dlg : public login_dlg_glade
         void on_user_icon_select_button_2_clicked();
         void on_user_icon_select_button_1_clicked();
         void on_user_icon_select_button_3_clicked();
+	private:
+		
 };
 #endif
