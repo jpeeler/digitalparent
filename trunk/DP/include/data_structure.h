@@ -55,7 +55,6 @@ private:
 	long m_disc_length;
 	int m_disc_chapters;
 	int m_disc_rating; // using 1:G, 2:PG, 3:PG-13, 4:R, 5:NC-17, 6:X, 7:NR
-
 };
 
 class User
@@ -97,12 +96,20 @@ public:
 
 	void setLastMoviePos(long position);
 	const long getLastMoviePos() const;
+	
+	void setQuestion(std::string& question);
+	const std::string& getQuestion() const;
+	
+	void setAnswer(std::string& answer);
+	const std::string& getAnswer() const;
 
 private:
 	int m_userID;
 	std::string m_username;
 	std::string m_iconfile;
 	std::string m_password;
+	std::string m_question;
+	std::string m_answer;
 	bool m_play_unknown;
 	int m_max_play_level;
 	int m_last_movie_ID;
@@ -114,8 +121,8 @@ class SkipTime
 public:
 	
 	SkipTime() : m_start_time(0),
-                 m_stop_time(0),
-                 m_audio_only(false)
+                 m_stop_time(0)/*,
+                 m_video_only(false)*/
 	{}
 	~SkipTime() {}
 		
@@ -127,15 +134,16 @@ public:
 	void setSkipStop(long stop);
 	const long getSkipStop() const;
 
-	void setAudioOnly(bool isAudio);
-	const bool getAudioOnly() const;
+	//taken out for now...
+	//void setVideoOnly(bool isOnlyVideo);
+	//const bool getVideoOnly() const;
 
 	bool operator==(const SkipTime& other);
 	
 private:
 	long m_start_time;
 	long m_stop_time;
-	bool m_audio_only;
+	//bool m_video_only;
 
 };
 
@@ -143,7 +151,8 @@ struct skipSortAscending
 {
 	bool operator()(const SkipTime& rpStart, const SkipTime& rpEnd) const
    	{
-		return rpStart.getSkipStart() < rpEnd.getSkipStart();
+		return (rpStart.getSkipStart() < rpEnd.getSkipStart() ||
+				rpStart.getSkipStop() == 0);
    	}
 };
 

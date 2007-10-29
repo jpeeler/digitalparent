@@ -173,6 +173,26 @@ const long User::getLastMoviePos() const
 	return m_last_movie_pos;
 }
 
+void User::setQuestion(std::string& question)
+{
+	m_question = question;
+}
+
+const std::string& User::getQuestion() const
+{
+	return m_question;
+}
+
+void User::setAnswer(std::string& answer)
+{
+	m_answer = answer;
+}
+
+const std::string& User::getAnswer() const
+{
+	return m_answer;
+}
+
 // -----------------------------------------------------------------------------
 // class SkipTime
 
@@ -180,7 +200,7 @@ void SkipTime::clear()
 {
 	m_start_time = 0;
     m_stop_time = 0;
-    m_audio_only = false;
+    //m_video_only = false;
 }
 
 void SkipTime::setSkipStart(long start)
@@ -205,21 +225,23 @@ const long SkipTime::getSkipStop() const
 	return m_stop_time;
 }
 
-void SkipTime::setAudioOnly(bool isAudio)
+/*
+void SkipTime::setVideoOnly(bool isOnlyVideo)
 {
-	m_audio_only = isAudio;
+	m_video_only = isOnlyVideo;
 }
-
-const bool SkipTime::getAudioOnly() const
+*/
+/*
+const bool SkipTime::getVideoOnly() const
 {
-	return m_audio_only;
+	return m_video_only;
 }
-
+*/
 bool SkipTime::operator==(const SkipTime& other)
 {
 	if (m_start_time == other.m_start_time &&
-		m_stop_time == other.m_stop_time &&
-		m_audio_only == other.m_audio_only)
+		m_stop_time == other.m_stop_time /*&&
+		m_video_only == other.m_video_only*/)
 		return true;
 	else
 		return false;
@@ -292,10 +314,112 @@ const std::vector<int>& Profile::getSkipChapters() const
 }
 
 void Profile::addSkipTime(SkipTime skip_time)
-{
-	m_skip_times.push_back(skip_time);
+{ // TODO: special case 4 testing required
+	std::vector<SkipTime>::iterator it=m_skip_times.begin();
+	std::vector<SkipTime *> affected_skips;
+
+	// find first
+	while (it!=m_skip_times.end())
+	{
+		if (it->getSkipStop() >= skip_time.getSkipStart())
+		{
+			affected_skips.push_back(&(*it));
+			
+			// passed in is subset of existing SkipTime
+			//if (it->getSkipStop() >= skip_time.getSkipStop())
+			//	affected_skips.push_back(&(*it));
+			
+			break;
+		}
+		it++;		
+	}
+	
+	// find remaining
+	while (it!=m_skip_times.end())
+	{
+		if (it->getSkipStart() <= skip_time.getSkipStop())
+		{
+			affected_skips.push_back(&(*it));
+		}
+		it++;
+	}
+	
+	// no skip times effected, case 1, case 5
+	if (affected_skips.size() == 0 ||
+		skip_time.getSkipStop() < affected_skips.at(0)->getSkipStart() ||
+		skip_time.getSkipStart() > affected_skips.back()->getSkipStop())
+	{
+		//printf("DEBUG: nothing effected for attempted [%ld,%ld]\n",skip_time.getSkipStart(), skip_time.getSkipStop());
+		m_skip_times.push_back(skip_time);
+	}
+	// case 6
+	else if (skip_time.getSkipStart() <= affected_skips.at(0)->getSkipStart() &&
+			skip_time.getSkipStop() >= affected_skips.back()->getSkipStop())
+	{
+		//printf("DEBUG: case 6 for attempted [%ld,%ld]\n",skip_time.getSkipStart(), skip_time.getSkipStop());
+		
+		// new skiptime bigger than all existing (or equal size which no-op is actually required)
+		for (std::vector<SkipTime*>::iterator it=affected_skips.begin(); it!=affected_skips.end(); it++)
+		{
+			(*it)->clear();
+		}
+		m_skip_times.push_back(skip_time);
+	}
+	// case 2
+	else if (skip_time.getSkipStart() < affected_skips.at(0)->getSkipStart())
+	{
+		//printf("DEBUG: case 2 for attempted [%ld,%ld]\n",skip_time.getSkipStart(), skip_time.getSkipStop());
+		for (std::vector<SkipTime*>::iterator it=affected_skips.begin(); it!=affected_skips.end(); it++)
+		{
+			// if skip_time is bigger
+			if (skip_time.getSkipStop() >= (*it)->getSkipStop())
+				(*it)->clear();
+			// if skip_time falls in middle or touches
+			else if (skip_time.getSkipStop() < (*it)->getSkipStop() &&
+				skip_time.getSkipStop() >= (*it)->getSkipStart())
+			{
+				skip_time.setSkipStop((*it)->getSkipStop());
+				(*it)->clear();
+			}
+		}
+		m_skip_times.push_back(skip_time);
+	}
+	// case 4
+	else if (skip_time.getSkipStart() < affected_skips.back()->getSkipStop())
+	{
+		//printf("DEBUG: case 4 for attempted [%ld,%ld]\n",skip_time.getSkipStart(), skip_time.getSkipStop());
+		for (std::vector<SkipTime*>::iterator it=affected_skips.begin(); it!=affected_skips.end(); it++)
+		{
+			// if skip_time needs expanding		
+			if (skip_time.getSkipStop() < (*it)->getSkipStop() &&
+				skip_time.getSkipStop() > (*it)->getSkipStart())
+			{
+				skip_time.setSkipStart((*it)->getSkipStart());
+				(*it)->clear();
+			}
+			else if (skip_time.getSkipStart() >= (*it)->getSkipStart())
+				(*it)->clear();
+		}
+		m_skip_times.push_back(skip_time);
+	}
+	// case 3
+	else if (*(affected_skips.at(0)) == *(affected_skips.at(1)))
+	{
+		//printf("DEBUG: case 3 for attempted [%ld,%ld] affect1[%ld,%ld] affect2[%ld,%ld]\n",skip_time.getSkipStart(), skip_time.getSkipStop(),affected_skips.at(0)->getSkipStart(),affected_skips.at(0)->getSkipStop(),affected_skips.at(1)->getSkipStart(),affected_skips.at(1)->getSkipStop());
+		// do nothing, skiptime subset of existing duration
+	}		
+	else
+	{
+		printf("DEBUG: unhandled\n");
+	}
 	
 	std::sort(m_skip_times.begin(), m_skip_times.end(), skipSortAscending());
+	
+	// pops off all [0,0] elements from head
+	while (m_skip_times.at(0).getSkipStart() == 0 && m_skip_times.at(0).getSkipStop() == 0)
+	{
+		m_skip_times.erase(m_skip_times.begin());
+	}
 }
 
 void Profile::removeSkipTime(SkipTime skip_time)
@@ -306,17 +430,7 @@ void Profile::removeSkipTime(SkipTime skip_time)
 	if (location != m_skip_times.end())
 	{
 		m_skip_times.erase(location);
-	}
-	
-	// traverse the vector yourself... remove later, just for reference
-	/*
-	for (std::vector<SkipTime>::iterator it=m_skip_times.begin(); it!=m_skip_times.end(); ++it)
-	{
-		if (skip_time == *it)
-			m_skip_times.erase(it);		
-	}
-	*/
-	
+	}	
 }
 
 const std::vector<SkipTime>& Profile::getSkipTimes() const
@@ -485,34 +599,34 @@ void DataTest::do_test()
 	SkipTime askiptime;
 	askiptime.setSkipStart(alongnum);
 	askiptime.setSkipStop(alongnum2);
-	askiptime.setAudioOnly(false);
+	//askiptime.setVideoOnly(false);
 	
 	if (askiptime.getSkipStart() != alongnum)
 		puts("ERROR: askiptime.getSkipStart");
 	if (askiptime.getSkipStop() != alongnum2)
 		puts("ERROR: askiptime.getSkipStop");
-	if (askiptime.getAudioOnly() != false)
-		puts("ERROR: askiptime.getAudioOnly");
+	//if (askiptime.getVideoOnly() != false)
+	//	puts("ERROR: askiptime.getVideoOnly");
 	
 	askiptime.clear();
 	if (askiptime.getSkipStart() != 0)
 		puts("ERROR_C: askiptime.getSkipStart");
 	if (askiptime.getSkipStop() != 0)
 		puts("ERROR_C: askiptime.getSkipStop");
-	if (askiptime.getAudioOnly() != false)
-		puts("ERROR_C: askiptime.getAudioOnly");
+	//if (askiptime.getVideoOnly() != false)
+	//	puts("ERROR_C: askiptime.getVideoOnly");
 	
 	// Test Profile object ------------
 	// set SkipTime object to something other than default values
 	askiptime.setSkipStart(alongnum);
 	askiptime.setSkipStop(alongnum2);
-	askiptime.setAudioOnly(false);
+	//askiptime.setVideoOnly(false);
 	
 	// create another SkipTime object
 	SkipTime askiptime2;
 	askiptime2.setSkipStart(alongnum2);
 	askiptime2.setSkipStop(alongnum3);
-	askiptime2.setAudioOnly(true);
+	//askiptime2.setVideoOnly(true);
 	
 	// add SkipTime object to newly created profile object
 	Profile aprofile;
@@ -532,8 +646,8 @@ void DataTest::do_test()
 	if (aprofile.getSkipChapters().at(0) != 9)
 		puts("ERROR: aprofile.getSkipChapters");
 	if (aprofile.getSkipTimes().at(0).getSkipStart() != askiptime.getSkipStart() ||
-		aprofile.getSkipTimes().at(0).getSkipStop() != askiptime.getSkipStop() ||
-		aprofile.getSkipTimes().at(0).getAudioOnly() != askiptime.getAudioOnly())
+		aprofile.getSkipTimes().at(0).getSkipStop() != askiptime.getSkipStop() /*||
+		aprofile.getSkipTimes().at(0).getVideoOnly() != askiptime.getVideoOnly()*/)
 		puts("ERROR: aprofile.getSkipTimes");
 	aprofile.clear();
 	if (aprofile.getProfileID() != 0)
@@ -560,19 +674,74 @@ void DataTest::do_test()
 	if (size != 1)
 		puts("ERROR: aprofile.getSkipTimes().size()");
 	
-	// check out the vector
-	for (std::vector<SkipTime>::const_iterator it = aprofile.getSkipTimes().begin();
-		it!=aprofile.getSkipTimes().end(); ++it)
-	{
-		printf("%s\n", "A skiptime object:");
-		printf("skipstart: %ld\n",it->getSkipStart());
-		printf("skipstop: %ld\n",it->getSkipStop());
-		printf("audio only: %s\n\n", it->getAudioOnly() ? "true" : "false");
-	}
-	
+	// remove valid non-cleared SkipTime object
 	aprofile.removeSkipTime(askiptime2);
 	size = aprofile.getSkipTimes().size();
 	if (size != 0)
-		puts("ERROR_C: aprofile.getSkipTimes().size()");
+		puts("ERROR_C: aprofile.getSkipTimes().size()");	
 	
+	// intense test for addSkipTime:
+	SkipTime existing_skiptime1;
+	SkipTime existing_skiptime2;
+	SkipTime existing_skiptime3;
+	SkipTime existing_skiptime4;
+	SkipTime existing_skiptime5;
+	
+	// existing ranges:
+	// 4-10, 13-14, 16-19, 20-22, 23-28
+	existing_skiptime1.setSkipStart(4); existing_skiptime1.setSkipStop(10);
+	existing_skiptime2.setSkipStart(13); existing_skiptime2.setSkipStop(14);
+	existing_skiptime3.setSkipStart(16); existing_skiptime3.setSkipStop(19);
+	existing_skiptime4.setSkipStart(20); existing_skiptime4.setSkipStop(22);
+	existing_skiptime5.setSkipStart(23); existing_skiptime5.setSkipStop(28);
+	aprofile.addSkipTime(existing_skiptime2);
+	aprofile.addSkipTime(existing_skiptime1);
+	aprofile.addSkipTime(existing_skiptime3); // test sorting
+	aprofile.addSkipTime(existing_skiptime5);
+	aprofile.addSkipTime(existing_skiptime4);
+	
+	SkipTime newSkip1; // 0-1 (case 1)
+	SkipTime newSkip3; // 17-18 (case 3)
+	SkipTime newSkip5; // 29-30 (case 5)
+	SkipTime newSkip2a; // 12-13 (case 2)
+	SkipTime newSkip2b; // 15-26 (case 2)
+	
+	newSkip1.setSkipStart(0); newSkip1.setSkipStop(1);
+	newSkip3.setSkipStart(17); newSkip3.setSkipStop(18);
+	newSkip5.setSkipStart(29); newSkip5.setSkipStop(30);
+	newSkip2a.setSkipStart(12); newSkip2a.setSkipStop(13);
+	newSkip2b.setSkipStart(15); newSkip2b.setSkipStop(26);
+	aprofile.addSkipTime(newSkip1);
+	aprofile.addSkipTime(newSkip1); // tests special case 6
+	aprofile.addSkipTime(newSkip3);
+	aprofile.addSkipTime(newSkip5);
+	aprofile.addSkipTime(newSkip2a);
+	aprofile.addSkipTime(newSkip2b);
+	
+	// check out the vector
+	printf("%s\n", "SkipTime objects in vector [start,stop]:");
+	for (std::vector<SkipTime>::const_iterator it = aprofile.getSkipTimes().begin();
+		it!=aprofile.getSkipTimes().end(); ++it)
+	{
+		printf("[%ld-%ld] ",it->getSkipStart(), it->getSkipStop());
+	}
+	puts("");
+	
+	SkipTime newSkip6; // test case 6 normal
+	newSkip6.setSkipStart(0); newSkip6.setSkipStop(30);
+	aprofile.addSkipTime(newSkip6);
+	
+	SkipTime newSkip4;
+	newSkip4.setSkipStart(15); newSkip4.setSkipStop(45);
+	aprofile.addSkipTime(newSkip4);
+	
+	printf("\n%s\n", "SkipTime objects in vector [start,stop]:");
+	for (std::vector<SkipTime>::const_iterator it = aprofile.getSkipTimes().begin();
+		it!=aprofile.getSkipTimes().end(); ++it)
+	{
+		printf("[%ld-%ld] ",it->getSkipStart(), it->getSkipStop());
+	}
+	puts("");
+	
+	aprofile.clear(); // start again
 }
