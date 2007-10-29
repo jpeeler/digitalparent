@@ -21,14 +21,33 @@ void login_dlg::on_previous_user_button_clicked()
 
 void login_dlg::on_admin_login_button_clicked()
 {  
-	std::string password = admin_psswrd_edit_box->get_text();
-	if ( password == "" ) return;
 	std::string admin = "admin";
-	int status = 
-		useController()->loadCurrentUser(admin,password);
+	int status;
+	if ( m_error_count < 4 )
+	{
+		std::string password = admin_psswrd_edit_box->get_text();	
+		status = useController()->loadCurrentUser(admin,password);
+	}
+	else
+	{
+		std::string answer = secret_a_edit_box->get_text();
+		status = useController()->loadCurrentUser(admin,answer);
+	}
 	if ( status == DB_BAD_PASSWORD )
 	{
-		login_hint_label->set_text("incorrect password");
+		admin_psswrd_edit_box->set_text("");
+		m_error_count++;
+		if ( m_error_count > 3 )
+		{
+			admin_login_label->hide();
+			admin_psswrd_edit_box->hide();
+			secret_q_edit_box->show();
+   			secret_a_edit_box->show();
+   			secret_question_label->show();
+   			secret_answer_label->show();			
+			login_hint_label->set_text("\t\t\t\tYou must reset your password");
+		}
+		else login_hint_label->set_text("incorrect password");
 		return;
 	}
 	hide();
