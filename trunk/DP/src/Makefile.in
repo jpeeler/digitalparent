@@ -52,10 +52,11 @@ binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_digitalparent_OBJECTS = digitalparent.$(OBJEXT) login_dlg.$(OBJEXT) \
 	login_dlg_glade.$(OBJEXT) media_player_dlg.$(OBJEXT) \
-	media_player_dlg_glade.$(OBJEXT) psswrd_prompt_dlg.$(OBJEXT) \
-	psswrd_prompt_dlg_glade.$(OBJEXT) controller.$(OBJEXT) \
+	media_player_dlg_glade.$(OBJEXT) controller.$(OBJEXT) \
 	data_structure.$(OBJEXT) database.$(OBJEXT) \
-	welcome_dlg.$(OBJEXT) welcome_dlg_glade.$(OBJEXT)
+	welcome_dlg.$(OBJEXT) welcome_dlg_glade.$(OBJEXT) \
+	playlist_dlg.$(OBJEXT) playlist_dlg_glade.$(OBJEXT) \
+	media_chooser_dlg.$(OBJEXT) media_chooser_dlg_glade.$(OBJEXT)
 digitalparent_OBJECTS = $(am_digitalparent_OBJECTS)
 am__DEPENDENCIES_1 =
 digitalparent_DEPENDENCIES = $(am__DEPENDENCIES_1) \
@@ -71,6 +72,14 @@ LTCXXCOMPILE = $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) \
 CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --tag=CXX --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = $(digitalparent_SOURCES)
 DIST_SOURCES = $(digitalparent_SOURCES)
 ETAGS = etags
@@ -228,20 +237,30 @@ digitalparent_SOURCES = \
 	login_dlg_glade.cc\
 	media_player_dlg.cc\
 	media_player_dlg_glade.cc\
-	psswrd_prompt_dlg.cc\
-	psswrd_prompt_dlg_glade.cc\
 	controller.cc\
 	data_structure.cc\
 	database.cc\
 	welcome_dlg.cc\
-	welcome_dlg_glade.cc
+	welcome_dlg_glade.cc\
+	playlist_dlg.cc\
+	playlist_dlg_glade.cc\
+	media_chooser_dlg.cc\
+	media_chooser_dlg_glade.cc\
+	login_dlg.hh\
+	login_dlg_glade.hh\
+	media_chooser_dlg.hh\
+	media_chooser_dlg_glade.hh\
+	media_player_dlg.hh\
+	media_player_dlg_glade.hh\
+	playlist_dlg.hh\
+	playlist_dlg_glade.hh\
+	welcome_dlg.hh\
+	welcome_dlg_glade.hh
 
-digitalparent_LDFLAGS = \
-	 -L/usr/include/vlc
-
+digitalparent_LDFLAGS = 
 digitalparent_LDADD = \
 	$(PACKAGE_LIBS)\
-	 /usr/lib/libtntdb.la
+	 /usr/lib/libtntdb.la -lvlc
 
 all: all-am
 
@@ -320,10 +339,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/digitalparent.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/login_dlg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/login_dlg_glade.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/media_chooser_dlg.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/media_chooser_dlg_glade.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/media_player_dlg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/media_player_dlg_glade.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/psswrd_prompt_dlg.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/psswrd_prompt_dlg_glade.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/playlist_dlg.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/playlist_dlg_glade.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/welcome_dlg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/welcome_dlg_glade.Po@am__quote@
 
