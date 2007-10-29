@@ -27,6 +27,14 @@ int Controller::loadCurrentUser(std::string& username, std::string& password)
 	return(m_database.getUser(user));
 }
 
+int Controller::loadCurrentUserWithAnswer(std::string& username, std::string& answer)
+{
+	User* user = m_data.getUserLoggedIn();
+	user->setUser(username);
+	user->setAnswer(answer);
+	return(m_database.getUserUsingAnswer(user));
+}
+
 int Controller::storeCurrentUser()
 {
 	User* user = m_data.getUserLoggedIn();
@@ -58,6 +66,7 @@ int Controller::deleteProfile()
 	Profile* profile = m_data.getProfile();
 	return (m_database.deleteProfile(profile));
 }
+
 // -------------------------------------
 int Controller::loadDisc(std::string& discName, long discLength, int numChapters)
 {
@@ -74,13 +83,21 @@ int Controller::storeDisc()
 	return (m_database.storeDisc(disc));
 }
 
-// should user be able to remove a disc from database?
-/*
-bool Controller::deleteDisc()
+int Controller::populateUserInfo(std::string& username)
 {
-	return true;
+	User* user = m_data.getUserOther();
+	return (m_database.getUserForEdit(user));
 }
-*/
+
+std::vector <std::string> Controller::getUserList()
+{
+	return (m_database.getUserList());
+}
+
+std::vector <std::string> Controller::getIconList()
+{
+	return (m_database.getIconList());
+}
 // -------------------------------------
 // wrappers of disc
 void Controller::c_setDiscID(int ID)
