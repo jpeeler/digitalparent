@@ -23,7 +23,7 @@ void login_dlg::on_admin_login_button_clicked()
 {  
 	std::string admin = "admin";
 	int status;
-	if ( m_error_count < 4 )
+	if ( m_error_count < 3 )
 	{
 		std::string password = admin_psswrd_edit_box->get_text();	
 		status = useController()->loadCurrentUser(admin,password);
@@ -37,7 +37,7 @@ void login_dlg::on_admin_login_button_clicked()
 	{
 		admin_psswrd_edit_box->set_text("");
 		m_error_count++;
-		if ( m_error_count > 3 )
+		if ( m_error_count > 2 )
 		{
 			admin_login_label->hide();
 			admin_psswrd_edit_box->hide();
@@ -47,7 +47,7 @@ void login_dlg::on_admin_login_button_clicked()
    			secret_answer_label->show();			
 			login_hint_label->set_text("\t\t\t\tYou must reset your password");
 		}
-		else login_hint_label->set_text("incorrect password");
+		else login_hint_label->set_text("Incorrect password");
 		return;
 	}
 	hide();
