@@ -1,10 +1,25 @@
 # List of source files containing translatable strings.
-./src/digitalparent.cc
-./src/media_player_dlg_glade.cc
-./src/media_player_dlg.cc
-./src/psswrd_prompt_dlg_glade.cc
-./src/psswrd_prompt_dlg.cc
-./src/login_dlg_glade.cc
-./src/login_dlg.cc
-./src/welcome_dlg_glade.cc
-./src/welcome_dlg.cc
+
+## Created by Anjuta - will be overwritten
+## If you don't want it to overwrite it,
+## 	Please disable it in the Anjuta project configuration
+
+# Source files
+src/digitalparent.cc
+src/login_dlg.cc
+src/login_dlg_glade.cc
+src/media_player_dlg.cc
+src/media_player_dlg_glade.cc
+src/controller.cc
+src/data_structure.cc
+src/database.cc
+src/welcome_dlg.cc
+src/welcome_dlg_glade.cc
+src/playlist_dlg.cc
+src/playlist_dlg_glade.cc
+src/media_chooser_dlg.cc
+src/media_chooser_dlg_glade.cc
+src/login_dlg.hh
+src/login_dlg_glade.hh
+
+
