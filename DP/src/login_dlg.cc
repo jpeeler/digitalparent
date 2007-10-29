@@ -15,10 +15,6 @@ void login_dlg::on_admin_psswrd_edit_box_editing_done()
 {  
 }
 
-void login_dlg::on_previous_user_button_clicked()
-{  
-}
-
 void login_dlg::on_admin_login_button_clicked()
 {  
 	std::string admin = "admin";
@@ -53,18 +49,45 @@ void login_dlg::on_admin_login_button_clicked()
 	hide();
 }
 
-void login_dlg::on_next_user_button_clicked()
-{  
+void login_dlg::on_previous_user_button_clicked()
+{
+	//shift all user icons right	
 }
 
-void login_dlg::on_user_icon_select_button_2_clicked()
+void login_dlg::on_next_user_button_clicked()
 {  
+	//shift all user icons to left
 }
 
 void login_dlg::on_user_icon_select_button_1_clicked()
 {  
+	//if (status == DB_BAD_PASSWORD)
+	//{
+	icon1_password_edit_box->show();
+	user_icon_select_button_2->hide();
+	user_icon_select_button_3->hide();
+	icon1_password_label->show();
+	//}
+}
+
+void login_dlg::on_user_icon_select_button_2_clicked()
+{  
+	//if (status == DB_BAD_PASSWORD)
+	//{
+	icon2_password_edit_box->show();
+	user_icon_select_button_1->hide();
+	user_icon_select_button_3->hide();
+	icon2_password_label->show();
+	//}
 }
 
 void login_dlg::on_user_icon_select_button_3_clicked()
 {  
+	//if (status == DB_BAD_PASSWORD)
+	//{
+	icon3_password_edit_box->show();
+	user_icon_select_button_1->hide();
+	user_icon_select_button_2->hide();
+	icon3_password_label->show();
+	//}
 }

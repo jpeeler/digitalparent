@@ -11,7 +11,6 @@
 
 #include "login_dlg.hh"
 #include "media_player_dlg.hh"
-#include "psswrd_prompt_dlg.hh"
 #include "welcome_dlg.hh"
 #include "dp_gui.h"
 #include "controller.h"
@@ -44,8 +43,7 @@ int main(int argc, char **argv)
 #if RUN_WINDOW
    Gtk::Main m(&argc, &argv);
    m_mode = START;
-   welcome_dlg *welcome_dlg;
-   psswrd_prompt_dlg *psswrd_prompt_dlg;  
+   welcome_dlg *welcome_dlg;   
    login_dlg *login_dlg;   
    media_player_dlg *media_player_dlg;
 	
@@ -91,16 +89,6 @@ int main(int argc, char **argv)
 			   std::cout << test;
 		   break;
 		   }		   
-		   case PROMPT_PASSWORD:
-		   {
-			   std::string test = "prompt_password";
-			   std::cout << test;
-			   psswrd_prompt_dlg = new class psswrd_prompt_dlg();
-				   m.run(*psswrd_prompt_dlg);
-			   delete psswrd_prompt_dlg;
-		   }
-		   break;
-		
 		   case USER_PLAY:
 		   {
 			   std::string test = "user_play";
