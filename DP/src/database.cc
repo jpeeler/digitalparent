@@ -98,7 +98,7 @@ int Database::getProfile(Profile *profile)
 		   row = *cursor;
 		   skipTime.setSkipStart((int) row[0]);
 		   skipTime.setSkipStop((int) row[1]);
-		   skipTime.setAudioOnly(row[2]);
+		   //skipTime.setAudioOnly(row[2]);
 		
 		   (*profile).addSkipTime(skipTime);
 	   }
@@ -180,7 +180,7 @@ int Database::storeProfile(Profile *profile)
 	for(index = 0; index < skipTimes.size(); index++)
 	{
       try {
-		   query.setInt("v1", (skipTimes[index]).getSkipStart()).setInt("v2", (skipTimes[index]).getSkipStop()).setBool("v3", (skipTimes[index]).getAudioOnly()).setInt("v4", (*profile).getProfileID()).execute();
+		   query.setInt("v1", (skipTimes[index]).getSkipStart()).setInt("v2", (skipTimes[index]).getSkipStop())./*setBool("v3", (skipTimes[index]).getAudioOnly()).*/setInt("v4", (*profile).getProfileID()).execute();
       }
       catch(tntdb::Error &e) {
          return DB_GEN_ERROR;
@@ -219,11 +219,72 @@ int Database::getUser(User *user)
 {
 	tntdb::Statement query;
 	tntdb::Row row;
-	std::string returnIcon;
-   int userStatus; //used in determining  if user exists
+	std::string returnIcon, returnQuestion;
+    int userStatus; //used in determining  if user exists
 	
-	query = conn.prepare("SELECT User_ID, Username, Password, User_Icon, Can_Play_Unknown, Disc_Rating_ID, Last_Movie_ID, Last_Movie_Position FROM Users WHERE Username = :v1 AND Password = :v2");
+	query = conn.prepare("SELECT User_ID, Username, Password, User_Icon, Can_Play_Unknown, Disc_Rating_ID, Last_Movie_ID, Last_Movie_Position, Secret_Question, Secret_Answer FROM Users WHERE Username = :v1 AND Password = :v2");
 	query.setString("v1", (*user).getUser()).setString("v2", (*user).getPasswordHash());
+	
+	try
+	{
+		row = query.selectRow();
+	}
+	catch(tntdb::Error &e)
+	{
+		if(0 == strcmp("not found", e.what())) {
+         
+         //see if username exists
+         userStatus = userExists(user);
+         
+         switch(userStatus) {
+            case DB_UNKNOWN_USER:
+                  //username doesn't exist
+                  return DB_UNKNOWN_USER;
+                  break;
+            case DB_USERNAME_IN_USE:
+                  //user exists, must be bad password
+				  //fill in secret question
+				  if(SUCCESS != fillSecretQuestion(user)) {
+					  //something failed in getting the question
+					  return DB_GEN_ERROR;
+				  }
+				  else {
+                  	return DB_BAD_PASSWORD;
+				  }
+                  break;
+            default:
+                  return DB_GEN_ERROR;
+                  break;
+         }
+      }
+      else
+         return DB_GEN_ERROR;
+	}
+	
+	//user was successfully retrieved, fill object
+	returnIcon = (row[3]).getString();
+	returnQuestion = (row[8]).getString();
+	
+	(*user).setUserID(row[0]);
+	(*user).setUserIcon(returnIcon);
+	(*user).setPlayUnknownDisc(row[4]);
+	(*user).setMaxPlayLevel(row[5]);
+	(*user).setLastMovieID(row[6]);
+	(*user).setLastMoviePos((int) row[7]);
+	(*user).setQuestion(returnQuestion);
+	
+	return SUCCESS;
+	
+}
+
+int Database::getUserUsingAnswer(User *user) {
+	tntdb::Statement query;
+	tntdb::Row row;
+	std::string returnIcon, returnPassword, returnQuestion, returnAnswer;
+    int userStatus; //used in determining  if user exists
+	
+	query = conn.prepare("SELECT User_ID, Username, Password, User_Icon, Can_Play_Unknown, Disc_Rating_ID, Last_Movie_ID, Last_Movie_Position, Secret_Question, Secret_Answer FROM Users WHERE Username = :v1 AND Secret_Answer = :v2");
+	query.setString("v1", (*user).getUser()).setString("v2", (*user).getAnswer());
 	
 	try
 	{
@@ -256,6 +317,7 @@ int Database::getUser(User *user)
 	
 	//user was successfully retrieved, fill object
 	returnIcon = (row[3]).getString();
+	returnQuestion = (row[8]).getString();
 	
 	(*user).setUserID(row[0]);
 	(*user).setUserIcon(returnIcon);
@@ -263,6 +325,65 @@ int Database::getUser(User *user)
 	(*user).setMaxPlayLevel(row[5]);
 	(*user).setLastMovieID(row[6]);
 	(*user).setLastMoviePos((int) row[7]);
+	(*user).setQuestion(returnQuestion);
+	
+	return SUCCESS;
+	
+}
+
+int Database::getUserForEdit(User *user) {
+	tntdb::Statement query;
+	tntdb::Row row;
+	std::string returnIcon, returnPassword, returnQuestion, returnAnswer;
+    int userStatus; //used in determining  if user exists
+	
+	query = conn.prepare("SELECT User_ID, Username, Password, User_Icon, Can_Play_Unknown, Disc_Rating_ID, Last_Movie_ID, Last_Movie_Position, Secret_Question, Secret_Answer FROM Users WHERE Username = :v1");
+	query.setString("v1", (*user).getUser());
+	
+	try
+	{
+		row = query.selectRow();
+	}
+	catch(tntdb::Error &e)
+	{
+		if(0 == strcmp("not found", e.what())) {
+         
+         //see if username exists
+         userStatus = userExists(user);
+         
+         switch(userStatus) {
+            case DB_UNKNOWN_USER:
+                  //username doesn't exist
+                  return DB_UNKNOWN_USER;
+                  break;
+            case DB_USERNAME_IN_USE:
+                  //user exists, must be bad password
+                  return DB_BAD_PASSWORD;
+                  break;
+            default:
+                  return DB_GEN_ERROR;
+                  break;
+         }
+      }
+      else
+         return DB_GEN_ERROR;
+	}
+	
+	//user was successfully retrieved, fill object
+	returnPassword = (row[2]).getString();
+	returnIcon = (row[3]).getString();
+	returnQuestion = (row[8]).getString();
+	returnAnswer = (row[9]).getString();
+	
+	(*user).setUserID(row[0]);
+	(*user).setPasswordHash(returnPassword);
+	(*user).setUserIcon(returnIcon);
+	(*user).setPlayUnknownDisc(row[4]);
+	(*user).setMaxPlayLevel(row[5]);
+	(*user).setLastMovieID(row[6]);
+	(*user).setLastMoviePos((int) row[7]);
+	(*user).setQuestion(returnQuestion);
+	(*user).setAnswer(returnAnswer);
 	
 	return SUCCESS;
 	
@@ -277,11 +398,12 @@ int Database::storeUser(User *user)
 	{
       try {
 		   //this user is already in database, update
-		   query = conn.prepare("UPDATE Users SET Username = :v1, Password = :v2, User_Icon = :v3, Can_Play_Unknown = :v4, Disc_Rating_ID = :v5, Last_Movie_ID = :v6, Last_Movie_Position = :v7 WHERE User_ID = :v8");
-		   query.setInt("v8", (*user).getUserID());
+		   query = conn.prepare("UPDATE Users SET Username = :v1, Password = :v2, User_Icon = :v3, Can_Play_Unknown = :v4, Disc_Rating_ID = :v5, Last_Movie_ID = :v6, Last_Movie_Position = :v7, Secret_Question = :v8, Secret_Answer = :v9 WHERE User_ID = :v10");
+		   query.setInt("v10", (*user).getUserID());
 		   query.setString("v1", (*user).getUser()).setString("v2", (*user).getPasswordHash()).setString("v3", (*user).getUserIcon());
 		   query.setBool("v4", (*user).getPlayUnknownDisc()).setInt("v5", (*user).getMaxPlayLevel()).setInt("v6", (*user).getLastMovieID());
-		   query.setInt("v7", (*user).getLastMoviePos()).execute();
+		   query.setInt("v7", (*user).getLastMoviePos());
+		   query.setString("v8", (*user).getQuestion()).setString("v9", (*user).getAnswer()).execute();
       }
       catch(tntdb::Error &e) {
          //printErrorMessage(DB_GEN_ERROR);
@@ -298,10 +420,11 @@ int Database::storeUser(User *user)
          //username does not exist, insert this user
          try {
             printf("User does not exist, inserting\n");
-		      query = conn.prepare("INSERT INTO Users (Username, Password, User_Icon, Can_Play_Unknown, Disc_Rating_ID, Last_Movie_ID, Last_Movie_Position) VALUES (:v1, :v2, :v3, :v4, :v5, :v6, :v7)");
+		      query = conn.prepare("INSERT INTO Users (Username, Password, User_Icon, Can_Play_Unknown, Disc_Rating_ID, Last_Movie_ID, Last_Movie_Position, Secret_Question, Secret_Answer) VALUES (:v1, :v2, :v3, :v4, :v5, :v6, :v7, :v8, :v9)");
 		      query.setString("v1", (*user).getUser()).setString("v2", (*user).getPasswordHash()).setString("v3", (*user).getUserIcon());
 		      query.setBool("v4", (*user).getPlayUnknownDisc()).setInt("v5", (*user).getMaxPlayLevel()).setInt("v6", (*user).getLastMovieID());
-		      query.setInt("v7", (*user).getLastMoviePos()).execute();
+		      query.setInt("v7", (*user).getLastMoviePos());
+			  query.setString("v8", (*user).getQuestion()).setString("v9", (*user).getAnswer()).execute();
 	
 		      query = conn.prepare("SELECT User_ID FROM Users WHERE Username = :v1 AND Password = :v2");
 		      query.setString("v1", (*user).getUser()).setString("v2", (*user).getPasswordHash());
@@ -567,6 +690,33 @@ int Database::userExists(User *user) {
       return SUCCESS;
 }
 
+int Database::fillSecretQuestion(User *user)
+{
+	tntdb::Statement query;
+	tntdb::Row row;
+	std::string returnQuestion;
+	
+	query = conn.prepare("SELECT User_ID, Username, Secret_Question FROM Users WHERE Username = :v1");
+	query.setString("v1", (*user).getUser());
+	
+	try
+	{
+		row = query.selectRow();
+	}
+	catch(tntdb::Error &e)
+	{
+		//calling function has already ensured user exists
+		//any error must be DB error
+		return DB_GEN_ERROR;
+	}
+	
+	//fill secret question
+	returnQuestion = (std::string) row[2];
+	(*user).setQuestion(returnQuestion);
+	
+	return SUCCESS;
+}
+
 //--------------------------------------------------------------------------//
 
 /**
@@ -624,11 +774,11 @@ void DBTest::do_DBTest()
 
    skip1.setSkipStart(2100);
    skip1.setSkipStop(2203);
-   skip1.setAudioOnly(false);
+   //skip1.setAudioOnly(false);
 
    skip2.setSkipStart(1200);
    skip2.setSkipStop(1303);
-   skip2.setAudioOnly(true);
+   //skip2.setAudioOnly(true);
 
    //note: will need to set userID, discID once User and Disc
    //are inserted and IDs assigned
