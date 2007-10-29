@@ -31,6 +31,8 @@ public:
 	int getUser(User *user);
 	int storeUser(User *user);
 	int deleteUser(User *user);
+	int getUserUsingAnswer(User *user);
+	int getUserForEdit(User *user);
 	std::vector <std::string> getUserList();
 	std::vector <std::string> getIconList();
 
@@ -42,7 +44,8 @@ public:
 private:
 	tntdb::Connection conn;
 
-   int userExists(User *user);
+    int userExists(User *user);
+    int fillSecretQuestion(User *user);
 
 };
 
