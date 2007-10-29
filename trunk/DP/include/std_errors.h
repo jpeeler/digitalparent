@@ -35,5 +35,14 @@ typedef enum {
 	DB_USERNAME_IN_USE
 } ERRORS;
 
-
+typedef enum {
+	G,
+	PG,
+	PG13,
+	NC17,
+	R,
+	X,
+	NR
+} RATINGS;
+	
 #endif /* _STD_ERRORS_H */
