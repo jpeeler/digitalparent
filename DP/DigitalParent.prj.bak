@@ -67,19 +67,11 @@ preferences.indent.closing=0
 module.include.name=include
 module.include.type=
 module.include.files=\
-	media_player_dlg.hh\
-	media_player_dlg_glade.hh\
 	controller.h\
 	data_structure.h\
 	database.h\
-	welcome_dlg.hh\
-	welcome_dlg_glade.hh\
 	dp_gui.h\
-	playlist_dlg_glade.hh\
-	playlist_dlg.hh\
 	std_errors.h\
-	media_chooser_dlg.hh\
-	media_chooser_dlg_glade.hh\
 	images.h
 
 module.source.name=src
@@ -100,7 +92,15 @@ module.source.files=\
 	media_chooser_dlg.cc\
 	media_chooser_dlg_glade.cc\
 	login_dlg.hh\
-	login_dlg_glade.hh
+	login_dlg_glade.hh\
+	media_chooser_dlg.hh\
+	media_chooser_dlg_glade.hh\
+	media_player_dlg.hh\
+	media_player_dlg_glade.hh\
+	playlist_dlg.hh\
+	playlist_dlg_glade.hh\
+	welcome_dlg.hh\
+	welcome_dlg_glade.hh
 
 module.pixmap.name=pixmaps
 module.pixmap.type=
