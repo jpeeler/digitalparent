@@ -243,14 +243,14 @@ void Controller::c_removeSkipChapter(int chapter)
 }
 
 // controller skip method (not wrapper) PROBABLY BETTER?
-void Controller::addSkipTiming(long start, long stop, bool onlyAudio)
+void Controller::addSkipTiming(long start, long stop/*, bool onlyAudio*/)
 {
 	Profile* profile = m_data.getProfile();
 	
 	SkipTime askiptime;
 	askiptime.setSkipStart(start);
 	askiptime.setSkipStop(stop);
-	askiptime.setAudioOnly(onlyAudio);
+	//askiptime.setAudioOnly(onlyAudio);
 	
 	profile->addSkipTime(askiptime);
 }
