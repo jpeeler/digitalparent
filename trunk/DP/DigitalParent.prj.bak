@@ -67,18 +67,20 @@ preferences.indent.closing=0
 module.include.name=include
 module.include.type=
 module.include.files=\
-	login_dlg.hh\
-	login_dlg_glade.hh\
 	media_player_dlg.hh\
 	media_player_dlg_glade.hh\
-	psswrd_prompt_dlg.hh\
-	psswrd_prompt_dlg_glade.hh\
 	controller.h\
 	data_structure.h\
 	database.h\
 	welcome_dlg.hh\
 	welcome_dlg_glade.hh\
-	dp_gui.h
+	dp_gui.h\
+	playlist_dlg_glade.hh\
+	playlist_dlg.hh\
+	std_errors.h\
+	media_chooser_dlg.hh\
+	media_chooser_dlg_glade.hh\
+	images.h
 
 module.source.name=src
 module.source.type=
@@ -88,13 +90,18 @@ module.source.files=\
 	login_dlg_glade.cc\
 	media_player_dlg.cc\
 	media_player_dlg_glade.cc\
-	psswrd_prompt_dlg.cc\
-	psswrd_prompt_dlg_glade.cc\
 	controller.cc\
 	data_structure.cc\
 	database.cc\
 	welcome_dlg.cc\
-	welcome_dlg_glade.cc
+	welcome_dlg_glade.cc\
+	playlist_dlg.cc\
+	playlist_dlg_glade.cc\
+	media_chooser_dlg.cc\
+	media_chooser_dlg_glade.cc\
+	login_dlg.hh\
+	login_dlg_glade.hh\
+	password_prompt_dlg.hh
 
 module.pixmap.name=pixmaps
 module.pixmap.type=
@@ -119,10 +126,11 @@ compiler.options.include.paths=\
 	/Projects/DP/include
 compiler.options.library.paths=
 compiler.options.libraries=\
-	*/usr/lib/libtntdb.la
-compiler.options.libraries.selected=1 
+	*/usr/lib/libtntdb.la\
+	vlc
+compiler.options.libraries.selected=1 1 
 compiler.options.defines=
-compiler.options.defines.selected=1 
+compiler.options.defines.selected=1 1 
 compiler.options.warning.buttons=0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 
 compiler.options.optimize.buttons=1 0 0 0 
 compiler.options.other.buttons=1 0 
