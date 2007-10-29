@@ -24,6 +24,7 @@ class Controller
 {
 public:
 	int loadCurrentUser(std::string& username, std::string& password);
+	int loadCurrentUserWithAnswer(std::string& username, std::string& answer);
 	int storeCurrentUser();
 	int deleteCurrentUser();
 
@@ -33,6 +34,11 @@ public:
 	
 	int loadDisc(std::string& discName, long discLength, int numChapters);
 	int storeDisc();
+
+	int populateUserInfo(std::string& username);
+
+	std::vector <std::string> getUserList();
+	std::vector <std::string> getIconList();
 
 	// controller disc wrapper methods
 	void c_setDiscID(int ID);
