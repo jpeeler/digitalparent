@@ -69,8 +69,6 @@ module.include.type=
 module.include.files=\
 	media_player_dlg.hh\
 	media_player_dlg_glade.hh\
-	psswrd_prompt_dlg.hh\
-	psswrd_prompt_dlg_glade.hh\
 	controller.h\
 	data_structure.h\
 	database.h\
@@ -81,7 +79,8 @@ module.include.files=\
 	playlist_dlg.hh\
 	std_errors.h\
 	media_chooser_dlg.hh\
-	media_chooser_dlg_glade.hh
+	media_chooser_dlg_glade.hh\
+	images.h
 
 module.source.name=src
 module.source.type=
@@ -91,8 +90,6 @@ module.source.files=\
 	login_dlg_glade.cc\
 	media_player_dlg.cc\
 	media_player_dlg_glade.cc\
-	psswrd_prompt_dlg.cc\
-	psswrd_prompt_dlg_glade.cc\
 	controller.cc\
 	data_structure.cc\
 	database.cc\
