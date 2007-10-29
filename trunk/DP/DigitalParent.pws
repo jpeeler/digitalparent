@@ -32,13 +32,6 @@ RunInTerminal=true
 [Project State]
 clean before build=false
 
-[filelist]
-0=/Projects/DP/src/login_dlg.cc
-1=/Projects/DP/src/login_dlg_glade.cc
-2=/Projects/DP/include/std_errors.h
-3=/Projects/DP/src/media_chooser_dlg_glade.cc
-4=/Projects/DP/src/digitalparent.cc
-
 [Project Tree]
 0=0
 1=0:0
