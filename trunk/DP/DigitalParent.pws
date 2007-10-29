@@ -1,10 +1,10 @@
 
 [filenumbers]
-0=7
-1=5
-2=263
-3=54
-4=59
+0=1
+1=1
+2=38
+3=56
+4=77
 5=1
 6=90
 7=13
@@ -33,14 +33,11 @@ RunInTerminal=true
 clean before build=false
 
 [filelist]
-0=/Projects/DP/src/login_dlg.hh
-1=/Projects/DP/include/images.h
-2=/Projects/DP/src/login_dlg_glade.cc
-3=/Projects/DP/src/login_dlg.cc
-4=/Projects/DP/src/welcome_dlg.cc
-5=/Projects/DP/src/controller.cc
-6=/Projects/DP/include/controller.h
-7=/Projects/DP/src/digitalparent.cc
+0=/Projects/DP/src/login_dlg.cc
+1=/Projects/DP/src/login_dlg_glade.cc
+2=/Projects/DP/include/std_errors.h
+3=/Projects/DP/src/media_chooser_dlg_glade.cc
+4=/Projects/DP/src/digitalparent.cc
 
 [Project Tree]
 0=0
