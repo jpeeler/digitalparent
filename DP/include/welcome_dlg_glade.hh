@@ -58,7 +58,7 @@ public:
         class Gtk::Entry * secret_a_edit_box;
         class Gtk::Button * welcome_next_button;
         class Gtk::Fixed * fixed6;
-        class Gtk::VBox * vbox2;		
+        class Gtk::VBox * vbox2;					
 				
 protected:
         
