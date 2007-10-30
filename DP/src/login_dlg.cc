@@ -23,30 +23,36 @@ void login_dlg::on_admin_psswrd_edit_box_editing_done()
 
 void login_dlg::on_admin_login_button_clicked()
 {  
-	std::string admin = "admin";
+	string admin = "admin";
 	int status;
 	if ( m_error_count < 3 )
 	{
-		std::string password = admin_psswrd_edit_box->get_text();	
+		string password = admin_psswrd_edit_box->get_text();		
 		status = useController()->loadCurrentUser(admin,password);
+		if ( status == DB_GEN_ERROR )
+			printf("general_error");
 	}
 	else
 	{
-		std::string answer = secret_a_edit_box->get_text();
-		status = useController()->loadCurrentUser(admin,answer);
+		string answer = secret_a_edit_box->get_text();
+		status = useController()->loadCurrentUserWithAnswer(admin,answer);
 	}
 	if ( status == DB_BAD_PASSWORD )
 	{
+		printf("\nbad password");
 		admin_psswrd_edit_box->set_text("");
 		m_error_count++;
 		if ( m_error_count > 2 )
 		{
+			const User *user_admin = useController()->c_getUserLoggedIn();
+			string question = user_admin->getQuestion();		
 			admin_login_label->hide();
 			admin_psswrd_edit_box->hide();
 			secret_q_edit_box->show();
    			secret_a_edit_box->show();
    			secret_question_label->show();
-   			secret_answer_label->show();			
+   			secret_answer_label->show();
+			secret_q_edit_box->set_text(question);			
 			login_hint_label->set_text("\t\t\t\tYou must reset your password");
 		}
 		else login_hint_label->set_text("Incorrect password");
@@ -169,10 +175,7 @@ void login_dlg::oninit()
 	{
 		setupButton3(icon_list.at(3),user_list.at(3));	
 	}	
-	else user_icon_select_button_3->hide();
-		
-	//admin_psswrd_edit_box->set_flags(Gtk::);
-	
+	else user_icon_select_button_3->hide();	
 }
 
 void login_dlg::setupButton1(const string filename, const string username)

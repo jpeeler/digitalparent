@@ -149,6 +149,18 @@ void Controller::c_setCurrentUserPasswordHash(std::string hash)
 	user->setPasswordHash(hash);
 }
 
+void Controller::c_setCurrentUserSecretQuestion(std::string question)
+{
+	User* user = m_data.getUserLoggedIn();
+	user->setQuestion(question);
+}
+
+void Controller::c_setCurrentUserSecretAnswerHash(std::string answer)
+{
+	User* user = m_data.getUserLoggedIn();
+	user->setAnswer(answer);
+}
+
 void Controller::c_setCurrentUserIcon(std::string file)
 {
 	User* user = m_data.getUserLoggedIn();
