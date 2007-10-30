@@ -14,9 +14,7 @@
 #include <vlc/libvlc.h>
 #  define _MEDIA_PLAYER_DLG_HH
 class media_player_dlg : public media_player_dlg_glade
-{  
-        
-        
+{          
         void on_volume_slider_value_changed();
         void on_previous_button_clicked();
         void on_rewind_button_clicked();

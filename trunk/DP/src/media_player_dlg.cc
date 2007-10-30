@@ -136,6 +136,7 @@ void media_player_dlg::on_volume_slider_value_changed()
 
 void media_player_dlg::on_Logout_clicked()
 {  
+	hide();
 }
 
 void media_player_dlg::on_cut_audio_toggled()
