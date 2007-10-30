@@ -19,7 +19,7 @@
 #include "database.h"
 
 // wrappers to database methods
-int Controller::loadCurrentUser(std::string& username, std::string& password)
+int Controller::loadCurrentUser(std::string username, std::string password)
 {
 	User* user = m_data.getUserLoggedIn();
 	user->setUser(username);
@@ -137,19 +137,19 @@ void Controller::c_setCurrentUserID(int ID)
 	user->setUserID(ID);
 }
 
-void Controller::c_setCurrentUser(std::string& username)
+void Controller::c_setCurrentUser(std::string username)
 {
 	User* user = m_data.getUserLoggedIn();
 	user->setUser(username);
 }
 
-void Controller::c_setCurrentUserPasswordHash(std::string& hash)
+void Controller::c_setCurrentUserPasswordHash(std::string hash)
 {
 	User* user = m_data.getUserLoggedIn();
 	user->setPasswordHash(hash);
 }
 
-void Controller::c_setCurrentUserIcon(std::string& file)
+void Controller::c_setCurrentUserIcon(std::string file)
 {
 	User* user = m_data.getUserLoggedIn();
 	user->setUserIcon(file);
