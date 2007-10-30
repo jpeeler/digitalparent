@@ -71,8 +71,7 @@ module.include.files=\
 	data_structure.h\
 	database.h\
 	dp_gui.h\
-	std_errors.h\
-	images.h
+	std_errors.h
 
 module.source.name=src
 module.source.type=
