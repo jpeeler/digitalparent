@@ -45,8 +45,8 @@ int main(int argc, char **argv)
    m_mode = START;
    welcome_dlg *welcome_dlg;   
    login_dlg *login_dlg;   
-   media_player_dlg *media_player_dlg;
-	
+   media_player_dlg *media_player_dlg;	   
+   	
    while ( m_mode != STOP )
    {
 	   switch ( m_mode )
@@ -82,6 +82,7 @@ int main(int argc, char **argv)
 		   case LOGIN:
 		   {
 			   login_dlg =  new class login_dlg();
+				login_dlg->oninit();				   
 				   m.run(*login_dlg);
 			   delete login_dlg;
 			   m_mode = USER_PLAY;

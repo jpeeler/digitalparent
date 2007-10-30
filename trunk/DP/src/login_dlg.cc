@@ -9,6 +9,10 @@
 #include "login_dlg.hh"
 #include "controller.h"
 #include "std_errors.h"
+#include "images.h"
+#include <gtkmm/image.h>
+#include <gdkmm/pixbufloader.h>
+
 extern Controller* useController();
 
 void login_dlg::on_admin_psswrd_edit_box_editing_done()
@@ -51,7 +55,12 @@ void login_dlg::on_admin_login_button_clicked()
 
 void login_dlg::on_previous_user_button_clicked()
 {
-	//shift all user icons right	
+	admin_icon->hide();
+	const std::string filename = "/Projects/DP/pixmaps/eye.png";
+	admin_login_button->remove();
+	admin_icon = Gtk::manage(new class Gtk::Image(filename));   
+	admin_login_button->add(*admin_icon);
+	admin_icon->show();	
 }
 
 void login_dlg::on_next_user_button_clicked()
@@ -90,4 +99,28 @@ void login_dlg::on_user_icon_select_button_3_clicked()
 	user_icon_select_button_2->hide();
 	icon3_password_label->show();
 	//}
+}
+
+void login_dlg::oninit()
+{
+	user_button1_icon->hide();
+	const std::string filename = "/Projects/DP/pixmaps/eye.png";
+	user_icon_select_button_1->remove();
+	user_button1_icon = Gtk::manage(new class Gtk::Image(filename));   
+	user_icon_select_button_1->add(*user_button1_icon);
+	user_button1_icon->show();	
+	
+	user_button2_icon->hide();
+	const std::string filename2 = "/Projects/DP/pixmaps/tired_smile.png";
+	user_icon_select_button_2->remove();
+	user_button2_icon = Gtk::manage(new class Gtk::Image(filename2));   
+	user_icon_select_button_2->add(*user_button2_icon);
+	user_button2_icon->show();	
+	
+	user_button3_icon->hide();
+	const std::string filename3 = "/Projects/DP/pixmaps/truck.png";
+	user_icon_select_button_3->remove();
+	user_button3_icon = Gtk::manage(new class Gtk::Image(filename3));   
+	user_icon_select_button_3->add(*user_button3_icon);
+	user_button3_icon->show();	
 }
