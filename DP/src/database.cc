@@ -244,7 +244,7 @@ int Database::getUser(User *user)
             case DB_USERNAME_IN_USE:
                   //user exists, must be bad password
 				  //fill in secret question
-				  if(SUCCESS != fillSecretQuestion(user)) {
+				  if(SUCCESS != fillSecretQuestionAndIcon(user)) {
 					  //something failed in getting the question
 					  return DB_GEN_ERROR;
 				  }
@@ -690,13 +690,13 @@ int Database::userExists(User *user) {
       return SUCCESS;
 }
 
-int Database::fillSecretQuestion(User *user)
+int Database::fillSecretQuestionAndIcon(User *user)
 {
 	tntdb::Statement query;
 	tntdb::Row row;
-	std::string returnQuestion;
+	std::string returnQuestion, returnIcon;
 	
-	query = conn.prepare("SELECT User_ID, Username, Secret_Question FROM Users WHERE Username = :v1");
+	query = conn.prepare("SELECT User_ID, Username, Secret_Question, User_Icon FROM Users WHERE Username = :v1");
 	query.setString("v1", (*user).getUser());
 	
 	try
@@ -712,7 +712,9 @@ int Database::fillSecretQuestion(User *user)
 	
 	//fill secret question
 	returnQuestion = (std::string) row[2];
+	returnIcon = (std::string) row[3];
 	(*user).setQuestion(returnQuestion);
+	(*user).setUserIcon(returnIcon);
 	
 	return SUCCESS;
 }
