@@ -51,6 +51,8 @@ public:
 	void c_setCurrentUserID(int ID);
 	void c_setCurrentUser(std::string username);
 	void c_setCurrentUserPasswordHash(std::string hash);
+	void c_setCurrentUserSecretQuestion(std::string question);
+	void c_setCurrentUserSecretAnswerHash(std::string answer);
 	void c_setCurrentUserIcon(std::string file);
 	void c_setCurrentUserCanPlayUnknown(bool flag);
 	void c_setCurrentUserMaxPlayLevel(int level);
