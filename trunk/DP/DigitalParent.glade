@@ -600,6 +600,7 @@
   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="focus_on_map">True</property>
   <property name="urgency_hint">False</property>
+  <signal name="delete_event" handler="on_login_dlg_delete_event" last_modification_time="Tue, 30 Oct 2007 16:11:12 GMT"/>
 
   <child>
     <widget class="GtkVBox" id="vbox1">
@@ -1524,7 +1525,6 @@ safe place and then click next to continue.
   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="focus_on_map">True</property>
   <property name="urgency_hint">False</property>
-  <signal name="selection_changed" handler="on_media_chooser_dlg_selection_changed" last_modification_time="Sat, 27 Oct 2007 20:30:36 GMT"/>
 
   <child internal-child="vbox">
     <widget class="GtkVBox" id="dialog-vbox1">
