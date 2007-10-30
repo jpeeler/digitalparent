@@ -66,7 +66,7 @@ void login_dlg::on_previous_user_button_clicked()
 void login_dlg::on_next_user_button_clicked()
 {  
 	int remaining_icons = user_list.size() - shifted - 4;
-	if ( remaining_icons == 0 ) return;
+	if ( remaining_icons < 1 ) return;
 	shifted+=min(remaining_icons,3);			
 	setupButton1(icon_list.at(1+shifted),user_list.at(1+shifted));
 	setupButton2(icon_list.at(2+shifted),user_list.at(2+shifted));	
@@ -153,6 +153,8 @@ void login_dlg::oninit()
 	{
 		user_icon_select_button_1->hide();
 		user_icon_select_button_3->hide();
+		next_user_button->hide();
+		previous_user_button->hide();
 		setupButton2(string("/Projects/DP/pixmaps/no_user.png"),string("NO USERS EXIST"));		
 		return;
 	}
