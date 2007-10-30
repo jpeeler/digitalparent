@@ -21,7 +21,7 @@
 #define TEST_DATA_STRUCTURE false
 #define TEST_WINDOWS false
 #define SHOW_WELCOME false
-#define TEST_USERS false
+#define TEST_USERS true
 
 // the one and only controller
 Controller m_control;

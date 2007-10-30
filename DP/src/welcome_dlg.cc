@@ -51,7 +51,8 @@ void welcome_dlg::on_welcome_next_button_clicked()
 		return;	
 	}	
 	std::string user = "admin";	
-	useController()->c_setCurrentUser( user );			
+	useController()->c_setCurrentUser( user );	
+	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/pixmaps/tux.png"));	
 	useController()->c_setCurrentUserPasswordHash( password );
 	useController()->c_setCurrentUserSecretQuestion( question );
 	useController()->c_setCurrentUserSecretAnswerHash( answer );

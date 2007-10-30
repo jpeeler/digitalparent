@@ -23,74 +23,86 @@ void login_dlg::on_admin_psswrd_edit_box_editing_done()
 
 void login_dlg::on_admin_login_button_clicked()
 {  
-	string admin = "admin";
-	int status;
-	if ( m_error_count < 3 )
+	switch ( m_login_mode )
 	{
-		string password = admin_psswrd_edit_box->get_text();		
-		status = useController()->loadCurrentUser(admin,password);
-		if ( status == DB_GEN_ERROR )
-			printf("general_error");
-	}
-	else
-	{
-		string answer = secret_a_edit_box->get_text();
-		status = useController()->loadCurrentUserWithAnswer(admin,answer);
-	}
-	if ( status == DB_BAD_PASSWORD )
-	{
-		printf("\nbad password");
-		admin_psswrd_edit_box->set_text("");
-		m_error_count++;
-		if ( m_error_count > 2 )
+		case ADMIN_OK:
 		{
-			const User *user_admin = useController()->c_getUserLoggedIn();
-			string question = user_admin->getQuestion();		
-			admin_login_label->hide();
-			admin_psswrd_edit_box->hide();
-			secret_q_edit_box->show();
-   			secret_a_edit_box->show();
-   			secret_question_label->show();
-   			secret_answer_label->show();
-			secret_q_edit_box->set_text(question);			
-			login_hint_label->set_text("\t\t\t\tYou must reset your password");
+			string password = admin_psswrd_edit_box->get_text();		
+			m_status = useController()->loadCurrentUser(m_admin,password);		
+			switch ( m_status )
+			{
+				case DB_GEN_ERROR:
+					m_ad_error_count++;
+					printf("general_error");//for testing
+					admin_psswrd_edit_box->set_text("");
+					login_hint_label->set_text("Incorrect password");
+				break;
+				case DB_BAD_PASSWORD:
+					m_ad_error_count++;
+					printf("\nbad password");//for testing
+					admin_psswrd_edit_box->set_text("");
+					login_hint_label->set_text("Incorrect password");
+				break;
+				case SUCCESS:
+					hide();
+				break;
+				default:
+					m_ad_error_count++;
+					admin_psswrd_edit_box->set_text("");
+				break;
+			}
+			if ( m_ad_error_count > 2 ) 
+			{
+				m_login_mode = ADMIN_LOST_PASSWORD;
+				tooManyErrors(m_admin);				
+			}
+		break;
 		}
-		else login_hint_label->set_text("Incorrect password");
-		return;
-	}
-	hide();
+		case ADMIN_LOST_PASSWORD:
+		{
+			string answer = secret_a_edit_box->get_text();
+			m_status = useController()->loadCurrentUserWithAnswer(m_admin,answer);		
+			if ( m_status == SUCCESS )
+				hide();
+			else
+			{
+				login_hint_label->set_text("Incorrect answer");
+				secret_a_edit_box->set_text("");
+			}
+		}
+		case B1_LOST_PASSWORD:
+			break;
+		case B2_LOST_PASSWORD:
+			break;
+		case B3_LOST_PASSWORD:
+			break;
+		default:
+			break;
+	}	
 }
 
 void login_dlg::on_previous_user_button_clicked()
 {
-	shifted-=min(shifted,3);
-	setupButton1(icon_list.at(1+shifted),user_list.at(1+shifted));
-	setupButton2(icon_list.at(2+shifted),user_list.at(2+shifted));	
-	setupButton3(icon_list.at(3+shifted),user_list.at(3+shifted));	
+	m_shifted-=min(m_shifted,3);
+	setupButtons();	
 }
 
 void login_dlg::on_next_user_button_clicked()
 {  
-	int remaining_icons = user_list.size() - shifted - 4;
+	int remaining_icons = m_user_list.size() - m_shifted - 4;
 	if ( remaining_icons < 1 ) return;
-	shifted+=min(remaining_icons,3);			
-	setupButton1(icon_list.at(1+shifted),user_list.at(1+shifted));
-	setupButton2(icon_list.at(2+shifted),user_list.at(2+shifted));	
-	setupButton3(icon_list.at(3+shifted),user_list.at(3+shifted));	
+	m_shifted+=min(remaining_icons,3);			
+	setupButtons();		
 }
 
 void login_dlg::on_user_icon_select_button_1_clicked()
 {  
 	string password = icon1_password_edit_box->get_text();
-	int status = 
-		useController()->loadCurrentUser(user_list.at(1+shifted),password);
-	if (status == DB_BAD_PASSWORD)
+	int m_status = 
+		useController()->loadCurrentUser(m_user_list.at(1+m_shifted),password);
+	if (m_status == DB_BAD_PASSWORD)
 	{
-		next_user_button->hide();
-		previous_user_button->hide();
-		user1_label->hide();
-		user2_label->hide();
-		user3_label->hide();
+		userLoginInit();
 		icon1_password_edit_box->show();
 		user_icon_select_button_2->hide();
 		user_icon_select_button_3->hide();
@@ -102,18 +114,14 @@ void login_dlg::on_user_icon_select_button_1_clicked()
 
 void login_dlg::on_user_icon_select_button_2_clicked()
 {  
-	if ( user_list.size() < 2 ) return;
+	if ( m_user_list.size() < 2 ) return;
 	string password = icon2_password_edit_box->get_text();
 	login_hint_label->set_text(password);
 	int status = 
-		useController()->loadCurrentUser(user_list.at(2+shifted),password);
+		useController()->loadCurrentUser(m_user_list.at(2+m_shifted),password);
 	if (status == DB_BAD_PASSWORD)
 	{
-		next_user_button->hide();
-		previous_user_button->hide();
-		user1_label->hide();
-		user2_label->hide();
-		user3_label->hide();
+		userLoginInit();
 		icon2_password_edit_box->show();
 		user_icon_select_button_1->hide();
 		user_icon_select_button_3->hide();
@@ -127,14 +135,10 @@ void login_dlg::on_user_icon_select_button_3_clicked()
 {  
 	string password = icon3_password_edit_box->get_text();
 	int status = 
-		useController()->loadCurrentUser(user_list.at(3+shifted),password);
+		useController()->loadCurrentUser(m_user_list.at(3+m_shifted),password);
 	if (status == DB_BAD_PASSWORD)
 	{
-		next_user_button->hide();
-		previous_user_button->hide();
-		user1_label->hide();
-		user2_label->hide();
-		user3_label->hide();
+		userLoginInit();
 		icon3_password_edit_box->show();
 		user_icon_select_button_1->hide();
 		user_icon_select_button_2->hide();
@@ -146,36 +150,49 @@ void login_dlg::on_user_icon_select_button_3_clicked()
 
 void login_dlg::oninit()
 {
-	shifted = 0;
-	m_error_count = 0;
-	icon_list = useController()->getIconList();
-	user_list = useController()->getUserList();	
+	m_shifted = 0;
+	m_ad_error_count = 0;
+	m_b1_error_count = 0;
+	m_b2_error_count = 0;
+	m_b3_error_count = 0;
+	m_login_mode = ADMIN_OK;	
+	m_icon_list = useController()->getIconList();
+	m_user_list = useController()->getUserList();	
+	m_admin = "admin";	
 	
-	if ( icon_list.size() > 1 )
+	useController()->loadCurrentUser(m_admin,string(""));
+	const User *a_user = useController()->c_getUserLoggedIn();
+	const string filename = a_user->getUserIcon();
+	setupAdminButton( filename, m_admin );
+	
+	if ( m_icon_list.size() > 3 )
+	{
+		setupButtons();	
+		return;
+	}
+	
+	user_icon_select_button_3->hide();
+
+	if ( m_icon_list.size() > 2 )
+	{
+		setupButton2(m_icon_list.at(2),m_user_list.at(2));
+		setupButton1(m_icon_list.at(1),m_user_list.at(1));	
+		return;		
+	}		
+	
+	if ( m_icon_list.size() > 1 )
 	{	
-		setupButton1(icon_list.at(1),user_list.at(1));		
+		setupButton1(m_icon_list.at(1),m_user_list.at(1));	
+		user_icon_select_button_2->hide();		
 	}
 	else 
 	{
 		user_icon_select_button_1->hide();
-		user_icon_select_button_3->hide();
 		next_user_button->hide();
 		previous_user_button->hide();
 		setupButton2(string("/Projects/DP/pixmaps/no_user.png"),string("NO USERS EXIST"));		
 		return;
-	}
-	
-	if ( icon_list.size() > 2 )
-	{
-		setupButton2(icon_list.at(2),user_list.at(2));	
-	}
-	else user_icon_select_button_2->hide();
-	
-	if ( icon_list.size() > 3 )
-	{
-		setupButton3(icon_list.at(3),user_list.at(3));	
 	}	
-	else user_icon_select_button_3->hide();	
 }
 
 void login_dlg::setupButton1(const string filename, const string username)
@@ -209,6 +226,57 @@ void login_dlg::setupButton3(const string filename, const string username)
 	user_button3_icon = Gtk::manage(new class Gtk::Image(filename));   
 	user_icon_select_button_3->add(*user_button3_icon);
 	user_button3_icon->show();	
+}
+
+void login_dlg::setupAdminButton(const string filename, const string username)
+{
+	admin_icon->hide();
+	admin_login_button->remove();		
+	admin_icon = Gtk::manage(new class Gtk::Image(filename));
+	admin_login_button->add(*admin_icon);
+	admin_icon->show();
+}
+
+void login_dlg::userLoginInit()
+{
+	next_user_button->hide();
+	previous_user_button->hide();
+	user1_label->hide();
+	user2_label->hide();
+	user3_label->hide();	
+}	
+
+void login_dlg::setupButtons()
+{
+	setupButton1(m_icon_list.at(1+m_shifted),m_user_list.at(1+m_shifted));
+	setupButton2(m_icon_list.at(2+m_shifted),m_user_list.at(2+m_shifted));	
+	setupButton3(m_icon_list.at(3+m_shifted),m_user_list.at(3+m_shifted));	
+}
+
+void login_dlg::tooManyErrors(string username)
+{
+	hideUserLogin();
+	admin_login_label->hide();
+	admin_psswrd_edit_box->hide();
+	secret_q_edit_box->show();
+   	secret_a_edit_box->show();
+   	secret_question_label->show();
+   	secret_answer_label->show();	
+	useController()->loadCurrentUser(username,string(""));
+	const User *a_user = useController()->c_getUserLoggedIn();
+	const string filename = a_user->getUserIcon();
+	setupAdminButton(filename,username);	
+	string question = a_user->getQuestion();			
+	secret_q_edit_box->set_text(question);			
+	login_hint_label->set_text("\t\t\t\tYou must reset your password");
+}
+
+void login_dlg::hideUserLogin()
+{
+	user_icon_select_button_1->hide();
+	user_icon_select_button_2->hide();
+	user_icon_select_button_3->hide();
+	userLoginInit();
 }
 
 bool login_dlg::on_login_dlg_delete_event(GdkEventAny *ev)
