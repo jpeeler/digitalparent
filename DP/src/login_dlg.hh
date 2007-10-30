@@ -11,6 +11,11 @@
 
 #ifndef _LOGIN_DLG_HH
 #  include "login_dlg_glade.hh"
+#include <string>
+#include <vector>
+
+using namespace std;
+
 #  define _LOGIN_DLG_HH
 class login_dlg : public login_dlg_glade
 {          
@@ -24,6 +29,14 @@ class login_dlg : public login_dlg_glade
 	public:
 		void oninit();
 	private:
+		vector<string> user_list;
+		vector<string> icon_list;
+		int shifted;
+		int m_error_count;
+	
+		void setupButton1(const string filename, const string username);
+		void setupButton2(const string filename, const string username);
+		void setupButton3(const string filename, const string username);
 		
 		
 };

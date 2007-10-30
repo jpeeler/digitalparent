@@ -9,9 +9,11 @@
 #include "login_dlg.hh"
 #include "controller.h"
 #include "std_errors.h"
-#include "images.h"
+#include "math.h"
 #include <gtkmm/image.h>
 #include <gdkmm/pixbufloader.h>
+#include <vector>
+#include <string>
 
 extern Controller* useController();
 
@@ -55,72 +57,151 @@ void login_dlg::on_admin_login_button_clicked()
 
 void login_dlg::on_previous_user_button_clicked()
 {
-	admin_icon->hide();
-	const std::string filename = "/Projects/DP/pixmaps/eye.png";
-	admin_login_button->remove();
-	admin_icon = Gtk::manage(new class Gtk::Image(filename));   
-	admin_login_button->add(*admin_icon);
-	admin_icon->show();	
+	shifted-=min(shifted,3);
+	setupButton1(icon_list.at(1+shifted),user_list.at(1+shifted));
+	setupButton2(icon_list.at(2+shifted),user_list.at(2+shifted));	
+	setupButton3(icon_list.at(3+shifted),user_list.at(3+shifted));	
 }
 
 void login_dlg::on_next_user_button_clicked()
 {  
-	//shift all user icons to left
+	int remaining_icons = user_list.size() - shifted - 4;
+	if ( remaining_icons == 0 ) return;
+	shifted+=min(remaining_icons,3);			
+	setupButton1(icon_list.at(1+shifted),user_list.at(1+shifted));
+	setupButton2(icon_list.at(2+shifted),user_list.at(2+shifted));	
+	setupButton3(icon_list.at(3+shifted),user_list.at(3+shifted));	
 }
 
 void login_dlg::on_user_icon_select_button_1_clicked()
 {  
-	//if (status == DB_BAD_PASSWORD)
-	//{
-	icon1_password_edit_box->show();
-	user_icon_select_button_2->hide();
-	user_icon_select_button_3->hide();
-	icon1_password_label->show();
-	//}
+	string password = icon1_password_edit_box->get_text();
+	int status = 
+		useController()->loadCurrentUser(user_list.at(1+shifted),password);
+	if (status == DB_BAD_PASSWORD)
+	{
+		next_user_button->hide();
+		previous_user_button->hide();
+		user1_label->hide();
+		user2_label->hide();
+		user3_label->hide();
+		icon1_password_edit_box->show();
+		user_icon_select_button_2->hide();
+		user_icon_select_button_3->hide();
+		icon1_password_label->show();
+		icon1_password_edit_box->set_text("");		
+	}
+	else hide();
 }
 
 void login_dlg::on_user_icon_select_button_2_clicked()
 {  
-	//if (status == DB_BAD_PASSWORD)
-	//{
-	icon2_password_edit_box->show();
-	user_icon_select_button_1->hide();
-	user_icon_select_button_3->hide();
-	icon2_password_label->show();
-	//}
+	if ( user_list.size() < 2 ) return;
+	string password = icon2_password_edit_box->get_text();
+	login_hint_label->set_text(password);
+	int status = 
+		useController()->loadCurrentUser(user_list.at(2+shifted),password);
+	if (status == DB_BAD_PASSWORD)
+	{
+		next_user_button->hide();
+		previous_user_button->hide();
+		user1_label->hide();
+		user2_label->hide();
+		user3_label->hide();
+		icon2_password_edit_box->show();
+		user_icon_select_button_1->hide();
+		user_icon_select_button_3->hide();
+		icon2_password_label->show();
+		icon2_password_edit_box->set_text("");		
+	}
+	else hide();
 }
 
 void login_dlg::on_user_icon_select_button_3_clicked()
 {  
-	//if (status == DB_BAD_PASSWORD)
-	//{
-	icon3_password_edit_box->show();
-	user_icon_select_button_1->hide();
-	user_icon_select_button_2->hide();
-	icon3_password_label->show();
-	//}
+	string password = icon3_password_edit_box->get_text();
+	int status = 
+		useController()->loadCurrentUser(user_list.at(3+shifted),password);
+	if (status == DB_BAD_PASSWORD)
+	{
+		next_user_button->hide();
+		previous_user_button->hide();
+		user1_label->hide();
+		user2_label->hide();
+		user3_label->hide();
+		icon3_password_edit_box->show();
+		user_icon_select_button_1->hide();
+		user_icon_select_button_2->hide();
+		icon3_password_label->show();
+		icon3_password_edit_box->set_text("");		
+	}
+	else hide();
 }
 
 void login_dlg::oninit()
 {
+	shifted = 0;
+	m_error_count = 0;
+	icon_list = useController()->getIconList();
+	user_list = useController()->getUserList();	
+	
+	if ( icon_list.size() > 1 )
+	{	
+		setupButton1(icon_list.at(1),user_list.at(1));		
+	}
+	else 
+	{
+		user_icon_select_button_1->hide();
+		user_icon_select_button_3->hide();
+		setupButton2(string("/Projects/DP/pixmaps/no_user.png"),string("NO USERS EXIST"));		
+		return;
+	}
+	
+	if ( icon_list.size() > 2 )
+	{
+		setupButton2(icon_list.at(2),user_list.at(2));	
+	}
+	else user_icon_select_button_2->hide();
+	
+	if ( icon_list.size() > 3 )
+	{
+		setupButton3(icon_list.at(3),user_list.at(3));	
+	}	
+	else user_icon_select_button_3->hide();
+		
+	//admin_psswrd_edit_box->set_flags(Gtk::);
+	
+}
+
+void login_dlg::setupButton1(const string filename, const string username)
+{
 	user_button1_icon->hide();
-	const std::string filename = "/Projects/DP/pixmaps/eye.png";
+	user1_label->show();
+	user1_label->set_text(username);	
 	user_icon_select_button_1->remove();
 	user_button1_icon = Gtk::manage(new class Gtk::Image(filename));   
 	user_icon_select_button_1->add(*user_button1_icon);
 	user_button1_icon->show();	
-	
+}
+
+void login_dlg::setupButton2(const string filename, const string username)
+{
 	user_button2_icon->hide();
-	const std::string filename2 = "/Projects/DP/pixmaps/tired_smile.png";
+	user2_label->show();
+	user2_label->set_text(username);
 	user_icon_select_button_2->remove();
-	user_button2_icon = Gtk::manage(new class Gtk::Image(filename2));   
+	user_button2_icon = Gtk::manage(new class Gtk::Image(filename));   
 	user_icon_select_button_2->add(*user_button2_icon);
 	user_button2_icon->show();	
-	
+}
+
+void login_dlg::setupButton3(const string filename, const string username)
+{
 	user_button3_icon->hide();
-	const std::string filename3 = "/Projects/DP/pixmaps/truck.png";
+	user3_label->show();
+	user3_label->set_text(username);
 	user_icon_select_button_3->remove();
-	user_button3_icon = Gtk::manage(new class Gtk::Image(filename3));   
+	user_button3_icon = Gtk::manage(new class Gtk::Image(filename));   
 	user_icon_select_button_3->add(*user_button3_icon);
 	user_button3_icon->show();	
 }

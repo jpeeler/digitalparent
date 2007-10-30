@@ -21,6 +21,7 @@
 #define TEST_DATA_STRUCTURE false
 #define TEST_WINDOWS false
 #define SHOW_WELCOME false
+#define TEST_USERS false
 
 // the one and only controller
 Controller m_control;
@@ -31,6 +32,7 @@ Controller* useController()
 	return &m_control;
 }
 
+void fillWithUsers();
 
 int main(int argc, char **argv)
 {  
@@ -46,7 +48,11 @@ int main(int argc, char **argv)
    welcome_dlg *welcome_dlg;   
    login_dlg *login_dlg;   
    media_player_dlg *media_player_dlg;	   
-   	
+   
+#if TEST_USERS
+	fillWithUsers();
+#endif	
+	
    while ( m_mode != STOP )
    {
 	   switch ( m_mode )
@@ -125,9 +131,6 @@ int main(int argc, char **argv)
 	 m.run(*welcome_dlg);	
  delete welcome_dlg;
 	
-	// some example controller usage:
-	//const User *auser = useController()->c_getUserLoggedIn();
-	//printf("%s",auser->getPasswordHash().c_str());
 
 //~ login_dlg *login_dlg = new class login_dlg();
 	//~ m.run(*login_dlg);	
@@ -172,10 +175,46 @@ delete media_player_dlg;
 	delete welcome_dlg;
 	
 	const User *auser = useController()->c_getUserLoggedIn();
-	printf("%s",auser->getPasswordHash().c_str());
-
-	
+	printf("%s",auser->getPasswordHash().c_str());	
 #endif
 	
     return 0;
+}
+
+void fillWithUsers()
+{
+	//setup user Jeremy
+	useController()->c_setCurrentUser(std::string("Jeremy"));
+	useController()->c_setCurrentUserPasswordHash(std::string("jeremys_password"));
+	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/pixmaps/tired_smile.png"));
+	useController()->c_setCurrentUserCanPlayUnknown(true);
+	useController()->c_setCurrentUserMaxPlayLevel(NR);
+	useController()->storeCurrentUser();
+	useController()->c_clearUserLoggedIn();
+	//setup user Jeff
+	useController()->c_setCurrentUser(std::string("Jeff"));
+	useController()->c_setCurrentUserPasswordHash(std::string(""));
+	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/pixmaps/butterfly.png"));
+	useController()->c_setCurrentUserCanPlayUnknown(false);
+	useController()->c_setCurrentUserMaxPlayLevel(PG13);
+	useController()->storeCurrentUser();
+	useController()->c_clearUserLoggedIn();
+	
+	//setup user Chris
+	useController()->c_setCurrentUser(std::string("Chris"));
+	useController()->c_setCurrentUserPasswordHash(std::string(""));
+	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/pixmaps/roswell_smile.png"));
+	useController()->c_setCurrentUserCanPlayUnknown(true);
+	useController()->c_setCurrentUserMaxPlayLevel(R);
+	useController()->storeCurrentUser();
+	useController()->c_clearUserLoggedIn();
+	
+	//setup user Paul
+	useController()->c_setCurrentUser(std::string("Paul"));
+	useController()->c_setCurrentUserPasswordHash(std::string("pauls_password"));
+	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/pixmaps/full_matrix.png"));
+	useController()->c_setCurrentUserCanPlayUnknown(false);
+	useController()->c_setCurrentUserMaxPlayLevel(G);
+	useController()->storeCurrentUser();
+	useController()->c_clearUserLoggedIn();
 }
