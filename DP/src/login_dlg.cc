@@ -207,3 +207,8 @@ void login_dlg::setupButton3(const string filename, const string username)
 	user_icon_select_button_3->add(*user_button3_icon);
 	user_button3_icon->show();	
 }
+
+bool login_dlg::on_login_dlg_delete_event(GdkEventAny *ev)
+{  
+	exit(0);
+}

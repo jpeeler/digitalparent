@@ -91,19 +91,15 @@ int main(int argc, char **argv)
 				login_dlg->oninit();				   
 				   m.run(*login_dlg);
 			   delete login_dlg;
-			   m_mode = USER_PLAY;
-			   std::string test = "login";
-			   std::cout << test;
+			   m_mode = USER_PLAY;			  
 		   break;
 		   }		   
 		   case USER_PLAY:
-		   {
-			   std::string test = "user_play";
-			   std::cout << test;
+		   {			   
 			   media_player_dlg = new class media_player_dlg();
 				   m.run(*media_player_dlg);
 			   delete media_player_dlg;
-			   m_mode = STOP;
+			   m_mode = LOGIN;
 		   break;
 		   }			   
 		   case ADMIN_PLAY:
