@@ -21,7 +21,10 @@ class login_dlg : public login_dlg_glade
         void on_user_icon_select_button_2_clicked();
         void on_user_icon_select_button_1_clicked();
         void on_user_icon_select_button_3_clicked();
+	public:
+		void oninit();
 	private:
-	
+		
+		
 };
 #endif

@@ -72,7 +72,7 @@ public:
         class Gtk::Label * icon2_password_label;
         class Gtk::Label * icon3_password_label;
         class Gtk::Fixed * fixed5;
-        class Gtk::VBox * vbox1;
+        class Gtk::VBox * vbox1; 
 		int m_error_count; 
 protected:
         
