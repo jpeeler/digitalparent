@@ -1,26 +1,4 @@
 
-[filenumbers]
-0=1
-1=1
-2=38
-3=56
-4=77
-5=1
-6=90
-7=13
-8=57
-
-[filemarkers]
-0=
-1=
-2=
-3=
-4=
-5=
-6=
-7=
-8=
-
 [File View]
 filter.file.unmatch=*.so *.o *.a *.la
 filter.file.ignore.hidden=0
@@ -31,6 +9,33 @@ RunInTerminal=true
 
 [Project State]
 clean before build=false
+
+[filenumbers]
+0=75
+1=1
+2=60
+3=109
+4=13
+5=17140
+6=86
+
+[filemarkers]
+0=
+1=
+2=
+3=
+4=
+5=
+6=
+
+[filelist]
+0=/Projects/DP/src/login_dlg_glade.hh
+1=/Projects/DP/include/controller.h
+2=/Projects/DP/src/login_dlg_glade.cc
+3=/Projects/DP/src/login_dlg.cc
+4=/Projects/DP/src/login_dlg.hh
+5=/Projects/DP/include/images.h
+6=/Projects/DP/src/digitalparent.cc
 
 [Project Tree]
 0=0
