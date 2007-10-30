@@ -45,7 +45,7 @@ private:
 	tntdb::Connection conn;
 
     int userExists(User *user);
-    int fillSecretQuestion(User *user);
+    int fillSecretQuestionAndIcon(User *user);
 
 };
 
