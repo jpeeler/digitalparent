@@ -11,7 +11,6 @@ digitalparent_include_DATA = \
 	data_structure.h\
 	database.h\
 	dp_gui.h\
-	std_errors.h\
-	images.h
+	std_errors.h
 
 EXTRA_DIST = $(digitalparent_include_DATA)
