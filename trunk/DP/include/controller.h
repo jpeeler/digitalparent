@@ -23,7 +23,7 @@
 class Controller
 {
 public:
-	int loadCurrentUser(std::string& username, std::string& password);
+	int loadCurrentUser(std::string username, std::string password);
 	int loadCurrentUserWithAnswer(std::string& username, std::string& answer);
 	int storeCurrentUser();
 	int deleteCurrentUser();
@@ -49,9 +49,9 @@ public:
 	
 	// controller user wrapper methods
 	void c_setCurrentUserID(int ID);
-	void c_setCurrentUser(std::string& username);
-	void c_setCurrentUserPasswordHash(std::string& hash);
-	void c_setCurrentUserIcon(std::string& file);
+	void c_setCurrentUser(std::string username);
+	void c_setCurrentUserPasswordHash(std::string hash);
+	void c_setCurrentUserIcon(std::string file);
 	void c_setCurrentUserCanPlayUnknown(bool flag);
 	void c_setCurrentUserMaxPlayLevel(int level);
 	void c_setCurrentUserLastMovieID(int ID);
