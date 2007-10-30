@@ -16,6 +16,15 @@
 
 using namespace std;
 
+typedef enum
+{
+	ADMIN_OK,	
+	B1_LOST_PASSWORD,
+	B2_LOST_PASSWORD,
+	B3_LOST_PASSWORD,
+	ADMIN_LOST_PASSWORD
+} LOGIN_MODE;
+
 #  define _LOGIN_DLG_HH
 class login_dlg : public login_dlg_glade
 {          
@@ -30,14 +39,24 @@ class login_dlg : public login_dlg_glade
 	public:
 		void oninit();
 	private:
-		vector<string> user_list;
-		vector<string> icon_list;
-		int shifted;
-		int m_error_count;
-	
+		vector<string> m_user_list;
+		vector<string> m_icon_list;
+		int m_status;
+		int m_shifted;
+		int m_ad_error_count;
+		int m_b1_error_count;
+		int m_b2_error_count;
+		int m_b3_error_count;
+		LOGIN_MODE m_login_mode;		
+		string m_admin;
 		void setupButton1(const string filename, const string username);
 		void setupButton2(const string filename, const string username);
 		void setupButton3(const string filename, const string username);
+		void setupAdminButton(const string filename, const string username);
+		void userLoginInit();
+		void setupButtons();
+		void hideUserLogin();
+		void tooManyErrors(string username);
 		
 		
 };
