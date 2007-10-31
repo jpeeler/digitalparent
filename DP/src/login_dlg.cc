@@ -344,6 +344,7 @@ void login_dlg::tooManyErrors(string username)
 	string question = a_user->getQuestion();			
 	secret_q_edit_box->set_text(question);			
 	login_hint_label->set_text("\t\t\t\tYou must reset your password");
+	login_hint_label->show();
 }
 
 void login_dlg::hideUserLogin()
