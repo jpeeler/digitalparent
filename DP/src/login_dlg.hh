@@ -36,10 +36,15 @@ class login_dlg : public login_dlg_glade
         void on_user_icon_select_button_2_clicked();
         void on_user_icon_select_button_1_clicked();
         void on_user_icon_select_button_3_clicked();
+	void on_back_button_clicked();
 	bool on_login_dlg_delete_event(GdkEventAny *ev);
+	bool on_secret_a_edit_box_key_press_event(GdkEventKey *ev);
+        bool on_icon1_password_edit_box_key_press_event(GdkEventKey *ev);
+        bool on_icon2_password_edit_box_key_press_event(GdkEventKey *ev);
+        bool on_icon3_password_edit_box_key_press_event(GdkEventKey *ev);
 	bool on_admin_psswrd_edit_box_key_press_event(GdkEventKey *ev);
 	public:
-		void oninit();
+		void oninit(int shifted);
 	private:
 		vector<string> m_user_list;
 		vector<string> m_icon_list;
@@ -58,6 +63,7 @@ class login_dlg : public login_dlg_glade
 		void userLoginInit();
 		void setupButtons();
 		void hideUserLogin();
+		void loginWithAnswer(string username);
 		void tooManyErrors(string username);
 		
 		
