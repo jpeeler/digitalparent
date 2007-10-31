@@ -663,6 +663,7 @@
 	      <property name="has_frame">True</property>
 	      <property name="invisible_char">●</property>
 	      <property name="activates_default">False</property>
+	      <signal name="key_press_event" handler="on_secret_a_edit_box_key_press_event" last_modification_time="Wed, 31 Oct 2007 04:11:44 GMT"/>
 	    </widget>
 	    <packing>
 	      <property name="x">592</property>
@@ -732,6 +733,7 @@
 	      <property name="has_frame">True</property>
 	      <property name="invisible_char">●</property>
 	      <property name="activates_default">False</property>
+	      <signal name="key_press_event" handler="on_icon1_password_edit_box_key_press_event" last_modification_time="Wed, 31 Oct 2007 04:12:05 GMT"/>
 	    </widget>
 	    <packing>
 	      <property name="x">104</property>
@@ -751,6 +753,7 @@
 	      <property name="has_frame">True</property>
 	      <property name="invisible_char">●</property>
 	      <property name="activates_default">False</property>
+	      <signal name="key_press_event" handler="on_icon2_password_edit_box_key_press_event" last_modification_time="Wed, 31 Oct 2007 04:12:12 GMT"/>
 	    </widget>
 	    <packing>
 	      <property name="x">288</property>
@@ -770,6 +773,7 @@
 	      <property name="has_frame">True</property>
 	      <property name="invisible_char">●</property>
 	      <property name="activates_default">False</property>
+	      <signal name="key_press_event" handler="on_icon3_password_edit_box_key_press_event" last_modification_time="Wed, 31 Oct 2007 04:12:22 GMT"/>
 	    </widget>
 	    <packing>
 	      <property name="x">472</property>
@@ -1048,32 +1052,6 @@
 	  </child>
 
 	  <child>
-	    <widget class="GtkLabel" id="login_hint_label">
-	      <property name="width_request">288</property>
-	      <property name="height_request">25</property>
-	      <property name="visible">True</property>
-	      <property name="label" translatable="yes"></property>
-	      <property name="use_underline">False</property>
-	      <property name="use_markup">False</property>
-	      <property name="justify">GTK_JUSTIFY_LEFT</property>
-	      <property name="wrap">True</property>
-	      <property name="selectable">False</property>
-	      <property name="xalign">0.5</property>
-	      <property name="yalign">0.5</property>
-	      <property name="xpad">0</property>
-	      <property name="ypad">0</property>
-	      <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
-	      <property name="width_chars">-1</property>
-	      <property name="single_line_mode">False</property>
-	      <property name="angle">0</property>
-	    </widget>
-	    <packing>
-	      <property name="x">472</property>
-	      <property name="y">136</property>
-	    </packing>
-	  </child>
-
-	  <child>
 	    <widget class="GtkButton" id="previous_user_button">
 	      <property name="width_request">96</property>
 	      <property name="height_request">40</property>
@@ -1157,6 +1135,49 @@
 	    <packing>
 	      <property name="x">216</property>
 	      <property name="y">24</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkLabel" id="login_hint_label">
+	      <property name="width_request">344</property>
+	      <property name="height_request">25</property>
+	      <property name="visible">True</property>
+	      <property name="label" translatable="yes"></property>
+	      <property name="use_underline">False</property>
+	      <property name="use_markup">False</property>
+	      <property name="justify">GTK_JUSTIFY_LEFT</property>
+	      <property name="wrap">True</property>
+	      <property name="selectable">False</property>
+	      <property name="xalign">0.5</property>
+	      <property name="yalign">0.5</property>
+	      <property name="xpad">0</property>
+	      <property name="ypad">0</property>
+	      <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
+	      <property name="width_chars">-1</property>
+	      <property name="single_line_mode">False</property>
+	      <property name="angle">0</property>
+	    </widget>
+	    <packing>
+	      <property name="x">416</property>
+	      <property name="y">136</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkButton" id="back_button">
+	      <property name="width_request">96</property>
+	      <property name="height_request">48</property>
+	      <property name="can_focus">True</property>
+	      <property name="label">gtk-go-back</property>
+	      <property name="use_stock">True</property>
+	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="focus_on_click">True</property>
+	      <signal name="clicked" handler="on_back_button_clicked" last_modification_time="Wed, 31 Oct 2007 04:28:29 GMT"/>
+	    </widget>
+	    <packing>
+	      <property name="x">8</property>
+	      <property name="y">200</property>
 	    </packing>
 	  </child>
 	</widget>
