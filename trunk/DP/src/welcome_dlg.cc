@@ -12,23 +12,6 @@
 #include "std_errors.h"
 extern Controller *useController();
 
-
-void welcome_dlg::on_init_password_edit_box_editing_done()
-{  
-}
-
-void welcome_dlg::on_repeat_password_edit_box_editing_done()
-{  
-}
-
-void welcome_dlg::on_secret_q_edit_box_editing_done()
-{  
-}
-
-void welcome_dlg::on_secret_a_edit_box_editing_done()
-{  
-}
-
 void welcome_dlg::on_welcome_next_button_clicked()
 {  
 	std::string password = init_password_edit_box->get_text();
@@ -61,4 +44,23 @@ void welcome_dlg::on_welcome_next_button_clicked()
 	if ( useController()->storeCurrentUser() != SUCCESS )
 		welcome_hint_label->set_text("can't create user");
 	hide();
+}
+
+bool welcome_dlg::on_repeat_password_edit_box_key_press_event(GdkEventKey *ev)
+{  
+	if ( ev->keyval == 65293 ) 
+		on_welcome_next_button_clicked();
+	return(0);
+}
+
+bool welcome_dlg::on_secret_a_edit_box_key_press_event(GdkEventKey *ev)
+{  
+	if ( ev->keyval == 65293 )
+		on_welcome_next_button_clicked();
+	return(0);
+}
+
+bool welcome_dlg::on_secret_q_edit_box_delete_event(GdkEventAny *ev)
+{  
+	exit(0);
 }

@@ -18,7 +18,8 @@ using namespace std;
 
 typedef enum
 {
-	ADMIN_OK,	
+	ADMIN_OK,
+	ADMIN_START,	
 	B1_LOST_PASSWORD,
 	B2_LOST_PASSWORD,
 	B3_LOST_PASSWORD,
@@ -36,6 +37,7 @@ class login_dlg : public login_dlg_glade
         void on_user_icon_select_button_1_clicked();
         void on_user_icon_select_button_3_clicked();
 	bool on_login_dlg_delete_event(GdkEventAny *ev);
+	bool on_admin_psswrd_edit_box_key_press_event(GdkEventKey *ev);
 	public:
 		void oninit();
 	private:
