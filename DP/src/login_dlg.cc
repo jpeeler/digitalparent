@@ -367,6 +367,7 @@ bool login_dlg::on_login_dlg_delete_event(GdkEventAny *ev)
 
 bool login_dlg::on_admin_psswrd_edit_box_key_press_event(GdkEventKey *ev)
 {  
+	//by printf("\n%d",ev->keyval), you can figure out values
 	//65293 is the GDK value for the enter button...
 	if (ev->keyval == 65293) on_admin_login_button_clicked();		
 	return 0;
