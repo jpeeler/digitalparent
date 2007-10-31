@@ -224,6 +224,8 @@ void login_dlg::oninit(int shifted)
 	next_user_button->show();
 	previous_user_button->show();
 	back_button->hide();
+	admin_login_label->hide();
+	admin_psswrd_edit_box->hide();
 	
 	useController()->loadCurrentUser(m_admin,string(""));
 	const User *a_user = useController()->c_getUserLoggedIn();
