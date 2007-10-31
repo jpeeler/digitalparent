@@ -1246,10 +1246,10 @@
 	      <property name="label" translatable="yes">
 Before you can begin using Digital Parent,
 you will need to set up an administrative
-account.  Create a password with 8-16 char-
+account.  Create a password with 5-16 char-
 acters and a secret question and answer 
 with 1-16 characters.  These are case 
-sensitive.  Write down you password in a
+sensitive.  Write down your password in a
 safe place and then click next to continue.
 Tux, the penguin in the picture, will be on
 your login button when you want to login
