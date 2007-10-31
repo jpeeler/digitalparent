@@ -23,8 +23,8 @@ class admin_dlg : public admin_dlg_glade
         void on_x_checkbox_toggled();
         void on_r_checkbox_toggled();
         void on_g_checkbox_toggled();
-	void on_remove_user_button_clicked();
-	bool on_pssword_confirm_edit_box_key_press_event(GdkEventKey *ev);
+		void on_remove_user_button_clicked();
+		bool on_pssword_confirm_edit_box_key_press_event(GdkEventKey *ev);
         bool on_sec_ques_edit_box_key_press_event(GdkEventKey *ev);
         bool on_password_edit_box_key_press_event(GdkEventKey *ev);
         bool on_sec_ans_edit_box_key_press_event(GdkEventKey *ev);        
