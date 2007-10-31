@@ -502,7 +502,21 @@ std::vector <std::string> Database::getUserList()
 	tntdb::Statement query;
 	tntdb::Row row;
 	
-	query = conn.prepare("SELECT Username FROM Users ORDER BY Username DESC");	
+	query = conn.prepare("SELECT Username FROM Users WHERE Username = 'admin'");	
+
+	try
+	{
+	   row = query.selectRow();
+	}
+	catch(tntdb::Error &e)
+	{
+		if(0 != strcmp("not found", e.what())) {
+			returnList.clear();
+			return returnList;
+		}
+	}
+	
+	query = conn.prepare("SELECT Username FROM Users WHERE Username != 'admin' ORDER BY Username DESC");	
 
 	try
 	{
@@ -516,8 +530,8 @@ std::vector <std::string> Database::getUserList()
 	}
 	catch(tntdb::Error &e)
 	{
-		returnList.clear();
-		return returnList;
+		if(0 != strcmp("not found", e.what()))
+			returnList.clear();
 	}
 	
 	
@@ -530,24 +544,37 @@ std::vector <std::string> Database::getIconList()
 	tntdb::Statement query;
 	tntdb::Row row;
 	
-	query = conn.prepare("SELECT User_Icon, Username FROM Users ORDER BY Username DESC");	
+	query = conn.prepare("SELECT User_Icon, Username FROM Users WHERE Username = 'admin'");	
+
+	try
+	{
+	   row = query.selectRow();
+	}
+	catch(tntdb::Error &e)
+	{
+		if(0 != strcmp("not found", e.what())) {
+			returnList.clear();
+			return returnList;
+		}
+	}
+	
+	query = conn.prepare("SELECT User_Icon, Username FROM Users WHERE Username != 'admin' ORDER BY Username DESC");	
 
 	try
 	{
 		for(tntdb::Statement::const_iterator cursor = query.begin();
 			cursor != query.end(); ++cursor)
 	   {
-		   //for each user, add icon to return vector
+		   //for each user, add username to return vector
 		   row = *cursor;
 		   returnList.push_back(row[0]);
 	   }
 	}
 	catch(tntdb::Error &e)
 	{
-		returnList.clear();
-		return returnList;
+		if(0 != strcmp("not found", e.what()))
+			returnList.clear();
 	}
-	
 	
 	return returnList;
 }
@@ -834,11 +861,11 @@ void DBTest::do_DBTest()
    userList = db.getUserList();
    iconList = db.getIconList();
    
-   if(userList.size() != 2 || 0 != (userList[1]).compare(sampleUser.getUser())) {
-	   printf("\nUser List %s\n", (userList[1]).c_str());
+   if(userList.size() != 3 || 0 != (userList[0]).compare("admin")) {
+	   printf("\nUser List %s\n", (userList[0]).c_str());
 	   exit(1);
    }
-   if(iconList.size() != 2 || 0 != (iconList[1]).compare(sampleUser.getUserIcon())) {
+   if(iconList.size() != 3) {
 	   printf("\nIcon List\n");
 	   exit(1);
    }
