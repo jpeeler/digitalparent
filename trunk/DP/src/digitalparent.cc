@@ -12,14 +12,15 @@
 #include "login_dlg.hh"
 #include "media_player_dlg.hh"
 #include "welcome_dlg.hh"
+#include "admin_dlg.hh"
 #include "dp_gui.h"
 #include "controller.h"
 
-#define RUN_WINDOW true
+#define RUN_WINDOW false
 #define TEST_CONTROLLER false
 #define TEST_DATABASE false
 #define TEST_DATA_STRUCTURE false
-#define TEST_WINDOWS false
+#define TEST_WINDOWS true
 #define SHOW_WELCOME false
 #define TEST_USERS false //this tests a heavy load of users
 
@@ -130,9 +131,9 @@ int main(int argc, char **argv)
    
 #if TEST_WINDOWS
    Gtk::Main m(&argc, &argv);
-    welcome_dlg *welcome_dlg = new class welcome_dlg();
-	 m.run(*welcome_dlg);	
- delete welcome_dlg;
+  //  welcome_dlg *welcome_dlg = new class welcome_dlg();
+//	 m.run(*welcome_dlg);	
+ //delete welcome_dlg;
 	
 
 //~ login_dlg *login_dlg = new class login_dlg();
@@ -143,6 +144,9 @@ int main(int argc, char **argv)
 //	m.run(*psswrd_prompt_dlg);
 //delete psswrd_prompt_dlg;	
 
+   admin_dlg *admin_dlg = new class admin_dlg();
+	   m.run(*admin_dlg);
+   delete admin_dlg;	
 
 /*   
 media_player_dlg *media_player_dlg = new class media_player_dlg();
