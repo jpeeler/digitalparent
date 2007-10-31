@@ -30,7 +30,7 @@ class admin_dlg : public admin_dlg_glade
 		void on_logout_button_clicked();
         void on_admin_settings_button_clicked();
         void on_add_user_button_clicked();
-        void on_edit_User_clicked();
+        void on_edit_user_button_clicked();
 		void on_remove_user_button_clicked();
 		void on_screen_movies_button_clicked();
 		bool on_pssword_confirm_edit_box_key_press_event(GdkEventKey *ev);
@@ -39,5 +39,14 @@ class admin_dlg : public admin_dlg_glade
         bool on_sec_ans_edit_box_key_press_event(GdkEventKey *ev);        
         bool on_icon_viewer_key_press_event(GdkEventKey *ev);
 		bool on_username_edit_box_key_press_event(GdkEventKey *ev);
+        void on_hide_password_checkbox_toggled();
+        void on_hide_confirm_checkbox_toggled();
+        void on_hide_sec_ques_checkbox_toggled();
+        void on_hide_sec_ans_checkbox_toggled();
+	public:
+		void oninit_admin();
+		void oninit_user();
+	private:
+		
 };
 #endif

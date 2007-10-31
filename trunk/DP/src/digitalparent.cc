@@ -77,7 +77,8 @@ int main(int argc, char **argv)
 					   useController()->m_mode = LOGIN;
 				   break;				   
 				   default:
-					   // figure this out later
+					   useController()->m_mode = STOP;
+				   		// figure this out later
 				   break;
 			   }		   			   
 		   break;
@@ -106,26 +107,32 @@ int main(int argc, char **argv)
 		   case USER_PANEL:
 		   {			   
 			   admin_dlg = new class admin_dlg();
+				   admin_dlg->oninit_user();
 				   m.run(*admin_dlg);
 			   delete admin_dlg;			   
 		   break;
 		   }			   
 		   case ADMIN_PANEL:
 			   admin_dlg = new class admin_dlg();
+				   admin_dlg->oninit_admin();
 				   m.run(*admin_dlg);
 			   delete admin_dlg;			   
 		   break;
 		   
 		   case USER_PLAY:
-			   // pull up edit user dlg;
-		   useController()->m_mode = LOGIN;
+		   {
+			  media_player_dlg = new class media_player_dlg();
+				  m.run(*media_player_dlg);
+			  delete media_player_dlg;
+			  useController()->m_mode = USER_PANEL;		   	
 		   break;
-		   
+		   }		     
 		   case ADMIN_PLAY:
 		   {
 			   media_player_dlg = new class media_player_dlg();
 				   m.run(*media_player_dlg);
 			   delete media_player_dlg;
+			   useController()->m_mode = ADMIN_PANEL;
 		   break;
 		   }			   
 	   	   default:
@@ -208,6 +215,7 @@ void fillWithUsers()
 	useController()->c_setCurrentUserMaxPlayLevel(NR);
 	useController()->storeCurrentUser();
 	useController()->c_clearUserLoggedIn();
+	
 	//setup user Jeff
 	useController()->c_setCurrentUser(std::string("Jeff"));
 	useController()->c_setCurrentUserPasswordHash(std::string(""));
@@ -251,6 +259,7 @@ void fillWithUsers()
 	useController()->c_setCurrentUserMaxPlayLevel(G);
 	useController()->storeCurrentUser();
 	useController()->c_clearUserLoggedIn();
+	
 	//setup user Marsha
 	useController()->c_setCurrentUser(std::string("Marsha"));
 	useController()->c_setCurrentUserPasswordHash(std::string("boys"));
