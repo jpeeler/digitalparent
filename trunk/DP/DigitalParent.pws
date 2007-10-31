@@ -11,11 +11,11 @@ RunInTerminal=true
 clean before build=false
 
 [filenumbers]
-0=35
-1=154
-2=24
-3=11148
-4=1
+0=46
+1=47
+2=370
+3=23
+4=72
 5=202
 6=86
 
@@ -29,12 +29,11 @@ clean before build=false
 6=
 
 [filelist]
-0=/Projects/DP/src/media_player_dlg.hh
-1=/Projects/DP/src/media_player_dlg.cc
-2=/Projects/DP/src/digitalparent.cc
-3=/Projects/DP/src/login_dlg_glade.cc
+0=/Projects/DP/src/welcome_dlg.cc
+1=/Projects/DP/src/login_dlg.hh
+2=/Projects/DP/src/login_dlg.cc
+3=/Projects/DP/src/digitalparent.cc
 4=/Projects/DP/include/controller.h
-5=/Projects/DP/src/login_dlg.cc
 
 [Project Tree]
 0=0
