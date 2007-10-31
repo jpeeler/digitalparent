@@ -13,14 +13,14 @@
 #include "media_player_dlg.hh"
 #include "welcome_dlg.hh"
 #include "admin_dlg.hh"
-#include "dp_gui.h"
+//#include "dp_gui.h"
 #include "controller.h"
 
-#define RUN_WINDOW false
+#define RUN_WINDOW true
 #define TEST_CONTROLLER false
 #define TEST_DATABASE false
 #define TEST_DATA_STRUCTURE false
-#define TEST_WINDOWS true
+#define TEST_WINDOWS false
 #define SHOW_WELCOME false
 #define TEST_USERS false //this tests a heavy load of users
 
@@ -47,18 +47,20 @@ int main(int argc, char **argv)
 
 #if RUN_WINDOW
    Gtk::Main m(&argc, &argv);
-   m_mode = START;
+   useController()->m_mode = START;
    welcome_dlg *welcome_dlg;   
+   admin_dlg *admin_dlg;
    login_dlg *login_dlg;   
-   media_player_dlg *media_player_dlg;	   
+   media_player_dlg *media_player_dlg;
+	
    
 #if TEST_USERS
 	fillWithUsers();
 #endif	
 	
-   while ( m_mode != STOP )
+   while ( useController()->m_mode != STOP )
    {
-	   switch ( m_mode )
+	   switch ( useController()->m_mode )
 	   {
 		   case START:
 		   {
@@ -69,10 +71,10 @@ int main(int argc, char **argv)
 		   	   switch( status )
 			   {
 				   case DB_UNKNOWN_USER:
-					   m_mode = RUNONCE;
+					   useController()->m_mode = RUNONCE;
 				   break;
 				   case DB_BAD_PASSWORD:
-					   m_mode = LOGIN;
+					   useController()->m_mode = LOGIN;
 				   break;				   
 				   default:
 					   // figure this out later
@@ -90,7 +92,7 @@ int main(int argc, char **argv)
 			   int status = 
 			   		useController()->loadCurrentUser(admin,password);
 			   if ( status == DB_UNKNOWN_USER ) exit(0);
-			   m_mode = LOGIN;
+			   useController()->m_mode = LOGIN;
 		   break;
 		   }			   
 		   case LOGIN:
@@ -98,28 +100,34 @@ int main(int argc, char **argv)
 			   login_dlg =  new class login_dlg();
 				login_dlg->oninit(0);				   
 				   m.run(*login_dlg);
-			   delete login_dlg;
-			   m_mode = USER_PLAY;			  
+			   delete login_dlg;		   							   
 		   break;
 		   }		   
-		   case USER_PLAY:
+		   case USER_PANEL:
 		   {			   
+			   admin_dlg = new class admin_dlg();
+				   m.run(*admin_dlg);
+			   delete admin_dlg;			   
+		   break;
+		   }			   
+		   case ADMIN_PANEL:
+			   admin_dlg = new class admin_dlg();
+				   m.run(*admin_dlg);
+			   delete admin_dlg;			   
+		   break;
+		   
+		   case USER_PLAY:
+			   // pull up edit user dlg;
+		   useController()->m_mode = LOGIN;
+		   break;
+		   
+		   case ADMIN_PLAY:
+		   {
 			   media_player_dlg = new class media_player_dlg();
 				   m.run(*media_player_dlg);
 			   delete media_player_dlg;
-			   m_mode = LOGIN;
 		   break;
 		   }			   
-		   case ADMIN_PLAY:
-			   //run media player in admin mode;
-		   	   m_mode = USER_PLAY;  //temporary
-		   break;
-		   
-		   case EDIT_USER:
-			   // pull up edit user dlg;
-		   m_mode = LOGIN;
-		   break;
-			   
 	   	   default:
 			   //do nothing, should exit while loop
 		   break;

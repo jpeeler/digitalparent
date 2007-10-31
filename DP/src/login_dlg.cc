@@ -7,7 +7,6 @@
 
 #include "config.h"
 #include "login_dlg.hh"
-#include "controller.h"
 #include "std_errors.h"
 #include "math.h"
 #include <gtkmm/image.h>
@@ -52,8 +51,11 @@ void login_dlg::on_admin_login_button_clicked()
 					login_hint_label->set_text("Incorrect password");
 				break;
 				case SUCCESS:
+				{
+					useController()->m_mode = ADMIN_PANEL;
 					hide();
 				break;
+				}
 				default:
 					m_ad_error_count++;
 					admin_psswrd_edit_box->set_text("");
@@ -66,13 +68,13 @@ void login_dlg::on_admin_login_button_clicked()
 			}
 		break;
 		}
-		case ADMIN_LOST_PASSWORD:
-		loginWithAnswer(m_admin);					
+		case ADMIN_LOST_PASSWORD:		
+			loginWithAnswer(m_admin);					
 		break;	
 		case B1_LOST_PASSWORD:
 			loginWithAnswer(m_user_list.at(1+m_shifted));					
 		break;	
-		case B2_LOST_PASSWORD:		
+		case B2_LOST_PASSWORD:						
 			loginWithAnswer(m_user_list.at(2+m_shifted));					
 		break;		
 		case B3_LOST_PASSWORD:
@@ -122,7 +124,11 @@ void login_dlg::on_user_icon_select_button_1_clicked()
 		icon1_password_label->show();
 		icon1_password_edit_box->set_text("");		
 	}
-	else hide();
+	else 
+	{
+		useController()->m_mode = USER_PANEL;
+		hide();
+	}
 }
 
 void login_dlg::on_user_icon_select_button_2_clicked()
@@ -152,7 +158,11 @@ void login_dlg::on_user_icon_select_button_2_clicked()
 		icon2_password_label->show();
 		icon2_password_edit_box->set_text("");		
 	}
-	else hide();
+	else 
+	{
+		useController()->m_mode = USER_PANEL;
+		hide();
+	}
 }
 
 void login_dlg::on_user_icon_select_button_3_clicked()
@@ -180,7 +190,11 @@ void login_dlg::on_user_icon_select_button_3_clicked()
 		icon3_password_label->show();
 		icon3_password_edit_box->set_text("");		
 	}
-	else hide();
+	else 
+	{
+		useController()->m_mode = USER_PANEL;
+		hide();
+	}
 }
 
 void login_dlg::loginWithAnswer(string username)
@@ -188,7 +202,13 @@ void login_dlg::loginWithAnswer(string username)
 	string answer = secret_a_edit_box->get_text();
 	m_status = useController()->loadCurrentUserWithAnswer(username,answer);	
 	if ( m_status == SUCCESS )
+	{
+		if ( username == "admin" )
+			useController()->m_mode = ADMIN_PANEL;
+		else 
+			useController()->m_mode = USER_PANEL;
 		hide();
+	}
 	else
 	{
 		login_hint_label->set_text("Incorrect answer");

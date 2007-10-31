@@ -60,6 +60,36 @@ bool admin_dlg::on_icon_viewer_key_press_event(GdkEventKey *ev)
 {  return 0;
 }
 
+
+bool admin_dlg::on_username_edit_box_key_press_event(GdkEventKey *ev)
+{  return 0;
+}
+
+void admin_dlg::on_logout_button_clicked()
+{  
+	useController()->m_mode = LOGIN;
+	useController()->c_clearUserLoggedIn();
+	hide();
+}
+
+void admin_dlg::on_admin_settings_button_clicked()
+{  
+}
+
+void admin_dlg::on_add_user_button_clicked()
+{  
+}
+
+void admin_dlg::on_edit_User_clicked()
+{  
+}
+
 void admin_dlg::on_remove_user_button_clicked()
 {  
+}
+
+void admin_dlg::on_screen_movies_button_clicked()
+{  
+	useController()->m_mode = ADMIN_PLAY;
+	hide();
 }
