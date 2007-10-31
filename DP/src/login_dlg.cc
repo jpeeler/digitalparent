@@ -19,16 +19,23 @@ extern Controller* useController();
 
 void login_dlg::on_admin_psswrd_edit_box_editing_done()
 {  
+	on_admin_login_button_clicked();	
 }
 
 void login_dlg::on_admin_login_button_clicked()
 {  
 	switch ( m_login_mode )
 	{
+		case ADMIN_START:
+			hideUserLogin();
+			admin_login_label->show();
+			admin_psswrd_edit_box->show();
+			m_login_mode = ADMIN_OK;
+		break;					
 		case ADMIN_OK:
-		{
+		{					
 			string password = admin_psswrd_edit_box->get_text();		
-			m_status = useController()->loadCurrentUser(m_admin,password);		
+			m_status = useController()->loadCurrentUser(m_admin,password);
 			switch ( m_status )
 			{
 				case DB_GEN_ERROR:
@@ -155,7 +162,7 @@ void login_dlg::oninit()
 	m_b1_error_count = 0;
 	m_b2_error_count = 0;
 	m_b3_error_count = 0;
-	m_login_mode = ADMIN_OK;	
+	m_login_mode = ADMIN_START;	
 	m_icon_list = useController()->getIconList();
 	m_user_list = useController()->getUserList();	
 	m_admin = "admin";	
@@ -282,4 +289,11 @@ void login_dlg::hideUserLogin()
 bool login_dlg::on_login_dlg_delete_event(GdkEventAny *ev)
 {  
 	exit(0);
+}
+
+bool login_dlg::on_admin_psswrd_edit_box_key_press_event(GdkEventKey *ev)
+{  
+	if (ev->keyval == 65293) on_admin_login_button_clicked();
+		
+	return 0;
 }
