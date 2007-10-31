@@ -25,6 +25,14 @@ void welcome_dlg::on_welcome_next_button_clicked()
 		return;
 	}
 	
+	if ( password.size() < 5 )
+	{
+		welcome_hint_label->set_text("your password is too short");
+		init_password_edit_box->set_text("");
+		repeat_password_edit_box->set_text("");
+		return;
+	}
+	
 	std::string question = secret_q_edit_box->get_text();
 	std::string answer = secret_a_edit_box->get_text();
 	
