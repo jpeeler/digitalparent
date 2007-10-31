@@ -313,8 +313,123 @@ const std::vector<int>& Profile::getSkipChapters() const
 	return m_skip_chapters;
 }
 
+/* This method adds the SkipTime object to the vector of time ranges to 
+ * skip. Methods returns on receipt of any negative values. Six possibilities
+ * have been devised to compare the skip_time to be inserted versus
+ * what already exists. A case by case basis is described below using
+ * CAPS for new skip_time to be inserted.
+ *
+ * case 1: [START,STOP] [start,stop]
+ *   skip_time occurs in a new separate block
+ * case 2: [START start STOP stop]
+ *   skip_time starts in empty space but stops in an existing range
+ * case 3: [start START STOP stop]
+ *   skip_time is a subset of an existing range, therefore is ignored
+ * case 4: [start START stop STOP]
+ *   skip_time starts in an existing range and can stop anywhere
+ * case 5: [start stop] [START STOP]
+ *   skip_time occurs in a new separate block
+ * case 6: [START start stop STOP]
+ *   skip_time starts before and after an existing skiptime range
+ */
 void Profile::addSkipTime(SkipTime skip_time)
-{ // TODO: special case 4 testing required
+{ 
+	if (skip_time.getSkipStart() < 0 || skip_time.getSkipStop() < 0)
+		return;
+	
+	std::vector<SkipTime>::iterator it=m_skip_times.begin();
+	bool locate_stop = false;
+	
+	// find start of skip_time and handle if possible
+	while(it!=m_skip_times.end())
+	{
+		// case 1 (handled here)
+		if (skip_time.getSkipStop() < it->getSkipStart())
+		{
+			//printf("DEBUG: case 1 for attempted [%ld,%ld]\n",skip_time.getSkipStart(), skip_time.getSkipStop());
+			m_skip_times.push_back(skip_time);
+			break;
+		}
+		// case 5 (handled here), must wait until end to avoid false positive
+		if (skip_time.getSkipStart() > it->getSkipStop() &&
+			it == m_skip_times.end()-1)
+		{
+			//printf("DEBUG: case 5 for attempted [%ld,%ld]\n",skip_time.getSkipStart(), skip_time.getSkipStop());
+			m_skip_times.push_back(skip_time);
+			break;
+		}
+		// case 3 (handled here, nothing to do actually)
+		else if (skip_time.getSkipStart() >= it->getSkipStart() &&
+				skip_time.getSkipStop() <= it->getSkipStop())
+		{
+			//printf("DEBUG: case 3 for attempted [%ld,%ld]\n",skip_time.getSkipStart(), skip_time.getSkipStop());
+			break;
+		}
+		// case 2 or 6 (may require further handling marked by locate_stop)
+		else if (skip_time.getSkipStart() < it->getSkipStart() &&
+				skip_time.getSkipStop() >= it->getSkipStart())
+		{
+			//printf("DEBUG: case 2/6 for attempted [%ld,%ld]\n",skip_time.getSkipStart(), skip_time.getSkipStop());
+			if (skip_time.getSkipStop() <= it->getSkipStop())
+			{
+				skip_time.setSkipStop(it->getSkipStop()); // handled
+				m_skip_times.push_back(skip_time);
+			}
+			else
+				locate_stop = true;			
+			it->clear();
+			break;
+		}
+		// case 4 (requires further handling marked by locate_stop)
+		else if (skip_time.getSkipStart() <= it->getSkipStop() &&
+				skip_time.getSkipStart() >= it->getSkipStart() &&
+				skip_time.getSkipStop() > it->getSkipStop())
+		{
+			//printf("DEBUG: case 4 for attempted [%ld,%ld] against [%ld,%ld]\n",skip_time.getSkipStart(), skip_time.getSkipStop(),it->getSkipStart(),it->getSkipStop());
+			// still don't know how far stop goes, so can't handle completely
+			if (skip_time.getSkipStart() >= it->getSkipStart())
+				skip_time.setSkipStart(it->getSkipStart());
+			locate_stop = true;
+			it->clear();
+			break;			
+		}
+		it++;		
+	}
+	
+	// find SkipTime stop relative to existing skiptimes
+	if (locate_stop)
+	{
+		it++; // previous existing skip time already examined, move to next
+		while(it!=m_skip_times.end())
+		{
+			if (skip_time.getSkipStop() < it->getSkipStart()) // nothing more
+				break;
+			// lands in middle of existing skip time
+			else if (skip_time.getSkipStop() >= it->getSkipStart() &&
+				skip_time.getSkipStop() <= it->getSkipStop())
+				skip_time.setSkipStop(it->getSkipStop());
+			
+			// if not, skip_time must be greater than current existing range
+			it->clear();
+			it++;
+		}
+		m_skip_times.push_back(skip_time);
+	}
+	
+	// insert first skiptime if none already exist, otherwise sort skiptimes
+	if (m_skip_times.size() == 0)
+		m_skip_times.push_back(skip_time);
+	else
+		std::sort(m_skip_times.begin(), m_skip_times.end(), skipSortAscending());
+	
+	// pops off all [0,0] elements (cleared) from head
+	while (m_skip_times.at(0).getSkipStart() == 0 && m_skip_times.at(0).getSkipStop() == 0)
+	{
+		m_skip_times.erase(m_skip_times.begin());
+	}
+	/*
+	
+	// TODO: special case 4 testing required
 	std::vector<SkipTime>::iterator it=m_skip_times.begin();
 	std::vector<SkipTime *> affected_skips;
 
@@ -420,6 +535,7 @@ void Profile::addSkipTime(SkipTime skip_time)
 	{
 		m_skip_times.erase(m_skip_times.begin());
 	}
+	*/
 }
 
 void Profile::removeSkipTime(SkipTime skip_time)
@@ -706,20 +822,21 @@ void DataTest::do_test()
 	SkipTime newSkip2a; // 12-13 (case 2)
 	SkipTime newSkip2b; // 15-26 (case 2)
 	
-	newSkip1.setSkipStart(0); newSkip1.setSkipStop(1);
+	newSkip1.setSkipStart(1); newSkip1.setSkipStop(2);
 	newSkip3.setSkipStart(17); newSkip3.setSkipStop(18);
 	newSkip5.setSkipStart(29); newSkip5.setSkipStop(30);
 	newSkip2a.setSkipStart(12); newSkip2a.setSkipStop(13);
 	newSkip2b.setSkipStart(15); newSkip2b.setSkipStop(26);
+	
 	aprofile.addSkipTime(newSkip1);
-	aprofile.addSkipTime(newSkip1); // tests special case 6
+	aprofile.addSkipTime(newSkip1); // tests special case 3 (exact match)
 	aprofile.addSkipTime(newSkip3);
 	aprofile.addSkipTime(newSkip5);
 	aprofile.addSkipTime(newSkip2a);
 	aprofile.addSkipTime(newSkip2b);
 	
-	// check out the vector
-	printf("%s\n", "SkipTime objects in vector [start,stop]:");
+	// view vector contents
+	puts("SkipTime objects in vector [start,stop]:");
 	for (std::vector<SkipTime>::const_iterator it = aprofile.getSkipTimes().begin();
 		it!=aprofile.getSkipTimes().end(); ++it)
 	{
@@ -727,21 +844,43 @@ void DataTest::do_test()
 	}
 	puts("");
 	
-	SkipTime newSkip6; // test case 6 normal
-	newSkip6.setSkipStart(0); newSkip6.setSkipStop(30);
+	SkipTime newSkip4a; // test case 6 normal
+	newSkip4a.setSkipStart(1); newSkip4a.setSkipStop(30);
+	aprofile.addSkipTime(newSkip4a);
+	
+	puts("\nSkipTime objects in vector [start,stop]:");
+	for (std::vector<SkipTime>::const_iterator it = aprofile.getSkipTimes().begin();
+		it!=aprofile.getSkipTimes().end(); ++it)
+	{
+		printf("[%ld-%ld] ",it->getSkipStart(), it->getSkipStop());
+	}
+	puts("");
+	
+	SkipTime newSkip4b;
+	newSkip4b.setSkipStart(15); newSkip4b.setSkipStop(45);
+	aprofile.addSkipTime(newSkip4b);
+	
+	puts("\nSkipTime objects in vector [start,stop]:");
+	for (std::vector<SkipTime>::const_iterator it = aprofile.getSkipTimes().begin();
+		it!=aprofile.getSkipTimes().end(); ++it)
+	{
+		printf("[%ld-%ld] ",it->getSkipStart(), it->getSkipStop());
+	}
+	puts("");
+	
+	SkipTime newSkip6;
+	newSkip6.setSkipStart(0); newSkip6.setSkipStop(100);
 	aprofile.addSkipTime(newSkip6);
 	
-	SkipTime newSkip4;
-	newSkip4.setSkipStart(15); newSkip4.setSkipStop(45);
-	aprofile.addSkipTime(newSkip4);
+	SkipTime newSkip99; // tests negative skiptime
+	newSkip99.setSkipStart(-1); newSkip99.setSkipStop(45);
+	aprofile.addSkipTime(newSkip99);
 	
-	printf("\n%s\n", "SkipTime objects in vector [start,stop]:");
+	puts("\nSkipTime objects in vector [start,stop]:");
 	for (std::vector<SkipTime>::const_iterator it = aprofile.getSkipTimes().begin();
 		it!=aprofile.getSkipTimes().end(); ++it)
 	{
 		printf("[%ld-%ld] ",it->getSkipStart(), it->getSkipStop());
 	}
 	puts("");
-	
-	aprofile.clear(); // start again
 }
