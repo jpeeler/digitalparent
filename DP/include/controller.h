@@ -19,7 +19,20 @@
  
 #include "data_structure.h"
 #include "database.h"
- 
+
+
+typedef enum {
+	STOP,
+	START,
+	RUNONCE,
+	LOGIN,
+	ADMIN_PANEL,
+	USER_PANEL,
+	USER_PLAY,
+	ADMIN_PLAY
+} MODE;
+
+
 class Controller
 {
 public:
@@ -39,6 +52,8 @@ public:
 
 	std::vector <std::string> getUserList();
 	std::vector <std::string> getIconList();
+
+	MODE m_mode;
 
 	// controller disc wrapper methods
 	void c_setDiscID(int ID);
