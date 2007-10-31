@@ -42,7 +42,11 @@ digitalparent_SOURCES = \
 	playlist_dlg.hh\
 	playlist_dlg_glade.hh\
 	welcome_dlg.hh\
-	welcome_dlg_glade.hh
+	welcome_dlg_glade.hh\
+	admin_dlg.cc\
+	admin_dlg.hh\
+	admin_dlg_glade.cc\
+	admin_dlg_glade.hh
 
 digitalparent_LDFLAGS = 
 
