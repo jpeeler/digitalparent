@@ -21,7 +21,7 @@
 #define TEST_DATA_STRUCTURE false
 #define TEST_WINDOWS false
 #define SHOW_WELCOME false
-#define TEST_USERS true
+#define TEST_USERS true //this tests a heavy load of users
 
 // the one and only controller
 Controller m_control;
@@ -201,7 +201,7 @@ void fillWithUsers()
 	useController()->c_setCurrentUserMaxPlayLevel(X);//someone has to test x, sorry
 	useController()->storeCurrentUser();
 	useController()->c_clearUserLoggedIn();
-	
+	/*
 	//setup user Chris
 	useController()->c_setCurrentUser(std::string("Chris"));
 	useController()->c_setCurrentUserPasswordHash(std::string(""));
@@ -265,5 +265,6 @@ void fillWithUsers()
 	useController()->c_setCurrentUserCanPlayUnknown(true);
 	useController()->c_setCurrentUserMaxPlayLevel(R);
 	useController()->storeCurrentUser();
-	useController()->c_clearUserLoggedIn();
+	useController()->c_clearUserLoggedIn();	
+	*/
 }

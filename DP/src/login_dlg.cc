@@ -322,8 +322,10 @@ void login_dlg::userLoginInit()
 void login_dlg::setupButtons()
 {
 	setupButton1(m_icon_list.at(1+m_shifted),m_user_list.at(1+m_shifted));
-	setupButton2(m_icon_list.at(2+m_shifted),m_user_list.at(2+m_shifted));	
-	setupButton3(m_icon_list.at(3+m_shifted),m_user_list.at(3+m_shifted));	
+	if ( m_user_list.size() > 2 )
+		setupButton2(m_icon_list.at(2+m_shifted),m_user_list.at(2+m_shifted));	
+	if ( m_user_list.size() > 3 )
+		setupButton3(m_icon_list.at(3+m_shifted),m_user_list.at(3+m_shifted));	
 }
 
 void login_dlg::tooManyErrors(string username)
@@ -364,6 +366,7 @@ bool login_dlg::on_login_dlg_delete_event(GdkEventAny *ev)
 
 bool login_dlg::on_admin_psswrd_edit_box_key_press_event(GdkEventKey *ev)
 {  
+	//65293 is the GDK value for the enter button...
 	if (ev->keyval == 65293) on_admin_login_button_clicked();		
 	return 0;
 }

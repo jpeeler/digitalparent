@@ -48,6 +48,7 @@ void welcome_dlg::on_welcome_next_button_clicked()
 
 bool welcome_dlg::on_repeat_password_edit_box_key_press_event(GdkEventKey *ev)
 {  
+	//65293 is the GDK value for the enter button...
 	if ( ev->keyval == 65293 ) 
 		on_welcome_next_button_clicked();
 	return(0);
