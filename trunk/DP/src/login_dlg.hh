@@ -11,6 +11,7 @@
 
 #ifndef _LOGIN_DLG_HH
 #  include "login_dlg_glade.hh"
+#include "controller.h"
 #include <string>
 #include <vector>
 
