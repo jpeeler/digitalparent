@@ -21,7 +21,7 @@
 #define TEST_DATA_STRUCTURE false
 #define TEST_WINDOWS false
 #define SHOW_WELCOME false
-#define TEST_USERS true //this tests a heavy load of users
+#define TEST_USERS false //this tests a heavy load of users
 
 // the one and only controller
 Controller m_control;
@@ -84,6 +84,11 @@ int main(int argc, char **argv)
 			   welcome_dlg = new class welcome_dlg();
 				   m.run(*welcome_dlg);
 			   delete welcome_dlg;
+			   std::string password = "";							   
+			   std::string admin = "admin";
+			   int status = 
+			   		useController()->loadCurrentUser(admin,password);
+			   if ( status == DB_UNKNOWN_USER ) exit(0);
 			   m_mode = LOGIN;
 		   break;
 		   }			   
@@ -201,7 +206,7 @@ void fillWithUsers()
 	useController()->c_setCurrentUserMaxPlayLevel(X);//someone has to test x, sorry
 	useController()->storeCurrentUser();
 	useController()->c_clearUserLoggedIn();
-	/*
+	
 	//setup user Chris
 	useController()->c_setCurrentUser(std::string("Chris"));
 	useController()->c_setCurrentUserPasswordHash(std::string(""));
@@ -266,5 +271,5 @@ void fillWithUsers()
 	useController()->c_setCurrentUserMaxPlayLevel(R);
 	useController()->storeCurrentUser();
 	useController()->c_clearUserLoggedIn();	
-	*/
+	
 }
