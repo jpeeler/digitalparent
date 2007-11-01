@@ -52,5 +52,5 @@ digitalparent_LDFLAGS =
 
 digitalparent_LDADD = \
 	$(PACKAGE_LIBS)\
-	 /usr/lib/libtntdb.la -lvlc
+	 /usr/lib/libtntdb.la -lvlc -lmhash
 
