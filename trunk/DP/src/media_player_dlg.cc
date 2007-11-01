@@ -110,13 +110,13 @@ void media_player_dlg::on_pause_button_clicked()
 void media_player_dlg::on_play_button_clicked()
 {  
 	libvlc_playlist_play (inst, item, 0, NULL, &excp);
-	while(libvlc_playlist_isplaying(inst,&excp)){
-		if(VLC_TimeGet(id)<0){
-			time_slider->set_value(0);
-		} else {
-		time_slider->set_value(VLC_TimeGet(id));
-		}
-	}
+	//~ while(libvlc_playlist_isplaying(inst,&excp)){
+		//~ if(VLC_TimeGet(id)<0){
+			//~ time_slider->set_value(0);
+		//~ } else {
+		//~ time_slider->set_value(VLC_TimeGet(id));
+		//~ }
+	//~ }
 }
 
 void media_player_dlg::on_time_slider_value_changed()
