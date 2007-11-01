@@ -200,7 +200,7 @@ void admin_dlg::oninit_images()
 			m_button_list.push_back(button);
 			hbox5->pack_start(*button, Gtk::PACK_SHRINK, 0);
 			button->signal_clicked().connect(SigC::slot(*this, &admin_dlg_glade::onIconButtonClicked), false);
-			fname = "/Projects/DP/pixmaps/";
+			fname = "/Projects/DP/images/";
 		}
 		else	fname+=c;
 		c = fgetc(fp);
