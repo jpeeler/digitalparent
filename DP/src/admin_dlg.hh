@@ -13,7 +13,11 @@
 #  include "admin_dlg_glade.hh"
 #include "controller.h"
 #include "data_structure.h"
+#include <vector>
+#include <string>
 #  define _ADMIN_DLG_HH
+
+using namespace std;
 
 extern Controller *useController();
 
@@ -44,12 +48,20 @@ class admin_dlg : public admin_dlg_glade
         void on_hide_confirm_checkbox_toggled();
         void on_hide_sec_ques_checkbox_toggled();
         void on_hide_sec_ans_checkbox_toggled();
+		void onIconButtonClicked();
+		vector<class Gtk::Image*> m_image_list;		
+		vector<class Gtk::Button*> m_button_list;		
 	public:
 		void oninit_admin();
 		void oninit_user();
+		void oninit_images();
+		void fill_image_button_scroller();
+		vector<string> m_file_list;
+		
 	private:
 		const User *m_user;
 		const User *m_admin;
+		
 		
 };
 #endif
