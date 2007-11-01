@@ -87,24 +87,45 @@ void admin_dlg::fill_image_button_scroller()
 
 void admin_dlg::on_add_user_button_clicked()
 {  	
+	hseparator2->show();
+	vseparator1->show();
+	frame2->show();
+	icon_select_frame_label->show();
+	frame1->show();
+	
 	user_label->set_text("");
+	user_label->show();
+	user_name_label->show();
 	username_edit_box->set_text("");
 	username_edit_box->set_editable(true);
+	username_edit_box->show();
 	
 	admin_icon->hide();	
 	fixed8->remove(*admin_icon);
 	admin_icon = Gtk::manage(new class Gtk::Image(string("/Projects/DP/pixmaps/no_user.png")));
 	fixed8->put(*admin_icon, 0, 40);		
-	admin_icon->show();
+	admin_icon->show();	
 	
+	password_label->show();	
 	password_edit_box->set_text("");
+	password_edit_box->show();
 	hide_password_checkbox->set_active(true);
+	hide_password_checkbox->show();
+	confirm_password_label->show();	
 	pssword_confirm_edit_box->set_text("");
+	pssword_confirm_edit_box->show();
 	hide_confirm_checkbox->set_active(true);
+	hide_confirm_checkbox->show();
+	sec_ques_label->show();
 	sec_ques_edit_box->set_text("");
+	sec_ques_edit_box->show();
 	hide_sec_ques_checkbox->set_active(true);
+	hide_sec_ques_checkbox->show();
+	sec_ans_label->show();
 	sec_ans_edit_box->set_text("");
+	sec_ans_edit_box->show();
 	hide_sec_ans_checkbox->set_active(true);
+	hide_sec_ans_checkbox->show();
 	
 	g_checkbox->show();
 	g_checkbox->set_active(true);
@@ -120,12 +141,9 @@ void admin_dlg::on_add_user_button_clicked()
 	x_checkbox->set_active(false);
 	nr_checkbox->show();
 	nr_checkbox->set_active(false);
-	screen_movies_button->show();
-	
-	hseparator2->show();
-	vseparator1->show();
-	frame2->show();
-	icon_select_frame_label->show();	
+	screen_movies_button->show();			
+			
+	accept_changes_button->show();
 }
 
 void admin_dlg::on_edit_user_button_clicked()
@@ -245,9 +263,83 @@ void admin_dlg::onIconButtonClicked()
 		{			
 			admin_icon->hide();	
 			fixed8->remove(*admin_icon);
+			m_user_image = m_file_list.at(1);
 			admin_icon = Gtk::manage(new class Gtk::Image(m_file_list.at(i)));
 			fixed8->put(*admin_icon, 0, 40);		
 			admin_icon->show();
 		}
 	}
+}
+
+void admin_dlg::on_accept_changes_button_clicked()
+{
+	string password = password_edit_box->get_text();
+	string confirm = pssword_confirm_edit_box->get_text();		
+	
+	if ( password != confirm || password == "" || confirm == "" )
+	{		
+		password_edit_box->set_text("");
+		pssword_confirm_edit_box->set_text("");
+		error_label->set_text("Please set and confirm a valid password");
+		return;
+	}
+	
+	if ( password.size() < 5 )
+	{		
+		password_edit_box->set_text("");
+		pssword_confirm_edit_box->set_text("");
+		error_label->set_text("Your password must have at least 5 characters");
+		return;
+	}
+	
+	string question = sec_ques_edit_box->get_text();
+	string answer = sec_ans_edit_box->get_text();
+	
+	if ( question == "" || answer == "" ) 
+	{
+		sec_ques_edit_box->set_text("");
+		sec_ans_edit_box->set_text("");
+		error_label->set_text("Question and answer must have at least 1 character");
+		return;	
+	}
+	
+	string user = username_edit_box->get_text();	
+	
+	if ( user == "" )
+	{
+		error_label->set_text("You must enter a name for this user");
+		return;
+	}
+	
+	if ( m_user_image == "" )
+	{
+		error_label->set_text("You must select an image for this user");
+		return;
+	}
+	
+	bool unknown = unknown_checkbox->get_state();
+	int max_level = 0;
+	if ( x_checkbox->get_state() == true )
+		max_level = X;
+	else if ( r_checkbox->get_state() == true )
+		max_level = R;
+	else if ( nc17_checkbox->get_state() == true )
+		max_level = NC17;
+	else if ( pg13_checkbox->get_state() == true )
+		max_level = PG13;
+	else if ( pg_checkbox->get_state() == true )
+		max_level = PG;
+	else if ( g_checkbox->get_state() == true )
+		max_level = G;
+	
+	useController()->c_setCurrentUser( user );	
+	useController()->c_setCurrentUserIcon( m_user_image );	
+	useController()->c_setCurrentUserPasswordHash( password );
+	useController()->c_setCurrentUserSecretQuestion( question );
+	useController()->c_setCurrentUserSecretAnswerHash( answer );
+	useController()->c_setCurrentUserCanPlayUnknown( unknown );
+	useController()->c_setCurrentUserMaxPlayLevel( max_level );
+	if ( useController()->storeCurrentUser() != SUCCESS )
+		error_label->set_text("can't create user");
+	else error_label->set_text("User saved successfully");
 }
