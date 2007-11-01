@@ -332,14 +332,14 @@ void admin_dlg::on_accept_changes_button_clicked()
 	else if ( g_checkbox->get_state() == true )
 		max_level = G;
 	
-	useController()->c_setCurrentUser( user );	
-	useController()->c_setCurrentUserIcon( m_user_image );	
-	useController()->c_setCurrentUserPasswordHash( password );
-	useController()->c_setCurrentUserSecretQuestion( question );
-	useController()->c_setCurrentUserSecretAnswerHash( answer );
-	useController()->c_setCurrentUserCanPlayUnknown( unknown );
-	useController()->c_setCurrentUserMaxPlayLevel( max_level );
-	if ( useController()->storeCurrentUser() != SUCCESS )
-		error_label->set_text("can't create user");
-	else error_label->set_text("User saved successfully");
+	useController()->c_setOtherUser( user );	
+	useController()->c_setOtherUserIcon( m_user_image );	
+	useController()->c_setOtherUserPasswordHash( password );
+	//useController()->c_setOtherUserQuestion( question );
+	//useController()->c_setOtherUserAnswerHash( answer );
+	useController()->c_setOtherUserCanPlayUnknown( unknown );
+	useController()->c_setOtherUserMaxPlayLevel( max_level );
+	//if ( useController()->storeOtherUser() != SUCCESS )
+	//	error_label->set_text("can't create user");
+	//else error_label->set_text("User saved successfully");
 }
