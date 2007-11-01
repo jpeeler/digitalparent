@@ -7,7 +7,6 @@
 
 #include "config.h"
 #include "admin_dlg.hh"
-#include "data_structure.h"
 #include <string>
 #include <gtkmm/image.h>
 #include <gdkmm/pixbufloader.h>
@@ -84,6 +83,49 @@ void admin_dlg::on_admin_settings_button_clicked()
 
 void admin_dlg::on_add_user_button_clicked()
 {  
+	user_label->set_text("");
+	username_edit_box->set_text("");
+	username_edit_box->set_editable(true);
+	
+	admin_icon->hide();	
+	fixed8->remove(*admin_icon);
+	admin_icon = Gtk::manage(new class Gtk::Image(string("/Projects/DP/pixmaps/no_user.png")));
+	fixed8->put(*admin_icon, 0, 40);		
+	admin_icon->show();
+	
+	password_edit_box->set_text("");
+	hide_password_checkbox->set_active(true);
+	pssword_confirm_edit_box->set_text("");
+	hide_confirm_checkbox->set_active(true);
+	sec_ques_edit_box->set_text("");
+	hide_sec_ques_checkbox->set_active(true);
+	sec_ans_edit_box->set_text("");
+	hide_sec_ans_checkbox->set_active(true);
+	
+	g_checkbox->show();
+	g_checkbox->set_active(true);
+	pg_checkbox->show();
+	pg_checkbox->set_active(false);
+	pg13_checkbox->show();
+	pg13_checkbox->set_active(false);
+	nc17_checkbox->show();
+	nc17_checkbox->set_active(false);
+	r_checkbox->show();
+	r_checkbox->set_active(false);
+	x_checkbox->show();
+	x_checkbox->set_active(false);
+	nr_checkbox->show();
+	nr_checkbox->set_active(false);
+	screen_movies_button->show();
+	
+	hseparator2->show();
+	vseparator1->show();
+	frame2->show();
+	icon_select_frame_label->show();
+	icon_scroller->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+	icon_scroller->show();
+	icon_viewer->show();
+	//icon_viewer->load(*admin_icon);	
 }
 
 void admin_dlg::on_edit_user_button_clicked()
@@ -114,8 +156,11 @@ void admin_dlg::oninit_admin()
 	fixed8->put(*admin_icon, 0, 40);		
 	admin_icon->show();
 
-	const User *a_user = useController()->c_getUserLoggedIn();
-	password_edit_box->set_text(a_user->getPasswordHash());	
+	m_admin = useController()->c_getUserLoggedIn();
+	password_edit_box->set_text(m_admin->getPasswordHash());
+	pssword_confirm_edit_box->set_text(m_admin->getPasswordHash());
+	sec_ques_edit_box->set_text(m_admin->getQuestion());
+	sec_ans_edit_box->set_text(m_admin->getAnswer());
 	
 }
 
@@ -129,16 +174,28 @@ void admin_dlg::oninit_user()
 
 void admin_dlg::on_hide_password_checkbox_toggled()
 {  
+	bool visible = password_edit_box->get_visibility();
+	if ( visible ) password_edit_box->set_visibility(false);
+	else password_edit_box->set_visibility(true);
 }
 
 void admin_dlg::on_hide_confirm_checkbox_toggled()
 {  
+	bool visible = pssword_confirm_edit_box->get_visibility();
+	if ( visible ) pssword_confirm_edit_box->set_visibility(false);
+	else pssword_confirm_edit_box->set_visibility(true);
 }
 
 void admin_dlg::on_hide_sec_ques_checkbox_toggled()
 {  
+	bool visible = sec_ques_edit_box->get_visibility();
+	if ( visible ) sec_ques_edit_box->set_visibility(false);
+	else sec_ques_edit_box->set_visibility(true);		
 }
 
 void admin_dlg::on_hide_sec_ans_checkbox_toggled()
 {  
+	bool visible = sec_ans_edit_box->get_visibility();
+	if ( visible ) sec_ans_edit_box->set_visibility(false);
+	else sec_ans_edit_box->set_visibility(true);
 }

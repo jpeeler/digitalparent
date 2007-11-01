@@ -12,6 +12,7 @@
 #ifndef _ADMIN_DLG_HH
 #  include "admin_dlg_glade.hh"
 #include "controller.h"
+#include "data_structure.h"
 #  define _ADMIN_DLG_HH
 
 extern Controller *useController();
@@ -47,6 +48,8 @@ class admin_dlg : public admin_dlg_glade
 		void oninit_admin();
 		void oninit_user();
 	private:
+		const User *m_user;
+		const User *m_admin;
 		
 };
 #endif
