@@ -48,6 +48,7 @@ class admin_dlg : public admin_dlg_glade
         void on_hide_confirm_checkbox_toggled();
         void on_hide_sec_ques_checkbox_toggled();
         void on_hide_sec_ans_checkbox_toggled();
+		void on_accept_changes_button_clicked();
 		void onIconButtonClicked();
 		vector<class Gtk::Image*> m_image_list;		
 		vector<class Gtk::Button*> m_button_list;		
@@ -61,6 +62,7 @@ class admin_dlg : public admin_dlg_glade
 	private:
 		const User *m_user;
 		const User *m_admin;
+		string m_user_image;
 		
 		
 };
