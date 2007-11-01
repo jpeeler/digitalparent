@@ -121,11 +121,7 @@ void admin_dlg::on_add_user_button_clicked()
 	hseparator2->show();
 	vseparator1->show();
 	frame2->show();
-	icon_select_frame_label->show();
-	icon_scroller->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
-	icon_scroller->show();
-	icon_viewer->show();
-	//icon_viewer->load(*admin_icon);	
+	icon_select_frame_label->show();	
 }
 
 void admin_dlg::on_edit_user_button_clicked()
@@ -147,8 +143,8 @@ void admin_dlg::on_screen_movies_button_clicked()
 void admin_dlg::oninit_admin()
 {
 	user_label->set_text("admin");
-	username_edit_box->set_text("admin");
-	username_edit_box->set_editable(false);
+	//username_edit_box->set_text("admin");
+	//username_edit_box->set_editable(false);
 	
 	admin_icon->hide();	
 	fixed8->remove(*admin_icon);
@@ -157,10 +153,10 @@ void admin_dlg::oninit_admin()
 	admin_icon->show();
 
 	m_admin = useController()->c_getUserLoggedIn();
-	password_edit_box->set_text(m_admin->getPasswordHash());
-	pssword_confirm_edit_box->set_text(m_admin->getPasswordHash());
-	sec_ques_edit_box->set_text(m_admin->getQuestion());
-	sec_ans_edit_box->set_text(m_admin->getAnswer());
+	//password_edit_box->set_text(m_admin->getPasswordHash());
+	//pssword_confirm_edit_box->set_text(m_admin->getPasswordHash());
+	//sec_ques_edit_box->set_text(m_admin->getQuestion());
+	//sec_ans_edit_box->set_text(m_admin->getAnswer());
 	
 }
 
