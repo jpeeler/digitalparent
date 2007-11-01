@@ -9,6 +9,7 @@
 #include "media_player_dlg.hh"
 #include "playlist_dlg.hh"
 #include "media_chooser_dlg.hh"
+#include "controller.h"
 
 #include <vlc/libvlc.h>
 
@@ -27,15 +28,26 @@ playlist_dlg *playlist_dlg;
 media_chooser_dlg *media_chooser;
 bool audioSkipped=false;
 Gtk::CheckButton * checkbutton;
+bool isAdmin;
+
+extern Controller* useController();
 
 
 
 void media_player_dlg::init()
 {
+	isAdmin = useController()->c_getUserLoggedIn()->getUser()=="admin";
 	libvlc_exception_init(&excp);
   	inst = libvlc_new (0, test, &excp);
 	id = libvlc_get_vlc_id(inst);
 	volume_slider->set_value(libvlc_audio_get_volume(inst,&excp));
+	item = libvlc_playlist_add_extended (inst, filename, NULL,2,playtimes, &excp);
+	libvlc_playlist_add_extended (inst, filename, NULL,2,playtimes2, &excp);
+	if(!isAdmin){
+		cut_audio->hide();
+		cut_video->hide();
+	}
+
 }
 
 void media_player_dlg::on_open_media_button_clicked()
@@ -48,18 +60,16 @@ void media_player_dlg::on_open_media_button_clicked()
 	init();
 	}
 	
-	item = libvlc_playlist_add_extended (inst, filename, NULL,2,playtimes, &excp);
-	libvlc_playlist_add_extended (inst, filename, NULL,2,playtimes2, &excp);
+	//~ item = libvlc_playlist_add_extended (inst, filename, NULL,2,playtimes, &excp);
+	//~ libvlc_playlist_add_extended (inst, filename, NULL,2,playtimes2, &excp);
 	//media_chooser =  new class mFILE_CHOOSER_ACTION_OPENedia_chooser_dlg("Choose File",Gtk::FILE_CHOOSER_ACTION_OPEN);
-	//media_chooser->show();
-	
+	//media_chooser->show();	
 }
 
 void media_player_dlg::on_stop_button_clicked()
 {
   libvlc_playlist_stop(inst,&excp);
-  usleep (10000000);
-  libvlc_destroy (inst);	
+  
 }
 
 void media_player_dlg::on_previous_button_clicked()
@@ -99,8 +109,14 @@ void media_player_dlg::on_pause_button_clicked()
 
 void media_player_dlg::on_play_button_clicked()
 {  
-	  libvlc_playlist_play (inst, item, 0, NULL, &excp);
-	time_slider->set_value(0);
+	libvlc_playlist_play (inst, item, 0, NULL, &excp);
+	while(libvlc_playlist_isplaying(inst,&excp)){
+		if(VLC_TimeGet(id)<0){
+			time_slider->set_value(0);
+		} else {
+		time_slider->set_value(VLC_TimeGet(id));
+		}
+	}
 }
 
 void media_player_dlg::on_time_slider_value_changed()
@@ -136,6 +152,7 @@ void media_player_dlg::on_volume_slider_value_changed()
 
 void media_player_dlg::on_Logout_clicked()
 {  
+	libvlc_destroy (inst);
 	hide();
 }
 
@@ -149,7 +166,7 @@ void media_player_dlg::on_cut_audio_toggled()
 
 void media_player_dlg::on_mute_button_toggled()
 {  
-	if(!audioSkipped){
+	if(!audioSkipped || !isAdmin){
 		VLC_VolumeMute(id);
 	} 
 }

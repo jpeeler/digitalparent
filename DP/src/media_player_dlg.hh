@@ -30,9 +30,10 @@ class media_player_dlg : public media_player_dlg_glade
         void on_playlist_button_toggled();
         void on_time_slider_value_changed();
         void on_cut_video_toggled();
+	public:
 		void init();
-		
-	libvlc_exception_t excp;
-	libvlc_instance_t *inst;
+	private:	
+		libvlc_exception_t excp;
+		libvlc_instance_t *inst;
 };
 #endif
