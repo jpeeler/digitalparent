@@ -22,7 +22,7 @@
 #define TEST_DATA_STRUCTURE false
 #define TEST_WINDOWS false
 #define SHOW_WELCOME false
-#define TEST_USERS false //this tests a heavy load of users
+#define TEST_USERS true //this tests a heavy load of users
 
 // the one and only controller
 Controller m_control;
@@ -93,7 +93,7 @@ int main(int argc, char **argv)
 			   int status = 
 			   		useController()->loadCurrentUser(admin,password);
 			   if ( status == DB_UNKNOWN_USER ) exit(0);
-			   useController()->m_mode = LOGIN;
+			   useController()->m_mode = ADMIN_PANEL;
 		   break;
 		   }			   
 		   case LOGIN:
