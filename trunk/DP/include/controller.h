@@ -53,6 +53,9 @@ public:
 	std::vector <std::string> getUserList();
 	std::vector <std::string> getIconList();
 
+	// in this case, reference to string input required
+	bool hashString(std::string& input);
+
 	MODE m_mode;
 
 	// controller disc wrapper methods
