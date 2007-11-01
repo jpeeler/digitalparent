@@ -11,12 +11,12 @@ RunInTerminal=true
 clean before build=false
 
 [filenumbers]
-0=100
-1=294
-2=1
-3=2061
-4=242
-5=51
+0=24
+1=1
+2=76
+3=420
+4=346
+5=300
 6=118
 7=72
 
@@ -31,14 +31,12 @@ clean before build=false
 7=
 
 [filelist]
-0=/Projects/DP/src/admin_dlg_glade.hh
-1=/Projects/DP/src/login_dlg.cc
-2=/Projects/DP/include/data_structure.h
-3=/Projects/DP/src/admin_dlg_glade.cc
+0=/Projects/DP/include/dp_gui.h
+1=/Projects/DP/include/std_errors.h
+2=/Projects/DP/src/welcome_dlg.cc
+3=/Projects/DP/src/login_dlg.cc
 4=/Projects/DP/src/admin_dlg.cc
-5=/Projects/DP/src/admin_dlg.hh
-6=/Projects/DP/src/digitalparent.cc
-7=/Projects/DP/include/controller.h
+5=/Projects/DP/src/digitalparent.cc
 
 [Project Tree]
 0=0
