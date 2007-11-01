@@ -115,7 +115,8 @@ int main(int argc, char **argv)
 		   case ADMIN_PANEL:
 			   admin_dlg = new class admin_dlg();
 				   admin_dlg->oninit_admin();
-				   m.run(*admin_dlg);
+			       admin_dlg->oninit_images();
+			   	   m.run(*admin_dlg);
 			   delete admin_dlg;			   
 		   break;
 		   
