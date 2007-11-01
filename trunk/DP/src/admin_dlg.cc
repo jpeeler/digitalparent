@@ -7,9 +7,9 @@
 
 #include "config.h"
 #include "admin_dlg.hh"
-#include <string>
 #include <gtkmm/image.h>
 #include <gdkmm/pixbufloader.h>
+#include <iostream>
 
 using namespace std;
 
@@ -81,8 +81,12 @@ void admin_dlg::on_admin_settings_button_clicked()
 {  
 }
 
+void admin_dlg::fill_image_button_scroller()
+{
+}
+
 void admin_dlg::on_add_user_button_clicked()
-{  
+{  	
 	user_label->set_text("");
 	username_edit_box->set_text("");
 	username_edit_box->set_editable(true);
@@ -126,6 +130,7 @@ void admin_dlg::on_add_user_button_clicked()
 
 void admin_dlg::on_edit_user_button_clicked()
 {  
+	
 }
 
 void admin_dlg::on_remove_user_button_clicked()
@@ -168,6 +173,40 @@ void admin_dlg::oninit_user()
 	admin_settings_button->hide();
 }
 
+void admin_dlg::oninit_images()
+{
+	system("ls /Projects/DP/images > pixmaps.dat");
+	FILE *fp = fopen("pixmaps.dat","r");
+	int c;
+	string fname = "/Projects/DP/pixmaps/";
+	c = fgetc(fp);
+	class Gtk::Button *button;
+	class Gtk::Image *image;
+	while ( c != EOF )
+	{
+		if ( c == '\n' )
+		{
+			m_file_list.push_back(fname);
+			image = Gtk::manage(new class Gtk::Image(fname)); 
+			image->set_alignment(0.5,0.5);
+   			image->set_padding(0,0);   
+			m_image_list.push_back(image);				
+			button = Gtk::manage(new class Gtk::Button());			
+			button->set_flags(Gtk::CAN_FOCUS);
+  			button->set_relief(Gtk::RELIEF_NORMAL);
+			button->add(*image);
+   			image->show();	
+			button->show();
+			m_button_list.push_back(button);
+			hbox5->pack_start(*button, Gtk::PACK_SHRINK, 0);
+			button->signal_clicked().connect(SigC::slot(*this, &admin_dlg_glade::onIconButtonClicked), false);
+			fname = "/Projects/DP/pixmaps/";
+		}
+		else	fname+=c;
+		c = fgetc(fp);
+	}	
+}
+
 void admin_dlg::on_hide_password_checkbox_toggled()
 {  
 	bool visible = password_edit_box->get_visibility();
@@ -194,4 +233,21 @@ void admin_dlg::on_hide_sec_ans_checkbox_toggled()
 	bool visible = sec_ans_edit_box->get_visibility();
 	if ( visible ) sec_ans_edit_box->set_visibility(false);
 	else sec_ans_edit_box->set_visibility(true);
+}
+
+void admin_dlg::onIconButtonClicked()
+{
+	printf("\nbutton clicked");
+	
+	for ( unsigned int i = 0; i < m_button_list.size(); i++ )
+	{
+		if ( get_focus() == m_button_list.at(i) )
+		{			
+			admin_icon->hide();	
+			fixed8->remove(*admin_icon);
+			admin_icon = Gtk::manage(new class Gtk::Image(m_file_list.at(i)));
+			fixed8->put(*admin_icon, 0, 40);		
+			admin_icon->show();
+		}
+	}
 }
