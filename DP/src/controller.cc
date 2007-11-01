@@ -13,10 +13,12 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
- 
-#include "controller.h"
+
+#include <mhash.h>
 #include <string>
+#include "controller.h"
 #include "database.h"
+
 
 // wrappers to database methods
 int Controller::loadCurrentUser(std::string username, std::string password)
@@ -97,6 +99,34 @@ std::vector <std::string> Controller::getUserList()
 std::vector <std::string> Controller::getIconList()
 {
 	return (m_database.getIconList());
+}
+
+
+bool hashString(std::string& input) 
+{
+	uint i;
+	MHASH td;
+	std::string output;
+	unsigned char *hash;
+	char *hashOut;
+
+	td = mhash_init(MHASH_SHA1);
+
+	if(td == MHASH_FAILED)
+		return false;
+	
+	mhash(td, input.c_str(), input.size());
+
+	hash = (unsigned char*) mhash_end(td);
+
+	for (i = 0; i < mhash_get_block_size(MHASH_SHA1); i++) {
+		sprintf(hashOut, "%.2x", hash[i]);
+		output.append(hashOut);
+	}
+
+	input = output;
+
+	return true;
 }
 // -------------------------------------
 // wrappers of disc
