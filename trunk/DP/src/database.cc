@@ -24,6 +24,7 @@
  
  #include "database.h"
  
+ 
  Database::Database()
 {
 	// TODO: put constructor code here
@@ -115,7 +116,7 @@ int Database::getProfile(Profile *profile)
 }
 
 int Database::storeProfile(Profile *profile)
-{
+{	
 
 	tntdb::Statement query;
 	std::vector<SkipTime> skipTimes = (*profile).getSkipTimes();
@@ -160,7 +161,7 @@ int Database::storeProfile(Profile *profile)
       }
 	}
 	
-	//insert skip chapters
+	//insert skip chaptersprintf("\n%s",m_user_image.c_str());	
 	query = conn.prepare("INSERT INTO Skip_Chapters (Chapter_Number, Profile_ID) VALUES (:v1, :v2)");
 	
 	for(index = 0; index < skipChapters.size(); index++)
@@ -549,6 +550,9 @@ std::vector <std::string> Database::getIconList()
 	try
 	{
 	   row = query.selectRow();
+	   returnList.push_back(row[0]);
+		std::string s = row[0];
+		printf("\ngetting %s from database",s.c_str());
 	}
 	catch(tntdb::Error &e)
 	{
@@ -568,8 +572,10 @@ std::vector <std::string> Database::getIconList()
 		   //for each user, add username to return vector
 		   row = *cursor;
 		   returnList.push_back(row[0]);
+		   std::string s = row[0];
+		   printf("\ngetting %s from database",s.c_str());
 	   }
-	}
+	} 
 	catch(tntdb::Error &e)
 	{
 		if(0 != strcmp("not found", e.what()))
