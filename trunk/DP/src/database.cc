@@ -508,6 +508,7 @@ std::vector <std::string> Database::getUserList()
 	try
 	{
 	   row = query.selectRow();
+	   returnList.push_back(row[0]);
 	}
 	catch(tntdb::Error &e)
 	{
