@@ -49,6 +49,10 @@ void media_player_dlg::init()
 		cut_audio->hide();
 		cut_video->hide();
 	}
+	
+	time_slider->set_range(0,VLC_LengthGet(id));
+	
+	Glib::signal_idle().connect(SigC::slot(*this, &media_player_dlg::update_slider));
 
 }
 
@@ -112,20 +116,25 @@ void media_player_dlg::on_pause_button_clicked()
 void media_player_dlg::on_play_button_clicked()
 {  
 	libvlc_playlist_play (inst, item, 0, NULL, &excp);
-	time_slider->set_value(0);
-	//~ while(libvlc_playlist_isplaying(inst,&excp)){
-		//~ if(VLC_TimeGet(id)<0){
-			//~ time_slider->set_value(0);
-		//~ } else {
-		//~ time_slider->set_value(VLC_TimeGet(id));
-		//~ }
-	//~ }
+}
+
+bool media_player_dlg::update_slider()
+{
+	if(libvlc_playlist_isplaying(inst,&excp)){
+		if(VLC_TimeGet(id)<0){
+			time_slider->set_value(0);
+		} else {
+			time_slider->set_value(VLC_TimeGet(id));
+		}
+	}
+	
+	return true;
 }
 
 void media_player_dlg::on_time_slider_value_changed()
 {  
-	time_slider->set_range(0,VLC_LengthGet(id));	
-	VLC_TimeSet(id,(int)time_slider->get_value(),false);
+	//time_slider->set_range(0,VLC_LengthGet(id));	
+	//VLC_TimeSet(id,(int)time_slider->get_value(),false);
 }
 
 void media_player_dlg::on_playlist_button_toggled()
