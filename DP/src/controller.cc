@@ -29,7 +29,7 @@ int Controller::loadCurrentUser(std::string username, std::string password)
 	return(m_database.getUser(user));
 }
 
-int Controller::loadCurrentUserWithAnswer(std::string& username, std::string& answer)
+int Controller::loadCurrentUserWithAnswer(std::string username, std::string answer)
 {
 	User* user = m_data.getUserLoggedIn();
 	user->setUser(username);
@@ -43,9 +43,15 @@ int Controller::storeCurrentUser()
 	return (m_database.storeUser(user));
 }
 
-int Controller::deleteCurrentUser()
+int Controller::storeOtherUser()
 {
-	User* user = m_data.getUserLoggedIn();
+	User* user = m_data.getUserOther();
+	return (m_database.storeUser(user));
+}
+
+int Controller::deleteOtherUser()
+{
+	User* user = m_data.getUserOther();
 	return (m_database.deleteUser(user));
 }
 // -------------------------------------
@@ -70,7 +76,7 @@ int Controller::deleteProfile()
 }
 
 // -------------------------------------
-int Controller::loadDisc(std::string& discName, long discLength, int numChapters)
+int Controller::loadDisc(std::string discName, long discLength, int numChapters)
 {
 	Disc* disc = m_data.getDisc();
 	disc->setDiscName(discName);
@@ -85,7 +91,7 @@ int Controller::storeDisc()
 	return (m_database.storeDisc(disc));
 }
 
-int Controller::populateUserInfo(std::string& username)
+int Controller::populateUserInfo(std::string username)
 {
 	User* user = m_data.getUserOther();
 	return (m_database.getUserForEdit(user));
@@ -136,7 +142,7 @@ void Controller::c_setDiscID(int ID)
 	disc->setDiscID(ID);
 }
 
-void Controller::c_setDiscName(std::string& name)
+void Controller::c_setDiscName(std::string name)
 {
 	Disc* disc = m_data.getDisc();
 	disc->setDiscName(name);
@@ -224,23 +230,35 @@ void Controller::c_setCurrentUserLastMoviePos(long position)
 // controller other user wrapper methods
 void Controller::c_setOtherUserID(int ID)
 {
-	User* user = m_data.getUserLoggedIn();
+	User* user = m_data.getUserOther();
 	user->setUserID(ID);
 }
 
-void Controller::c_setOtherUser(std::string& username)
+void Controller::c_setOtherUser(std::string username)
 {
-	User* user = m_data.getUserLoggedIn();
+	User* user = m_data.getUserOther();
 	user->setUser(username);
 }
 
-void Controller::c_setOtherUserPasswordHash(std::string& hash)
+void Controller::c_setOtherUserPasswordHash(std::string hash)
 {
-	User* user = m_data.getUserLoggedIn();
+	User* user = m_data.getUserOther();
 	user->setPasswordHash(hash);
 }
 
-void Controller::c_setOtherUserIcon(std::string& file)
+void Controller::c_setOtherUserSecretQuestion(std::string question)
+{
+	User* user = m_data.getUserOther();
+	user->setQuestion(question);
+}
+	
+void Controller::c_setOtherUserSecretAnswerHash(std::string answer)
+{
+	User* user = m_data.getUserOther();
+	user->setAnswer(answer);
+}
+
+void Controller::c_setOtherUserIcon(std::string file)
 {
 	User* user = m_data.getUserLoggedIn();
 	user->setUserIcon(file);

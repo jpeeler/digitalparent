@@ -37,18 +37,19 @@ class Controller
 {
 public:
 	int loadCurrentUser(std::string username, std::string password);
-	int loadCurrentUserWithAnswer(std::string& username, std::string& answer);
+	int loadCurrentUserWithAnswer(std::string username, std::string answer);
 	int storeCurrentUser();
-	int deleteCurrentUser();
+	int storeOtherUser();
+	int deleteOtherUser();
 
 	int loadProfile(int userID, int discID);
 	int storeProfile();
 	int deleteProfile();
 	
-	int loadDisc(std::string& discName, long discLength, int numChapters);
+	int loadDisc(std::string discName, long discLength, int numChapters);
 	int storeDisc();
 
-	int populateUserInfo(std::string& username);
+	int populateUserInfo(std::string username);
 
 	std::vector <std::string> getUserList();
 	std::vector <std::string> getIconList();
@@ -60,7 +61,7 @@ public:
 
 	// controller disc wrapper methods
 	void c_setDiscID(int ID);
-	void c_setDiscName(std::string& name);
+	void c_setDiscName(std::string name);
 	void c_setDiscLength(long length);
 	void c_setDiscChapterNum(int chapters);
 	void c_setDiscRating(int rating);
@@ -79,9 +80,11 @@ public:
 	
 	// controller other user wrapper methods
 	void c_setOtherUserID(int ID);
-	void c_setOtherUser(std::string& username);
-	void c_setOtherUserPasswordHash(std::string& hash);
-	void c_setOtherUserIcon(std::string& file);
+	void c_setOtherUser(std::string username);
+	void c_setOtherUserPasswordHash(std::string hash);
+	void c_setOtherUserSecretQuestion(std::string question);
+	void c_setOtherUserSecretAnswerHash(std::string answer);
+	void c_setOtherUserIcon(std::string file);
 	void c_setOtherUserCanPlayUnknown(bool flag);
 	void c_setOtherUserMaxPlayLevel(int level);
 	void c_setOtherUserLastMovieID(int ID);
