@@ -87,6 +87,8 @@ void admin_dlg::fill_image_button_scroller()
 
 void admin_dlg::on_add_user_button_clicked()
 {  	
+	m_user_image = "";
+	
 	hseparator2->show();
 	vseparator1->show();
 	frame2->show();
@@ -196,7 +198,7 @@ void admin_dlg::oninit_images()
 	system("ls /Projects/DP/images > pixmaps.dat");
 	FILE *fp = fopen("pixmaps.dat","r");
 	int c;
-	string fname = "/Projects/DP/pixmaps/";
+	string fname = "/Projects/DP/images/";
 	c = fgetc(fp);
 	class Gtk::Button *button;
 	class Gtk::Image *image;
@@ -255,18 +257,17 @@ void admin_dlg::on_hide_sec_ans_checkbox_toggled()
 
 void admin_dlg::onIconButtonClicked()
 {
-	printf("\nbutton clicked");
-	
 	for ( unsigned int i = 0; i < m_button_list.size(); i++ )
 	{
 		if ( get_focus() == m_button_list.at(i) )
 		{			
 			admin_icon->hide();	
 			fixed8->remove(*admin_icon);
-			m_user_image = m_file_list.at(1);
+			m_user_image = m_file_list.at(i);
 			admin_icon = Gtk::manage(new class Gtk::Image(m_file_list.at(i)));
 			fixed8->put(*admin_icon, 0, 40);		
 			admin_icon->show();
+			return;
 		}
 	}
 }
@@ -303,7 +304,8 @@ void admin_dlg::on_accept_changes_button_clicked()
 		return;	
 	}
 	
-	string user = username_edit_box->get_text();	
+	string user = username_edit_box->get_text();
+	printf("\n\n%s",user.c_str());	
 	
 	if ( user == "" )
 	{
@@ -332,7 +334,7 @@ void admin_dlg::on_accept_changes_button_clicked()
 	else if ( g_checkbox->get_state() == true )
 		max_level = G;
 	
-	useController()->c_setOtherUser( user );	
+	useController()->c_setOtherUser( user );
 	useController()->c_setOtherUserIcon( m_user_image );
 	useController()->c_setOtherUserPasswordHash( password );
 	useController()->c_setOtherUserSecretQuestion( question );
