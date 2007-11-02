@@ -333,13 +333,17 @@ void admin_dlg::on_accept_changes_button_clicked()
 		max_level = G;
 	
 	useController()->c_setOtherUser( user );	
-	useController()->c_setOtherUserIcon( m_user_image );	
+	useController()->c_setOtherUserIcon( m_user_image );
 	useController()->c_setOtherUserPasswordHash( password );
-	//useController()->c_setOtherUserQuestion( question );
-	//useController()->c_setOtherUserAnswerHash( answer );
+	useController()->c_setOtherUserSecretQuestion( question );
+	useController()->c_setOtherUserSecretAnswerHash( answer );
 	useController()->c_setOtherUserCanPlayUnknown( unknown );
 	useController()->c_setOtherUserMaxPlayLevel( max_level );
-	//if ( useController()->storeOtherUser() != SUCCESS )
-	//	error_label->set_text("can't create user");
-	//else error_label->set_text("User saved successfully");
+	if ( useController()->storeOtherUser() != SUCCESS )
+		error_label->set_text("can't create user");
+	else
+	{
+		error_label->set_text("User saved successfully");
+		useController()->c_clearUserOther();
+	}
 }

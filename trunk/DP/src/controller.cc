@@ -266,31 +266,31 @@ void Controller::c_setOtherUserSecretAnswerHash(std::string answer)
 
 void Controller::c_setOtherUserIcon(std::string file)
 {
-	User* user = m_data.getUserLoggedIn();
+	User* user = m_data.getUserOther();
 	user->setUserIcon(file);
 }
 
 void Controller::c_setOtherUserCanPlayUnknown(bool flag)
 {
-	User* user = m_data.getUserLoggedIn();
+	User* user = m_data.getUserOther();
 	user->setPlayUnknownDisc(flag);
 }
 
 void Controller::c_setOtherUserMaxPlayLevel(int level)
 {
-	User* user = m_data.getUserLoggedIn();
+	User* user = m_data.getUserOther();
 	user->setMaxPlayLevel(level);
 }
 
 void Controller::c_setOtherUserLastMovieID(int ID)
 {
-	User* user = m_data.getUserLoggedIn();
+	User* user = m_data.getUserOther();
 	user->setLastMovieID(ID);
 }
 
 void Controller::c_setOtherUserLastMoviePos(long position)
 {
-	User* user = m_data.getUserLoggedIn();
+	User* user = m_data.getUserOther();
 	user->setLastMoviePos(position);
 }
 
