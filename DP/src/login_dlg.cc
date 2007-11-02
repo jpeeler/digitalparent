@@ -225,6 +225,10 @@ void login_dlg::oninit(int shifted)
 	m_b3_error_count = 0;
 	m_login_mode = ADMIN_START;	
 	m_icon_list = useController()->getIconList();
+	for(unsigned int i = 0; i < m_icon_list.size(); i++ )
+	{
+		printf("\n%s",m_icon_list.at(i).c_str());
+	}
 	m_user_list = useController()->getUserList();	
 	m_admin = "admin";	
 	
