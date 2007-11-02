@@ -517,7 +517,7 @@ std::vector <std::string> Database::getUserList()
 		}
 	}
 	
-	query = conn.prepare("SELECT Username FROM Users WHERE Username != 'admin' ORDER BY Username DESC");	
+	query = conn.prepare("SELECT Username FROM Users WHERE Username NOT LIKE 'admin' ORDER BY Username ASC");	
 
 	try
 	{
@@ -562,7 +562,7 @@ std::vector <std::string> Database::getIconList()
 		}
 	}
 	
-	query = conn.prepare("SELECT User_Icon, Username FROM Users WHERE Username != 'admin' ORDER BY Username DESC");	
+	query = conn.prepare("SELECT User_Icon, Username FROM Users WHERE Username NOT LIKE 'admin' ORDER BY Username ASC");	
 
 	try
 	{
@@ -572,7 +572,7 @@ std::vector <std::string> Database::getIconList()
 		   //for each user, add username to return vector
 		   row = *cursor;
 		   returnList.push_back(row[0]);
-		   std::string s = row[0];
+		   std::string s = row[1];
 		   printf("\ngetting %s from database",s.c_str());
 	   }
 	} 
