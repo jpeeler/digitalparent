@@ -62,6 +62,7 @@ public:
 	// controller disc wrapper methods
 	void c_setDiscID(int ID);
 	void c_setDiscName(std::string name);
+	void c_setDiscSerial(std::string serial);
 	void c_setDiscLength(long length);
 	void c_setDiscChapterNum(int chapters);
 	void c_setDiscRating(int rating);

@@ -148,6 +148,12 @@ void Controller::c_setDiscName(std::string name)
 	disc->setDiscName(name);
 }
 
+void Controller::c_setDiscSerial(std::string serial)
+{
+	Disc* disc = m_data.getDisc();
+	disc->setDiscSerial(serial);
+}
+
 void Controller::c_setDiscLength(long length)
 {
 	Disc* disc = m_data.getDisc();
