@@ -17,7 +17,7 @@
 //~ libvlc_exception_t excp;
 //~ libvlc_instance_t *inst;
 //char *filename = "/home/ctemple/clemson/ece453/Marisa Tomei Hanes Commercial.gvi";
-char *filename ="/media/cdrom0";
+std::string filename ="/media/cdrom0";
 char **test =NULL;
 const char *playtimes[2]={":start-time=0",":stop-time=30"};
 const char *playtimes2[2]={":start-time=45",":stop-time=60"};
@@ -41,8 +41,10 @@ void media_player_dlg::init()
   	inst = libvlc_new (0, test, &excp);
 	id = libvlc_get_vlc_id(inst);
 	volume_slider->set_value(libvlc_audio_get_volume(inst,&excp));
-	item = libvlc_playlist_add_extended (inst, filename, NULL,2,playtimes, &excp);
-	libvlc_playlist_add_extended (inst, filename, NULL,2,playtimes2, &excp);
+	item = libvlc_playlist_add_extended (inst, filename.c_str(), NULL,2,playtimes, &excp);
+	libvlc_playlist_add_extended (inst, filename.c_str(), NULL,2,playtimes2, &excp);
+	currentUser->set_text("User: " +useController()->c_getUserLoggedIn()->getUser());
+	media->set_text("Currently Playing: " + filename);
 	if(!isAdmin){
 		cut_audio->hide();
 		cut_video->hide();
@@ -110,6 +112,7 @@ void media_player_dlg::on_pause_button_clicked()
 void media_player_dlg::on_play_button_clicked()
 {  
 	libvlc_playlist_play (inst, item, 0, NULL, &excp);
+	time_slider->set_value(0);
 	//~ while(libvlc_playlist_isplaying(inst,&excp)){
 		//~ if(VLC_TimeGet(id)<0){
 			//~ time_slider->set_value(0);
@@ -137,7 +140,8 @@ printf("i: %d\n", i);
 			checkbutton = new class Gtk::CheckButton(playtimes[i]);
 			playlist_dlg->vbox4->pack_end(*checkbutton, Gtk::PACK_EXPAND_WIDGET, 0);
 		}
-			playlist_dlg->show();
+		playlist_dlg->vbox4->show();
+		playlist_dlg->show();
 	}
 	else{
 			playlist_dlg->hide();
