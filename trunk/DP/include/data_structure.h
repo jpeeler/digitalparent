@@ -26,6 +26,7 @@ class Disc
 public:
 	Disc() : m_discID(0),
              m_disc_name(""),
+             m_disc_serial(""),
              m_disc_length(0),
              m_disc_chapters(0),
              m_disc_rating(0)
@@ -39,6 +40,9 @@ public:
 
 	void setDiscName(std::string& name);
 	const std::string& getDiscName() const;
+		
+	void setDiscSerial(std::string& serial);
+	const std::string& getDiscSerial() const;
 
 	void setDiscLength(long length);
 	const long getDiscLength() const;
@@ -52,6 +56,7 @@ public:
 private:
 	int m_discID;
 	std::string m_disc_name;
+	std::string m_disc_serial;
 	long m_disc_length;
 	int m_disc_chapters;
 	int m_disc_rating; // using 1:G, 2:PG, 3:PG-13, 4:R, 5:NC-17, 6:X, 7:NR
@@ -64,6 +69,8 @@ public:
              m_username(""),
              m_iconfile(""),
              m_password(""),
+             m_question(""),
+             m_answer(""),
              m_play_unknown(false),
              m_max_play_level(0),
              m_last_movie_ID(0),

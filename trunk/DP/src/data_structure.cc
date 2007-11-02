@@ -23,9 +23,10 @@ void Disc::clear()
 {
 	m_discID = 0;
 	m_disc_name = "";
+	m_disc_serial = "";
 	m_disc_length = 0;
 	m_disc_chapters = 0;
-    m_disc_rating = 0;
+	m_disc_rating = 0;
 }
 
 void Disc::setDiscID(int ID)
@@ -46,6 +47,16 @@ void Disc::setDiscName(std::string& name)
 const std::string& Disc::getDiscName() const
 {
 	return m_disc_name;
+}
+
+void Disc::setDiscSerial(std::string& serial)
+{
+	m_disc_serial = serial;	
+}
+
+const std::string& Disc::getDiscSerial() const
+{
+	return m_disc_serial;
 }
 
 void Disc::setDiscLength(long length)
@@ -84,13 +95,15 @@ const int Disc::getDiscRating() const
 void User::clear()
 {
 	m_userID =0;
-    m_username = "";
+	m_username = "";
 	m_iconfile = "";
 	m_password = "";
-    m_play_unknown = false;
+	m_question = "";
+	m_answer = "";
+	m_play_unknown = false;
 	m_max_play_level = 0;
-    m_last_movie_ID = 0;
-    m_last_movie_pos = 0;
+	m_last_movie_ID = 0;
+	m_last_movie_pos = 0;
 }
 
 void User::setUserID(int ID)
