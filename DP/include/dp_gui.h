@@ -6,15 +6,6 @@
 #include "data_structure.h"
 #include "controller.h"
 
-typedef enum {
-	STOP,
-	START,
-	RUNONCE,
-	LOGIN,
-	EDIT_USER,
-	USER_PLAY,
-	ADMIN_PLAY
-} MODE;
 User *m_current_user;
 std::vector<User> *m_user_list;
 MODE m_mode;
