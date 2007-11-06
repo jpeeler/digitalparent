@@ -23,16 +23,16 @@ void login_dlg::on_admin_psswrd_edit_box_editing_done()
 
 void login_dlg::on_admin_login_button_clicked()
 {  	
-	switch ( m_login_mode )
+	switch ( lg_state )
 	{
-		case ADMIN_START:
+		case LG_ADMIN_START:
 			back_button->show();
 			hideUserLogin();
 			admin_login_label->show();
 			admin_psswrd_edit_box->show();
-			m_login_mode = ADMIN_OK;
+			lg_state = LG_ADMIN;
 		break;					
-		case ADMIN_OK:
+		case LG_ADMIN:
 		{					
 			string password = admin_psswrd_edit_box->get_text();		
 			m_status = useController()->loadCurrentUser(m_admin,password);
@@ -52,7 +52,7 @@ void login_dlg::on_admin_login_button_clicked()
 				break;
 				case SUCCESS:
 				{
-					useController()->m_mode = ADMIN_PANEL;
+					useController()->dp_state = DP_ADMIN_PANEL;
 					hide();
 				break;
 				}
@@ -63,21 +63,21 @@ void login_dlg::on_admin_login_button_clicked()
 			}
 			if ( m_ad_error_count > 2 ) 
 			{
-				m_login_mode = ADMIN_LOST_PASSWORD;
+				lg_state = LG_ADMIN_LOST_PASSWORD;
 				tooManyErrors(m_admin);				
 			}
 		break;
 		}
-		case ADMIN_LOST_PASSWORD:		
+		case LG_ADMIN_LOST_PASSWORD:		
 			loginWithAnswer(m_admin);					
 		break;	
-		case B1_LOST_PASSWORD:
+		case LG_B1_LOST_PASSWORD:
 			loginWithAnswer(m_user_list.at(1+m_shifted));					
 		break;	
-		case B2_LOST_PASSWORD:						
+		case LG_B2_LOST_PASSWORD:						
 			loginWithAnswer(m_user_list.at(2+m_shifted));					
 		break;		
-		case B3_LOST_PASSWORD:
+		case LG_B3_LOST_PASSWORD:
 			loginWithAnswer(m_user_list.at(3+m_shifted));					
 		break;	
 		default:
@@ -112,7 +112,7 @@ void login_dlg::on_user_icon_select_button_1_clicked()
 		if ( m_b1_error_count++ == 3 )
 		{			
 			tooManyErrors(m_user_list.at(1+m_shifted));
-			m_login_mode = B1_LOST_PASSWORD;
+			lg_state = LG_B1_LOST_PASSWORD;
 			icon1_password_edit_box->hide();
 			icon1_password_label->hide();
 			return;
@@ -126,7 +126,7 @@ void login_dlg::on_user_icon_select_button_1_clicked()
 	}
 	else 
 	{
-		useController()->m_mode = USER_PANEL;
+		useController()->dp_state = DP_USER_PANEL;
 		hide();
 	}
 }
@@ -146,7 +146,7 @@ void login_dlg::on_user_icon_select_button_2_clicked()
 		if ( m_b2_error_count++ == 3 )
 		{			
 			tooManyErrors(m_user_list.at(2+m_shifted));
-			m_login_mode = B2_LOST_PASSWORD;
+			lg_state = LG_B2_LOST_PASSWORD;
 			icon2_password_edit_box->hide();
 			icon2_password_label->hide();
 			return;
@@ -160,7 +160,7 @@ void login_dlg::on_user_icon_select_button_2_clicked()
 	}
 	else 
 	{
-		useController()->m_mode = USER_PANEL;
+		useController()->dp_state = DP_USER_PANEL;
 		hide();
 	}
 }
@@ -178,7 +178,7 @@ void login_dlg::on_user_icon_select_button_3_clicked()
 		if ( m_b1_error_count++ == 3 )
 		{			
 			tooManyErrors(m_user_list.at(3+m_shifted));
-			m_login_mode = B3_LOST_PASSWORD;
+			lg_state = LG_B3_LOST_PASSWORD;
 			icon3_password_edit_box->hide();
 			icon3_password_label->hide();
 			return;
@@ -192,7 +192,7 @@ void login_dlg::on_user_icon_select_button_3_clicked()
 	}
 	else 
 	{
-		useController()->m_mode = USER_PANEL;
+		useController()->dp_state = DP_USER_PANEL;
 		hide();
 	}
 }
@@ -204,9 +204,9 @@ void login_dlg::loginWithAnswer(string username)
 	if ( m_status == SUCCESS )
 	{
 		if ( username == "admin" )
-			useController()->m_mode = ADMIN_PANEL;
+			useController()->dp_state = DP_ADMIN_PANEL;
 		else 
-			useController()->m_mode = USER_PANEL;
+			useController()->dp_state = DP_USER_PANEL;
 		hide();
 	}
 	else
@@ -223,7 +223,7 @@ void login_dlg::oninit(int shifted)
 	m_b1_error_count = 0;
 	m_b2_error_count = 0;
 	m_b3_error_count = 0;
-	m_login_mode = ADMIN_START;	
+	lg_state = LG_ADMIN_START;	
 	m_icon_list = useController()->getIconList();
 	for(unsigned int i = 0; i < m_icon_list.size(); i++ )
 	{
