@@ -9,7 +9,7 @@
 //    typedef foo_glade foo;
 // if you didn't make any modifications to the widget
 
-#ifndef _LOGIN_DLG_HH
+#ifndef _DP_LOGIN_DLG_HH
 #  include "login_dlg_glade.hh"
 #include "controller.h"
 #include <string>
@@ -19,15 +19,15 @@ using namespace std;
 
 typedef enum
 {
-	ADMIN_OK,
-	ADMIN_START,	
-	B1_LOST_PASSWORD,
-	B2_LOST_PASSWORD,
-	B3_LOST_PASSWORD,
-	ADMIN_LOST_PASSWORD
-} LOGIN_MODE;
+	LG_ADMIN,
+	LG_ADMIN_START,	
+	LG_B1_LOST_PASSWORD,
+	LG_B2_LOST_PASSWORD,
+	LG_B3_LOST_PASSWORD,
+	LG_ADMIN_LOST_PASSWORD
+} LG_STATE;
 
-#  define _LOGIN_DLG_HH
+#  define _DP_LOGIN_DLG_HH
 class login_dlg : public login_dlg_glade
 {          
         void on_admin_psswrd_edit_box_editing_done();
@@ -55,7 +55,7 @@ class login_dlg : public login_dlg_glade
 		int m_b1_error_count;
 		int m_b2_error_count;
 		int m_b3_error_count;
-		LOGIN_MODE m_login_mode;		
+		LG_STATE lg_state;		
 		string m_admin;
 		void setupButton1(const string filename, const string username);
 		void setupButton2(const string filename, const string username);

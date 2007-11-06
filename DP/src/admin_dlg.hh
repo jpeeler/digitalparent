@@ -21,6 +21,16 @@ using namespace std;
 
 extern Controller *useController();
 
+typedef enum {
+	AD_ADMIN_START,
+	AD_SETTINGS,
+	AD_USER_START,
+	AD_USER_SETTINGS,
+	AD_ADD_USER,
+	AD_EDIT_USER,
+	AD_DELETE_USER
+} AD_STATE;
+
 class admin_dlg : public admin_dlg_glade
 {  
         

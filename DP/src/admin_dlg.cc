@@ -72,7 +72,7 @@ bool admin_dlg::on_username_edit_box_key_press_event(GdkEventKey *ev)
 
 void admin_dlg::on_logout_button_clicked()
 {  
-	useController()->m_mode = LOGIN;
+	useController()->dp_state = DP_LOGIN;
 	useController()->c_clearUserLoggedIn();
 	hide();
 }
@@ -159,9 +159,9 @@ void admin_dlg::on_remove_user_button_clicked()
 
 void admin_dlg::on_screen_movies_button_clicked()
 {  
-	if ( useController()->m_mode == ADMIN_PANEL )
-		useController()->m_mode = ADMIN_PLAY;
-	else useController()->m_mode = USER_PLAY;
+	if ( useController()->dp_state == DP_ADMIN_PANEL )
+		useController()->dp_state = DP_ADMIN_PLAY;
+	else useController()->dp_state = DP_USER_PLAY;
 	hide();
 }
 

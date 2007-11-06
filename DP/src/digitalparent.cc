@@ -47,7 +47,7 @@ int main(int argc, char **argv)
 
 #if RUN_WINDOW
    Gtk::Main m(&argc, &argv);
-   useController()->m_mode = START;
+   useController()->dp_state = DP_START;
    welcome_dlg *welcome_dlg;   
    admin_dlg *admin_dlg;
    login_dlg *login_dlg;   
@@ -58,11 +58,11 @@ int main(int argc, char **argv)
 	fillWithUsers();
 #endif	
 	
-   while ( useController()->m_mode != STOP )
+   while ( useController()->dp_state != DP_STOP )
    {
-	   switch ( useController()->m_mode )
+	   switch ( useController()->dp_state )
 	   {
-		   case START:
+		   case DP_START:
 		   {
 			   std::string password = "";							   
 			   std::string admin = "admin";	   
@@ -71,19 +71,19 @@ int main(int argc, char **argv)
 		   	   switch( status )
 			   {
 				   case DB_UNKNOWN_USER:
-					   useController()->m_mode = RUNONCE;
+					   useController()->dp_state = DP_RUNONCE;
 				   break;
 				   case DB_BAD_PASSWORD:
-					   useController()->m_mode = LOGIN;
+					   useController()->dp_state = DP_LOGIN;
 				   break;				   
 				   default:
-					   useController()->m_mode = STOP;
+					   useController()->dp_state = DP_STOP;
 				   		// figure this out later
 				   break;
 			   }		   			   
 		   break;
 		   }		   
-		   case RUNONCE:
+		   case DP_RUNONCE:
 		   {
 			   welcome_dlg = new class welcome_dlg();
 				   m.run(*welcome_dlg);
@@ -93,10 +93,10 @@ int main(int argc, char **argv)
 			   int status = 
 			   		useController()->loadCurrentUser(admin,password);
 			   if ( status == DB_UNKNOWN_USER ) exit(0);
-			   useController()->m_mode = ADMIN_PANEL;
+			   useController()->dp_state = DP_ADMIN_PANEL;
 		   break;
 		   }			   
-		   case LOGIN:
+		   case DP_LOGIN:
 		   {
 			   login_dlg =  new class login_dlg();
 				login_dlg->oninit(0);				   
@@ -104,7 +104,7 @@ int main(int argc, char **argv)
 			   delete login_dlg;		   							   
 		   break;
 		   }		   
-		   case USER_PANEL:
+		   case DP_USER_PANEL:
 		   {			   
 			   admin_dlg = new class admin_dlg();
 				   admin_dlg->oninit_user();
@@ -112,7 +112,7 @@ int main(int argc, char **argv)
 			   delete admin_dlg;			   
 		   break;
 		   }			   
-		   case ADMIN_PANEL:
+		   case DP_ADMIN_PANEL:
 			   admin_dlg = new class admin_dlg();
 				   admin_dlg->oninit_admin();
 			       admin_dlg->oninit_images();
@@ -120,22 +120,22 @@ int main(int argc, char **argv)
 			   delete admin_dlg;			   
 		   break;
 		   
-		   case USER_PLAY:
+		   case DP_USER_PLAY:
 		   {
 			  media_player_dlg = new class media_player_dlg();
 					media_player_dlg->init();  
 			  		m.run(*media_player_dlg);			
 			  delete media_player_dlg;
-			  useController()->m_mode = USER_PANEL;		   	
+			  useController()->dp_state = DP_USER_PANEL;		   	
 		   break;
 		   }		     
-		   case ADMIN_PLAY:
+		   case DP_ADMIN_PLAY:
 		   {
 			   media_player_dlg = new class media_player_dlg();
 				   media_player_dlg->init();  
 				   m.run(*media_player_dlg);
 			   delete media_player_dlg;
-			   useController()->m_mode = ADMIN_PANEL;
+			   useController()->dp_state = DP_ADMIN_PANEL;
 		   break;
 		   }			   
 	   	   default:
