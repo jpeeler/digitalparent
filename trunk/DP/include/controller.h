@@ -22,15 +22,15 @@
 
 
 typedef enum {
-	STOP,
-	START,
-	RUNONCE,
-	LOGIN,
-	ADMIN_PANEL,
-	USER_PANEL,
-	USER_PLAY,
-	ADMIN_PLAY
-} MODE;
+	DP_STOP,
+	DP_START,
+	DP_RUNONCE,
+	DP_LOGIN,
+	DP_ADMIN_PANEL,
+	DP_USER_PANEL,
+	DP_USER_PLAY,
+	DP_ADMIN_PLAY
+} DP_STATE;
 
 
 class Controller
@@ -57,7 +57,7 @@ public:
 	// in this case, reference to string input required
 	bool hashString(std::string& input);
 
-	MODE m_mode;
+	DP_STATE dp_state;
 
 	// controller disc wrapper methods
 	void c_setDiscID(int ID);
