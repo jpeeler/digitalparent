@@ -70,7 +70,6 @@ module.include.files=\
 	controller.h\
 	data_structure.h\
 	database.h\
-	dp_gui.h\
 	std_errors.h
 
 module.source.name=src
