@@ -71,5 +71,6 @@ bool welcome_dlg::on_secret_a_edit_box_key_press_event(GdkEventKey *ev)
 
 bool welcome_dlg::on_secret_q_edit_box_delete_event(GdkEventAny *ev)
 {  
-	exit(0);
+	useController()->dp_state = DP_STOP;
+	hide();
 }

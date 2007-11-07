@@ -13,38 +13,6 @@
 
 using namespace std;
 
-void admin_dlg::on_pg_checkbox_toggled()
-{  
-}
-
-void admin_dlg::on_unknown_checkbox_toggled()
-{  
-}
-
-void admin_dlg::on_pg13_checkbox_toggled()
-{  
-}
-
-void admin_dlg::on_nc17_checkbox_toggled()
-{  
-}
-
-void admin_dlg::on_nr_checkbox_toggled()
-{  
-}
-
-void admin_dlg::on_x_checkbox_toggled()
-{  
-}
-
-void admin_dlg::on_r_checkbox_toggled()
-{  
-}
-
-void admin_dlg::on_g_checkbox_toggled()
-{  
-}
-
 bool admin_dlg::on_pssword_confirm_edit_box_key_press_event(GdkEventKey *ev)
 {  return 0;
 }
@@ -129,21 +97,15 @@ void admin_dlg::on_add_user_button_clicked()
 	hide_sec_ans_checkbox->set_active(true);
 	hide_sec_ans_checkbox->show();
 	
-	g_checkbox->show();
-	g_checkbox->set_active(true);
-	pg_checkbox->show();
-	pg_checkbox->set_active(false);
-	pg13_checkbox->show();
-	pg13_checkbox->set_active(false);
-	nc17_checkbox->show();
-	nc17_checkbox->set_active(false);
-	r_checkbox->show();
-	r_checkbox->set_active(false);
-	x_checkbox->show();
-	x_checkbox->set_active(false);
-	nr_checkbox->show();
+	frame3->show();
+	g_radio_button->set_active(true);	
+	//pg_checkbox->set_active(false);	
+	//pg13_checkbox->set_active(false);	
+	//nc17_checkbox->set_active(false);	
+	//r_checkbox->set_active(false);	
+	//x_checkbox->set_active(false);	
 	nr_checkbox->set_active(false);
-	screen_movies_button->show();			
+		
 			
 	accept_changes_button->show();
 }
@@ -170,7 +132,9 @@ void admin_dlg::oninit_admin()
 	user_label->set_text("admin");
 	//username_edit_box->set_text("admin");
 	//username_edit_box->set_editable(false);
-	
+	frame3->hide();
+	frame2->hide();
+	frame1->hide();
 	admin_icon->hide();	
 	fixed8->remove(*admin_icon);
 	admin_icon = Gtk::manage(new class Gtk::Image(string("/Projects/DP/pixmaps/tux.png")));
@@ -187,6 +151,7 @@ void admin_dlg::oninit_admin()
 
 void admin_dlg::oninit_user()
 {
+	frame3->hide();
 	edit_user_button->hide();
 	add_user_button->hide();
 	remove_user_button->hide();
@@ -319,19 +284,19 @@ void admin_dlg::on_accept_changes_button_clicked()
 		return;
 	}
 	
-	bool unknown = unknown_checkbox->get_state();
+	bool unknown = nr_checkbox->get_state();
 	int max_level = 0;
-	if ( x_checkbox->get_state() == true )
+	if ( x_radio_button->get_state() == true )
 		max_level = X;
-	else if ( r_checkbox->get_state() == true )
+	else if ( r_radio_button->get_state() == true )
 		max_level = R;
-	else if ( nc17_checkbox->get_state() == true )
+	else if ( nc17_radio_button->get_state() == true )
 		max_level = NC17;
-	else if ( pg13_checkbox->get_state() == true )
+	else if ( pg13_radio_button->get_state() == true )
 		max_level = PG13;
-	else if ( pg_checkbox->get_state() == true )
+	else if ( pg_radio_button->get_state() == true )
 		max_level = PG;
-	else if ( g_checkbox->get_state() == true )
+	else if ( g_radio_button->get_state() == true )
 		max_level = G;
 	
 	useController()->c_setOtherUser( user );
