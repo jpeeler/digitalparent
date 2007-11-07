@@ -33,16 +33,7 @@ typedef enum {
 
 class admin_dlg : public admin_dlg_glade
 {  
-        
-        void on_pg_checkbox_toggled();
-        void on_unknown_checkbox_toggled();
-        void on_pg13_checkbox_toggled();
-        void on_nc17_checkbox_toggled();
-        void on_nr_checkbox_toggled();
-        void on_x_checkbox_toggled();
-        void on_r_checkbox_toggled();
-        void on_g_checkbox_toggled();
-		void on_logout_button_clicked();
+        void on_logout_button_clicked();
         void on_admin_settings_button_clicked();
         void on_add_user_button_clicked();
         void on_edit_user_button_clicked();
