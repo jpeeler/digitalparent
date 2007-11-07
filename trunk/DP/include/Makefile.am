@@ -10,7 +10,6 @@ digitalparent_include_DATA = \
 	controller.h\
 	data_structure.h\
 	database.h\
-	dp_gui.h\
 	std_errors.h
 
 EXTRA_DIST = $(digitalparent_include_DATA)
