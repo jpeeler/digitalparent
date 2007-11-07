@@ -13,31 +13,6 @@
 
 using namespace std;
 
-bool admin_dlg::on_pssword_confirm_edit_box_key_press_event(GdkEventKey *ev)
-{  return 0;
-}
-
-bool admin_dlg::on_sec_ques_edit_box_key_press_event(GdkEventKey *ev)
-{  return 0;
-}
-
-bool admin_dlg::on_password_edit_box_key_press_event(GdkEventKey *ev)
-{  return 0;
-}
-
-bool admin_dlg::on_sec_ans_edit_box_key_press_event(GdkEventKey *ev)
-{  return 0;
-}
-
-bool admin_dlg::on_icon_viewer_key_press_event(GdkEventKey *ev)
-{  return 0;
-}
-
-
-bool admin_dlg::on_username_edit_box_key_press_event(GdkEventKey *ev)
-{  return 0;
-}
-
 void admin_dlg::on_logout_button_clicked()
 {  
 	useController()->dp_state = DP_LOGIN;
@@ -63,12 +38,9 @@ void admin_dlg::on_add_user_button_clicked()
 	icon_select_frame_label->show();
 	frame1->show();
 	
-	user_label->set_text("");
-	user_label->show();
-	user_name_label->show();
-	username_edit_box->set_text("");
-	username_edit_box->set_editable(true);
-	username_edit_box->show();
+	user_label->set_text("");	
+	user_name_edit_box->set_text("");
+	user_name_edit_box->set_editable(true);	
 	
 	admin_icon->hide();	
 	fixed8->remove(*admin_icon);
@@ -76,38 +48,21 @@ void admin_dlg::on_add_user_button_clicked()
 	fixed8->put(*admin_icon, 0, 40);		
 	admin_icon->show();	
 	
-	password_label->show();	
 	password_edit_box->set_text("");
 	password_edit_box->show();
-	hide_password_checkbox->set_active(true);
-	hide_password_checkbox->show();
-	confirm_password_label->show();	
-	pssword_confirm_edit_box->set_text("");
-	pssword_confirm_edit_box->show();
-	hide_confirm_checkbox->set_active(true);
-	hide_confirm_checkbox->show();
-	sec_ques_label->show();
-	sec_ques_edit_box->set_text("");
-	sec_ques_edit_box->show();
-	hide_sec_ques_checkbox->set_active(true);
-	hide_sec_ques_checkbox->show();
-	sec_ans_label->show();
-	sec_ans_edit_box->set_text("");
-	sec_ans_edit_box->show();
-	hide_sec_ans_checkbox->set_active(true);
-	hide_sec_ans_checkbox->show();
+	pw_checkbox->set_active(true);		
+	confirm_edit_box->set_text("");
+	cf_checkbox->set_active(true);	
+	sq_edit_box->set_text("");	
+	sq_checkbox->set_active(true);	
+	sa_edit_box->set_text("");
+	sa_checkbox->set_active(true);
 	
 	frame3->show();
 	g_radio_button->set_active(true);	
-	//pg_checkbox->set_active(false);	
-	//pg13_checkbox->set_active(false);	
-	//nc17_checkbox->set_active(false);	
-	//r_checkbox->set_active(false);	
-	//x_checkbox->set_active(false);	
-	nr_checkbox->set_active(false);
-		
+	nr_checkbox->set_active(false);		
 			
-	accept_changes_button->show();
+	user_save_button->show();
 }
 
 void admin_dlg::on_edit_user_button_clicked()
@@ -192,60 +147,15 @@ void admin_dlg::oninit_images()
 	}	
 }
 
-void admin_dlg::on_hide_password_checkbox_toggled()
+void admin_dlg::on_user_save_button_clicked()
 {  
-	bool visible = password_edit_box->get_visibility();
-	if ( visible ) password_edit_box->set_visibility(false);
-	else password_edit_box->set_visibility(true);
-}
-
-void admin_dlg::on_hide_confirm_checkbox_toggled()
-{  
-	bool visible = pssword_confirm_edit_box->get_visibility();
-	if ( visible ) pssword_confirm_edit_box->set_visibility(false);
-	else pssword_confirm_edit_box->set_visibility(true);
-}
-
-void admin_dlg::on_hide_sec_ques_checkbox_toggled()
-{  
-	bool visible = sec_ques_edit_box->get_visibility();
-	if ( visible ) sec_ques_edit_box->set_visibility(false);
-	else sec_ques_edit_box->set_visibility(true);		
-}
-
-void admin_dlg::on_hide_sec_ans_checkbox_toggled()
-{  
-	bool visible = sec_ans_edit_box->get_visibility();
-	if ( visible ) sec_ans_edit_box->set_visibility(false);
-	else sec_ans_edit_box->set_visibility(true);
-}
-
-void admin_dlg::onIconButtonClicked()
-{
-	for ( unsigned int i = 0; i < m_button_list.size(); i++ )
-	{
-		if ( get_focus() == m_button_list.at(i) )
-		{			
-			admin_icon->hide();	
-			fixed8->remove(*admin_icon);
-			m_user_image = m_file_list.at(i);
-			admin_icon = Gtk::manage(new class Gtk::Image(m_file_list.at(i)));
-			fixed8->put(*admin_icon, 0, 40);		
-			admin_icon->show();
-			return;
-		}
-	}
-}
-
-void admin_dlg::on_accept_changes_button_clicked()
-{
-	string password = password_edit_box->get_text();
-	string confirm = pssword_confirm_edit_box->get_text();		
+string password = password_edit_box->get_text();
+	string confirm = confirm_edit_box->get_text();		
 	
 	if ( password != confirm || password == "" || confirm == "" )
 	{		
 		password_edit_box->set_text("");
-		pssword_confirm_edit_box->set_text("");
+		confirm_edit_box->set_text("");
 		error_label->set_text("Please set and confirm a valid password");
 		return;
 	}
@@ -253,23 +163,23 @@ void admin_dlg::on_accept_changes_button_clicked()
 	if ( password.size() < 5 )
 	{		
 		password_edit_box->set_text("");
-		pssword_confirm_edit_box->set_text("");
+		confirm_edit_box->set_text("");
 		error_label->set_text("Your password must have at least 5 characters");
 		return;
 	}
 	
-	string question = sec_ques_edit_box->get_text();
-	string answer = sec_ans_edit_box->get_text();
+	string question = sq_edit_box->get_text();
+	string answer = sa_edit_box->get_text();
 	
 	if ( question == "" || answer == "" ) 
 	{
-		sec_ques_edit_box->set_text("");
-		sec_ans_edit_box->set_text("");
+		sq_edit_box->set_text("");
+		sa_edit_box->set_text("");
 		error_label->set_text("Question and answer must have at least 1 character");
 		return;	
 	}
 	
-	string user = username_edit_box->get_text();
+	string user = user_name_edit_box->get_text();
 	printf("\n\n%s",user.c_str());	
 	
 	if ( user == "" )
@@ -312,5 +222,54 @@ void admin_dlg::on_accept_changes_button_clicked()
 	{
 		error_label->set_text("User saved successfully");
 		useController()->c_clearUserOther();
+	}
+}
+
+void admin_dlg::on_un_checkbox_toggled()
+{  
+}
+
+void admin_dlg::on_pw_checkbox_toggled()
+{  
+	bool visible = password_edit_box->get_visibility();
+	if ( visible ) password_edit_box->set_visibility(false);
+	else password_edit_box->set_visibility(true);
+}
+
+void admin_dlg::on_cf_checkbox_toggled()
+{  
+	bool visible = confirm_edit_box->get_visibility();
+	if ( visible ) confirm_edit_box->set_visibility(false);
+	else confirm_edit_box->set_visibility(true);
+}
+
+void admin_dlg::on_sq_checkbutton_toggled()
+{  
+	bool visible = sq_edit_box->get_visibility();
+	if ( visible ) sq_edit_box->set_visibility(false);
+	else sq_edit_box->set_visibility(true);
+}
+
+void admin_dlg::on_sa_checkbox_toggled()
+{  
+	bool visible = sa_edit_box->get_visibility();
+	if ( visible ) sa_edit_box->set_visibility(false);
+	else sa_edit_box->set_visibility(true);
+}
+
+void admin_dlg::onIconButtonClicked()
+{
+	for ( unsigned int i = 0; i < m_button_list.size(); i++ )
+	{
+		if ( get_focus() == m_button_list.at(i) )
+		{			
+			admin_icon->hide();	
+			fixed8->remove(*admin_icon);
+			m_user_image = m_file_list.at(i);
+			admin_icon = Gtk::manage(new class Gtk::Image(m_file_list.at(i)));
+			fixed8->put(*admin_icon, 0, 40);		
+			admin_icon->show();
+			return;
+		}
 	}
 }
