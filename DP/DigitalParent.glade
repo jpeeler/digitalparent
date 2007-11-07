@@ -1835,17 +1835,6 @@ as administrator.
       </child>
 
       <child>
-	<widget class="GtkHSeparator" id="hseparator2">
-	  <property name="width_request">168</property>
-	  <property name="height_request">16</property>
-	</widget>
-	<packing>
-	  <property name="x">0</property>
-	  <property name="y">216</property>
-	</packing>
-      </child>
-
-      <child>
 	<widget class="GtkFrame" id="frame2">
 	  <property name="width_request">471</property>
 	  <property name="height_request">184</property>
@@ -1933,6 +1922,78 @@ as administrator.
 	<packing>
 	  <property name="x">160</property>
 	  <property name="y">40</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkImage" id="admin_icon">
+	  <property name="width_request">152</property>
+	  <property name="height_request">136</property>
+	  <property name="visible">True</property>
+	  <property name="pixbuf">polypheme_smile.png</property>
+	  <property name="xalign">0.5</property>
+	  <property name="yalign">0.5</property>
+	  <property name="xpad">0</property>
+	  <property name="ypad">0</property>
+	</widget>
+	<packing>
+	  <property name="x">8</property>
+	  <property name="y">48</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkLabel" id="user_label">
+	  <property name="width_request">160</property>
+	  <property name="height_request">16</property>
+	  <property name="visible">True</property>
+	  <property name="label" translatable="yes">USER</property>
+	  <property name="use_underline">False</property>
+	  <property name="use_markup">True</property>
+	  <property name="justify">GTK_JUSTIFY_CENTER</property>
+	  <property name="wrap">False</property>
+	  <property name="selectable">False</property>
+	  <property name="xalign">0.5</property>
+	  <property name="yalign">0.5</property>
+	  <property name="xpad">0</property>
+	  <property name="ypad">0</property>
+	  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
+	  <property name="width_chars">-1</property>
+	  <property name="single_line_mode">False</property>
+	  <property name="angle">0</property>
+	</widget>
+	<packing>
+	  <property name="x">0</property>
+	  <property name="y">184</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkButton" id="add_user_button">
+	  <property name="width_request">128</property>
+	  <property name="height_request">37</property>
+	  <property name="visible">True</property>
+	  <property name="can_focus">True</property>
+	  <property name="label" translatable="yes">Add User</property>
+	  <property name="use_underline">True</property>
+	  <property name="relief">GTK_RELIEF_NORMAL</property>
+	  <property name="focus_on_click">True</property>
+	  <signal name="clicked" handler="on_add_user_button_clicked" last_modification_time="Wed, 31 Oct 2007 17:57:46 GMT"/>
+	</widget>
+	<packing>
+	  <property name="x">256</property>
+	  <property name="y">0</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkHSeparator" id="hseparator2">
+	  <property name="width_request">168</property>
+	  <property name="height_request">16</property>
+	</widget>
+	<packing>
+	  <property name="x">0</property>
+	  <property name="y">216</property>
 	</packing>
       </child>
 
@@ -2265,240 +2326,217 @@ as administrator.
       </child>
 
       <child>
-	<widget class="GtkCheckButton" id="pg_checkbox">
-	  <property name="width_request">111</property>
-	  <property name="height_request">22</property>
-	  <property name="can_focus">True</property>
-	  <property name="label" translatable="yes">PG</property>
-	  <property name="use_underline">True</property>
-	  <property name="relief">GTK_RELIEF_NORMAL</property>
-	  <property name="focus_on_click">True</property>
-	  <property name="active">False</property>
-	  <property name="inconsistent">False</property>
-	  <property name="draw_indicator">True</property>
-	  <signal name="toggled" handler="on_pg_checkbox_toggled" last_modification_time="Wed, 31 Oct 2007 14:10:57 GMT"/>
-	</widget>
-	<packing>
-	  <property name="x">10</property>
-	  <property name="y">270</property>
-	</packing>
-      </child>
-
-      <child>
-	<widget class="GtkCheckButton" id="pg13_checkbox">
-	  <property name="width_request">111</property>
-	  <property name="height_request">22</property>
-	  <property name="can_focus">True</property>
-	  <property name="label" translatable="yes">PG-13</property>
-	  <property name="use_underline">True</property>
-	  <property name="relief">GTK_RELIEF_NORMAL</property>
-	  <property name="focus_on_click">True</property>
-	  <property name="active">False</property>
-	  <property name="inconsistent">False</property>
-	  <property name="draw_indicator">True</property>
-	  <signal name="toggled" handler="on_pg13_checkbox_toggled" last_modification_time="Wed, 31 Oct 2007 14:13:45 GMT"/>
-	</widget>
-	<packing>
-	  <property name="x">10</property>
-	  <property name="y">295</property>
-	</packing>
-      </child>
-
-      <child>
-	<widget class="GtkCheckButton" id="g_checkbox">
-	  <property name="width_request">111</property>
-	  <property name="height_request">22</property>
-	  <property name="can_focus">True</property>
-	  <property name="label" translatable="yes">G</property>
-	  <property name="use_underline">True</property>
-	  <property name="relief">GTK_RELIEF_NORMAL</property>
-	  <property name="focus_on_click">True</property>
-	  <property name="active">True</property>
-	  <property name="inconsistent">False</property>
-	  <property name="draw_indicator">True</property>
-	  <signal name="toggled" handler="on_g_checkbox_toggled" last_modification_time="Wed, 31 Oct 2007 14:11:28 GMT"/>
-	</widget>
-	<packing>
-	  <property name="x">10</property>
-	  <property name="y">245</property>
-	</packing>
-      </child>
-
-      <child>
-	<widget class="GtkCheckButton" id="nc17_checkbox">
-	  <property name="width_request">111</property>
-	  <property name="height_request">22</property>
-	  <property name="can_focus">True</property>
-	  <property name="label" translatable="yes">NC-17</property>
-	  <property name="use_underline">True</property>
-	  <property name="relief">GTK_RELIEF_NORMAL</property>
-	  <property name="focus_on_click">True</property>
-	  <property name="active">False</property>
-	  <property name="inconsistent">False</property>
-	  <property name="draw_indicator">True</property>
-	  <signal name="toggled" handler="on_nc17_checkbox_toggled" last_modification_time="Wed, 31 Oct 2007 14:15:14 GMT"/>
-	</widget>
-	<packing>
-	  <property name="x">10</property>
-	  <property name="y">320</property>
-	</packing>
-      </child>
-
-      <child>
-	<widget class="GtkCheckButton" id="x_checkbox">
-	  <property name="width_request">111</property>
-	  <property name="height_request">22</property>
-	  <property name="can_focus">True</property>
-	  <property name="label" translatable="yes">X</property>
-	  <property name="use_underline">True</property>
-	  <property name="relief">GTK_RELIEF_NORMAL</property>
-	  <property name="focus_on_click">True</property>
-	  <property name="active">False</property>
-	  <property name="inconsistent">False</property>
-	  <property name="draw_indicator">True</property>
-	  <signal name="toggled" handler="on_x_checkbox_toggled" last_modification_time="Wed, 31 Oct 2007 14:17:31 GMT"/>
-	</widget>
-	<packing>
-	  <property name="x">10</property>
-	  <property name="y">370</property>
-	</packing>
-      </child>
-
-      <child>
-	<widget class="GtkCheckButton" id="r_checkbox">
-	  <property name="width_request">111</property>
-	  <property name="height_request">22</property>
-	  <property name="can_focus">True</property>
-	  <property name="label" translatable="yes">R</property>
-	  <property name="use_underline">True</property>
-	  <property name="relief">GTK_RELIEF_NORMAL</property>
-	  <property name="focus_on_click">True</property>
-	  <property name="active">False</property>
-	  <property name="inconsistent">False</property>
-	  <property name="draw_indicator">True</property>
-	  <signal name="toggled" handler="on_r_checkbox_toggled" last_modification_time="Wed, 31 Oct 2007 14:16:43 GMT"/>
-	</widget>
-	<packing>
-	  <property name="x">10</property>
-	  <property name="y">345</property>
-	</packing>
-      </child>
-
-      <child>
-	<widget class="GtkCheckButton" id="unknown_checkbox">
-	  <property name="width_request">111</property>
-	  <property name="height_request">22</property>
-	  <property name="can_focus">True</property>
-	  <property name="label" translatable="yes">UNKNOWN</property>
-	  <property name="use_underline">True</property>
-	  <property name="relief">GTK_RELIEF_NORMAL</property>
-	  <property name="focus_on_click">True</property>
-	  <property name="active">False</property>
-	  <property name="inconsistent">False</property>
-	  <property name="draw_indicator">True</property>
-	  <signal name="toggled" handler="on_unknown_checkbox_toggled" last_modification_time="Wed, 31 Oct 2007 14:22:18 GMT"/>
-	</widget>
-	<packing>
-	  <property name="x">10</property>
-	  <property name="y">420</property>
-	</packing>
-      </child>
-
-      <child>
-	<widget class="GtkCheckButton" id="nr_checkbox">
-	  <property name="width_request">111</property>
-	  <property name="height_request">22</property>
-	  <property name="can_focus">True</property>
-	  <property name="label" translatable="yes">NR</property>
-	  <property name="use_underline">True</property>
-	  <property name="relief">GTK_RELIEF_NORMAL</property>
-	  <property name="focus_on_click">True</property>
-	  <property name="active">False</property>
-	  <property name="inconsistent">False</property>
-	  <property name="draw_indicator">True</property>
-	  <signal name="toggled" handler="on_nr_checkbox_toggled" last_modification_time="Wed, 31 Oct 2007 14:19:26 GMT"/>
-	</widget>
-	<packing>
-	  <property name="x">10</property>
-	  <property name="y">395</property>
-	</packing>
-      </child>
-
-      <child>
-	<widget class="GtkButton" id="screen_movies_button">
-	  <property name="width_request">152</property>
-	  <property name="height_request">32</property>
-	  <property name="can_focus">True</property>
-	  <property name="label" translatable="yes">Screen Movies</property>
-	  <property name="use_underline">True</property>
-	  <property name="relief">GTK_RELIEF_NORMAL</property>
-	  <property name="focus_on_click">True</property>
-	  <signal name="clicked" handler="on_screen_movies_button_clicked" last_modification_time="Wed, 31 Oct 2007 18:04:55 GMT"/>
-	</widget>
-	<packing>
-	  <property name="x">5</property>
-	  <property name="y">450</property>
-	</packing>
-      </child>
-
-      <child>
-	<widget class="GtkImage" id="admin_icon">
-	  <property name="width_request">152</property>
-	  <property name="height_request">136</property>
+	<widget class="GtkFrame" id="frame3">
+	  <property name="width_request">168</property>
+	  <property name="height_request">280</property>
 	  <property name="visible">True</property>
-	  <property name="pixbuf">polypheme_smile.png</property>
-	  <property name="xalign">0.5</property>
-	  <property name="yalign">0.5</property>
-	  <property name="xpad">0</property>
-	  <property name="ypad">0</property>
-	</widget>
-	<packing>
-	  <property name="x">8</property>
-	  <property name="y">48</property>
-	</packing>
-      </child>
+	  <property name="label_xalign">0</property>
+	  <property name="label_yalign">0.5</property>
+	  <property name="shadow_type">GTK_SHADOW_NONE</property>
 
-      <child>
-	<widget class="GtkLabel" id="user_label">
-	  <property name="width_request">160</property>
-	  <property name="height_request">16</property>
-	  <property name="visible">True</property>
-	  <property name="label" translatable="yes">USER</property>
-	  <property name="use_underline">False</property>
-	  <property name="use_markup">True</property>
-	  <property name="justify">GTK_JUSTIFY_CENTER</property>
-	  <property name="wrap">False</property>
-	  <property name="selectable">False</property>
-	  <property name="xalign">0.5</property>
-	  <property name="yalign">0.5</property>
-	  <property name="xpad">0</property>
-	  <property name="ypad">0</property>
-	  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
-	  <property name="width_chars">-1</property>
-	  <property name="single_line_mode">False</property>
-	  <property name="angle">0</property>
+	  <child>
+	    <widget class="GtkAlignment" id="alignment7">
+	      <property name="visible">True</property>
+	      <property name="xalign">0.5</property>
+	      <property name="yalign">0.5</property>
+	      <property name="xscale">1</property>
+	      <property name="yscale">1</property>
+	      <property name="top_padding">0</property>
+	      <property name="bottom_padding">0</property>
+	      <property name="left_padding">0</property>
+	      <property name="right_padding">0</property>
+
+	      <child>
+		<widget class="GtkVBox" id="vbox7">
+		  <property name="visible">True</property>
+		  <property name="homogeneous">False</property>
+		  <property name="spacing">0</property>
+
+		  <child>
+		    <widget class="GtkRadioButton" id="g_radio_button">
+		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
+		      <property name="label" translatable="yes">G</property>
+		      <property name="use_underline">True</property>
+		      <property name="relief">GTK_RELIEF_NORMAL</property>
+		      <property name="focus_on_click">True</property>
+		      <property name="active">False</property>
+		      <property name="inconsistent">False</property>
+		      <property name="draw_indicator">True</property>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">True</property>
+		      <property name="fill">True</property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkRadioButton" id="pg_radio_button">
+		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
+		      <property name="label" translatable="yes">PG</property>
+		      <property name="use_underline">True</property>
+		      <property name="relief">GTK_RELIEF_NORMAL</property>
+		      <property name="focus_on_click">True</property>
+		      <property name="active">False</property>
+		      <property name="inconsistent">False</property>
+		      <property name="draw_indicator">True</property>
+		      <property name="group">g_radio_button</property>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">True</property>
+		      <property name="fill">True</property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkRadioButton" id="pg13_radio_button">
+		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
+		      <property name="label" translatable="yes">PG13</property>
+		      <property name="use_underline">True</property>
+		      <property name="relief">GTK_RELIEF_NORMAL</property>
+		      <property name="focus_on_click">True</property>
+		      <property name="active">False</property>
+		      <property name="inconsistent">False</property>
+		      <property name="draw_indicator">True</property>
+		      <property name="group">g_radio_button</property>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">True</property>
+		      <property name="fill">True</property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkRadioButton" id="nc17_radio_button">
+		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
+		      <property name="label" translatable="yes">NC17</property>
+		      <property name="use_underline">True</property>
+		      <property name="relief">GTK_RELIEF_NORMAL</property>
+		      <property name="focus_on_click">True</property>
+		      <property name="active">False</property>
+		      <property name="inconsistent">False</property>
+		      <property name="draw_indicator">True</property>
+		      <property name="group">g_radio_button</property>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">True</property>
+		      <property name="fill">True</property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkRadioButton" id="r_radio_button">
+		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
+		      <property name="label" translatable="yes">R</property>
+		      <property name="use_underline">True</property>
+		      <property name="relief">GTK_RELIEF_NORMAL</property>
+		      <property name="focus_on_click">True</property>
+		      <property name="active">False</property>
+		      <property name="inconsistent">False</property>
+		      <property name="draw_indicator">True</property>
+		      <property name="group">g_radio_button</property>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">True</property>
+		      <property name="fill">True</property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkRadioButton" id="x_radio_button">
+		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
+		      <property name="label" translatable="yes">X</property>
+		      <property name="use_underline">True</property>
+		      <property name="relief">GTK_RELIEF_NORMAL</property>
+		      <property name="focus_on_click">True</property>
+		      <property name="active">False</property>
+		      <property name="inconsistent">False</property>
+		      <property name="draw_indicator">True</property>
+		      <property name="group">g_radio_button</property>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">True</property>
+		      <property name="fill">True</property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkCheckButton" id="nr_checkbox">
+		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
+		      <property name="label" translatable="yes">NR</property>
+		      <property name="use_underline">True</property>
+		      <property name="relief">GTK_RELIEF_NORMAL</property>
+		      <property name="focus_on_click">True</property>
+		      <property name="active">False</property>
+		      <property name="inconsistent">False</property>
+		      <property name="draw_indicator">True</property>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">True</property>
+		      <property name="fill">True</property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkButton" id="screen_movies_button">
+		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
+		      <property name="label" translatable="yes">Screen Movies</property>
+		      <property name="use_underline">True</property>
+		      <property name="relief">GTK_RELIEF_NORMAL</property>
+		      <property name="focus_on_click">True</property>
+		      <signal name="clicked" handler="on_screen_movies_button_clicked" last_modification_time="Wed, 07 Nov 2007 04:01:09 GMT"/>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">True</property>
+		      <property name="fill">True</property>
+		    </packing>
+		  </child>
+		</widget>
+	      </child>
+	    </widget>
+	  </child>
+
+	  <child>
+	    <widget class="GtkLabel" id="user_level_label">
+	      <property name="visible">True</property>
+	      <property name="label" translatable="yes">&lt;b&gt;Maximum User Level&lt;/b&gt;</property>
+	      <property name="use_underline">False</property>
+	      <property name="use_markup">True</property>
+	      <property name="justify">GTK_JUSTIFY_LEFT</property>
+	      <property name="wrap">False</property>
+	      <property name="selectable">False</property>
+	      <property name="xalign">0.5</property>
+	      <property name="yalign">0.5</property>
+	      <property name="xpad">0</property>
+	      <property name="ypad">0</property>
+	      <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
+	      <property name="width_chars">-1</property>
+	      <property name="single_line_mode">False</property>
+	      <property name="angle">0</property>
+	    </widget>
+	    <packing>
+	      <property name="type">label_item</property>
+	    </packing>
+	  </child>
 	</widget>
 	<packing>
 	  <property name="x">0</property>
-	  <property name="y">184</property>
-	</packing>
-      </child>
-
-      <child>
-	<widget class="GtkButton" id="add_user_button">
-	  <property name="width_request">128</property>
-	  <property name="height_request">37</property>
-	  <property name="visible">True</property>
-	  <property name="can_focus">True</property>
-	  <property name="label" translatable="yes">Add User</property>
-	  <property name="use_underline">True</property>
-	  <property name="relief">GTK_RELIEF_NORMAL</property>
-	  <property name="focus_on_click">True</property>
-	  <signal name="clicked" handler="on_add_user_button_clicked" last_modification_time="Wed, 31 Oct 2007 17:57:46 GMT"/>
-	</widget>
-	<packing>
-	  <property name="x">256</property>
-	  <property name="y">0</property>
+	  <property name="y">224</property>
 	</packing>
       </child>
     </widget>
