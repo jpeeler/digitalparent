@@ -85,8 +85,7 @@ void admin_dlg::on_screen_movies_button_clicked()
 void admin_dlg::oninit_admin()
 {
 	user_label->set_text("admin");
-	//username_edit_box->set_text("admin");
-	//username_edit_box->set_editable(false);
+	
 	frame3->hide();
 	frame2->hide();
 	frame1->hide();
@@ -96,17 +95,14 @@ void admin_dlg::oninit_admin()
 	fixed8->put(*admin_icon, 0, 40);		
 	admin_icon->show();
 
-	m_admin = useController()->c_getUserLoggedIn();
-	//password_edit_box->set_text(m_admin->getPasswordHash());
-	//pssword_confirm_edit_box->set_text(m_admin->getPasswordHash());
-	//sec_ques_edit_box->set_text(m_admin->getQuestion());
-	//sec_ans_edit_box->set_text(m_admin->getAnswer());
-	
+	m_admin = useController()->c_getUserLoggedIn();	
 }
 
 void admin_dlg::oninit_user()
 {
 	frame3->hide();
+	frame2->hide();
+	frame1->hide();
 	edit_user_button->hide();
 	add_user_button->hide();
 	remove_user_button->hide();
