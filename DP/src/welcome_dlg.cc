@@ -69,8 +69,9 @@ bool welcome_dlg::on_secret_a_edit_box_key_press_event(GdkEventKey *ev)
 	return(0);
 }
 
-bool welcome_dlg::on_secret_q_edit_box_delete_event(GdkEventAny *ev)
+bool welcome_dlg::on_welcome_dlg_delete_event(GdkEventAny *ev)
 {  
 	useController()->dp_state = DP_STOP;
 	hide();
+	return 0;
 }

@@ -17,7 +17,7 @@ class welcome_dlg : public welcome_dlg_glade
 {  
         
         void on_welcome_next_button_clicked();
-		bool on_secret_q_edit_box_delete_event(GdkEventAny *ev);
+		bool on_welcome_dlg_delete_event(GdkEventAny *ev);
 		bool on_repeat_password_edit_box_key_press_event(GdkEventKey *ev);        
         bool on_secret_a_edit_box_key_press_event(GdkEventKey *ev);
 	

@@ -19,7 +19,6 @@
 #include "controller.h"
 #include "database.h"
 
-
 // wrappers to database methods
 int Controller::loadCurrentUser(std::string username, std::string password)
 {
