@@ -20,6 +20,7 @@
 #include "data_structure.h"
 #include "database.h"
 
+#include <string>
 
 typedef enum {
 	DP_STOP,
@@ -58,6 +59,7 @@ public:
 	bool hashString(std::string& input);
 
 	DP_STATE dp_state;
+	std::string img_dir;
 
 	// controller disc wrapper methods
 	void c_setDiscID(int ID);
