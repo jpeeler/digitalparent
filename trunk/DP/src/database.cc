@@ -525,7 +525,7 @@ std::vector <std::string> Database::getUserList()
 		for(tntdb::Statement::const_iterator cursor = query.begin();
 			cursor != query.end(); ++cursor)
 	   {
-		   //for each user, add username to return vector
+		   //for each user, add user icon to return vector
 		   row = *cursor;
 		   returnList.push_back(row[0]);
 	   }
@@ -551,9 +551,7 @@ std::vector <std::string> Database::getIconList()
 	try
 	{
 	   row = query.selectRow();
-	   returnList.push_back(row[0]);
-		std::string s = row[0];
-		printf("\ngetting %s from database",s.c_str());
+	   returnList.push_back(row[0]);			
 	}
 	catch(tntdb::Error &e)
 	{
@@ -572,9 +570,7 @@ std::vector <std::string> Database::getIconList()
 	   {
 		   //for each user, add username to return vector
 		   row = *cursor;
-		   returnList.push_back(row[0]);
-		   std::string s = row[1];
-		   printf("\ngetting %s from database",s.c_str());
+		   returnList.push_back(row[0]);		   
 	   }
 	} 
 	catch(tntdb::Error &e)

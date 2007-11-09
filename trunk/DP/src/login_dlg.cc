@@ -72,13 +72,13 @@ void login_dlg::on_admin_login_button_clicked()
 			loginWithAnswer(m_admin);					
 		break;	
 		case LG_B1_LOST_PASSWORD:
-			loginWithAnswer(m_user_list.at(1+m_shifted));					
+			loginWithAnswer(m_user_list.at(0+m_shifted));					
 		break;	
 		case LG_B2_LOST_PASSWORD:						
-			loginWithAnswer(m_user_list.at(2+m_shifted));					
+			loginWithAnswer(m_user_list.at(1+m_shifted));					
 		break;		
 		case LG_B3_LOST_PASSWORD:
-			loginWithAnswer(m_user_list.at(3+m_shifted));					
+			loginWithAnswer(m_user_list.at(2+m_shifted));					
 		break;	
 		default:
 			break;
@@ -93,7 +93,7 @@ void login_dlg::on_previous_user_button_clicked()
 
 void login_dlg::on_next_user_button_clicked()
 {  
-	int remaining_icons = m_user_list.size() - m_shifted - 4;
+	int remaining_icons = m_user_list.size() - m_shifted - 3;
 	if ( remaining_icons < 1 ) return;
 	m_shifted+=min(remaining_icons,3);			
 	setupButtons();		
@@ -106,12 +106,12 @@ void login_dlg::on_user_icon_select_button_1_clicked()
 	admin_label->hide();
 	string password = icon1_password_edit_box->get_text();
 	int m_status = 
-		useController()->loadCurrentUser(m_user_list.at(1+m_shifted),password);
+		useController()->loadCurrentUser(m_user_list.at(0+m_shifted),password);
 	if (m_status == DB_BAD_PASSWORD)
 	{
 		if ( m_b1_error_count++ == 3 )
 		{			
-			tooManyErrors(m_user_list.at(1+m_shifted));
+			tooManyErrors(m_user_list.at(0+m_shifted));
 			lg_state = LG_B1_LOST_PASSWORD;
 			icon1_password_edit_box->hide();
 			icon1_password_label->hide();
@@ -140,12 +140,12 @@ void login_dlg::on_user_icon_select_button_2_clicked()
 	string password = icon2_password_edit_box->get_text();
 	login_hint_label->set_text(password);
 	int status = 
-		useController()->loadCurrentUser(m_user_list.at(2+m_shifted),password);
+		useController()->loadCurrentUser(m_user_list.at(1+m_shifted),password);
 	if (status == DB_BAD_PASSWORD)
 	{
 		if ( m_b2_error_count++ == 3 )
 		{			
-			tooManyErrors(m_user_list.at(2+m_shifted));
+			tooManyErrors(m_user_list.at(1+m_shifted));
 			lg_state = LG_B2_LOST_PASSWORD;
 			icon2_password_edit_box->hide();
 			icon2_password_label->hide();
@@ -172,12 +172,12 @@ void login_dlg::on_user_icon_select_button_3_clicked()
 	admin_label->hide();
 	string password = icon3_password_edit_box->get_text();
 	int status = 
-		useController()->loadCurrentUser(m_user_list.at(3+m_shifted),password);
+		useController()->loadCurrentUser(m_user_list.at(2+m_shifted),password);
 	if (status == DB_BAD_PASSWORD)
 	{
 		if ( m_b1_error_count++ == 3 )
 		{			
-			tooManyErrors(m_user_list.at(3+m_shifted));
+			tooManyErrors(m_user_list.at(2+m_shifted));
 			lg_state = LG_B3_LOST_PASSWORD;
 			icon3_password_edit_box->hide();
 			icon3_password_label->hide();
@@ -225,11 +225,15 @@ void login_dlg::oninit(int shifted)
 	m_b3_error_count = 0;
 	lg_state = LG_ADMIN_START;	
 	m_icon_list = useController()->getIconList();
-	for(unsigned int i = 0; i < m_icon_list.size(); i++ )
+	//for(unsigned int i = 0; i < m_icon_list.size(); i++ )
+	//{
+	//	printf("\n%s",m_icon_list.at(i).c_str());
+	//}
+	m_user_list = useController()->getUserList();
+	for(unsigned int i = 0; i < m_user_list.size(); i++ )
 	{
-		printf("\n%s",m_icon_list.at(i).c_str());
-	}
-	m_user_list = useController()->getUserList();	
+		printf("\n%s",m_user_list.at(i).c_str());
+	}	
 	m_admin = "admin";	
 	
 	icon1_password_edit_box->hide();
@@ -254,26 +258,27 @@ void login_dlg::oninit(int shifted)
 	useController()->loadCurrentUser(m_admin,string(""));
 	const User *a_user = useController()->c_getUserLoggedIn();
 	const string filename = a_user->getUserIcon();
+	printf("\n\n%s\n\n",filename.c_str());
 	setupAdminButton( filename, m_admin );
 	
-	if ( m_icon_list.size() > 3 )
-	{
+	if ( m_icon_list.size() > 2 )
+	{		
 		setupButtons();	
 		return;
 	}
 	
 	user_icon_select_button_3->hide();
 
-	if ( m_icon_list.size() > 2 )
-	{
-		setupButton2(m_icon_list.at(2),m_user_list.at(2));
-		setupButton1(m_icon_list.at(1),m_user_list.at(1));	
+	if ( m_icon_list.size() > 1 )
+	{		
+		setupButton2(m_icon_list.at(1),m_user_list.at(1));
+		setupButton1(m_icon_list.at(0),m_user_list.at(0));	
 		return;		
 	}		
 	
-	if ( m_icon_list.size() > 1 )
+	if ( m_icon_list.size() > 0 )
 	{	
-		setupButton1(m_icon_list.at(1),m_user_list.at(1));	
+		setupButton1(m_icon_list.at(0),m_user_list.at(0));	
 		user_icon_select_button_2->hide();		
 	}
 	else 
@@ -345,11 +350,11 @@ void login_dlg::userLoginInit()
 
 void login_dlg::setupButtons()
 {
-	setupButton1(m_icon_list.at(1+m_shifted),m_user_list.at(1+m_shifted));
+	setupButton1(m_icon_list.at(0+m_shifted),m_user_list.at(0+m_shifted));
+	if ( m_user_list.size() > 1 )
+		setupButton2(m_icon_list.at(1+m_shifted),m_user_list.at(1+m_shifted));	
 	if ( m_user_list.size() > 2 )
-		setupButton2(m_icon_list.at(2+m_shifted),m_user_list.at(2+m_shifted));	
-	if ( m_user_list.size() > 3 )
-		setupButton3(m_icon_list.at(3+m_shifted),m_user_list.at(3+m_shifted));	
+		setupButton3(m_icon_list.at(2+m_shifted),m_user_list.at(2+m_shifted));	
 }
 
 void login_dlg::tooManyErrors(string username)

@@ -13,7 +13,6 @@
 #include "media_player_dlg.hh"
 #include "welcome_dlg.hh"
 #include "admin_dlg.hh"
-//#include "dp_gui.h"
 #include "controller.h"
 
 #define RUN_WINDOW true
@@ -56,7 +55,9 @@ int main(int argc, char **argv)
    
 #if TEST_USERS
 	fillWithUsers();
-#endif	
+#endif	   
+	
+   useController()->img_dir = "/Projects/DP/images/";	
 	
    while ( useController()->dp_state != DP_STOP )
    {
@@ -115,7 +116,7 @@ int main(int argc, char **argv)
 		   case DP_ADMIN_PANEL:
 			   admin_dlg = new class admin_dlg();
 				   admin_dlg->oninit_admin();
-			       admin_dlg->oninit_images();
+			       admin_dlg->oninit_icons();			   	   
 			   	   m.run(*admin_dlg);
 			   delete admin_dlg;			   
 		   break;
@@ -213,7 +214,7 @@ void fillWithUsers()
 	useController()->c_setCurrentUserPasswordHash(std::string("jeremys_password"));
 	useController()->c_setCurrentUserSecretQuestion(string("number?"));
 	useController()->c_setCurrentUserSecretAnswerHash(string("one"));
-	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/pixmaps/tired_smile.png"));
+	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/images/tired_smile.png"));
 	useController()->c_setCurrentUserCanPlayUnknown(true);
 	useController()->c_setCurrentUserMaxPlayLevel(NR);
 	useController()->storeCurrentUser();
@@ -224,7 +225,7 @@ void fillWithUsers()
 	useController()->c_setCurrentUserPasswordHash(std::string(""));
 	useController()->c_setCurrentUserSecretQuestion(string("number?"));
 	useController()->c_setCurrentUserSecretAnswerHash(string("two"));
-	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/pixmaps/pirate.png"));
+	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/images/pirate.png"));
 	useController()->c_setCurrentUserCanPlayUnknown(false);
 	useController()->c_setCurrentUserMaxPlayLevel(X);//someone has to test x, sorry
 	useController()->storeCurrentUser();
@@ -235,7 +236,7 @@ void fillWithUsers()
 	useController()->c_setCurrentUserPasswordHash(std::string(""));
 	useController()->c_setCurrentUserSecretQuestion(string("number?"));
 	useController()->c_setCurrentUserSecretAnswerHash(string("three"));
-	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/pixmaps/roswell_smile.png"));
+	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/images/roswell_smile.png"));
 	useController()->c_setCurrentUserCanPlayUnknown(true);
 	useController()->c_setCurrentUserMaxPlayLevel(R);
 	useController()->storeCurrentUser();
@@ -246,7 +247,7 @@ void fillWithUsers()
 	useController()->c_setCurrentUserPasswordHash(std::string("pauls_password"));
 	useController()->c_setCurrentUserSecretQuestion(string("number?"));
 	useController()->c_setCurrentUserSecretAnswerHash(string("four"));
-	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/pixmaps/full_matrix.png"));
+	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/images/full_matrix.png"));
 	useController()->c_setCurrentUserCanPlayUnknown(false);
 	useController()->c_setCurrentUserMaxPlayLevel(G);
 	useController()->storeCurrentUser();
@@ -257,7 +258,7 @@ void fillWithUsers()
 	useController()->c_setCurrentUserPasswordHash(std::string("candy"));
 	useController()->c_setCurrentUserSecretQuestion(string("number?"));
 	useController()->c_setCurrentUserSecretAnswerHash(string("five"));
-	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/pixmaps/butterfly.png"));
+	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/images/butterfly.png"));
 	useController()->c_setCurrentUserCanPlayUnknown(false);
 	useController()->c_setCurrentUserMaxPlayLevel(G);
 	useController()->storeCurrentUser();
@@ -268,7 +269,7 @@ void fillWithUsers()
 	useController()->c_setCurrentUserPasswordHash(std::string("boys"));
 	useController()->c_setCurrentUserSecretQuestion(string("number?"));
 	useController()->c_setCurrentUserSecretAnswerHash(string("six"));
-	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/pixmaps/sun.png"));
+	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/images/sun.png"));
 	useController()->c_setCurrentUserCanPlayUnknown(false);
 	useController()->c_setCurrentUserMaxPlayLevel(NC17);
 	useController()->storeCurrentUser();
@@ -279,7 +280,7 @@ void fillWithUsers()
 	useController()->c_setCurrentUserPasswordHash(std::string("straightjacket"));
 	useController()->c_setCurrentUserSecretQuestion(string("number?"));
 	useController()->c_setCurrentUserSecretAnswerHash(string("seven"));
-	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/pixmaps/weird.png"));
+	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/images/weird.png"));
 	useController()->c_setCurrentUserCanPlayUnknown(true);
 	useController()->c_setCurrentUserMaxPlayLevel(PG13);
 	useController()->storeCurrentUser();
@@ -290,7 +291,7 @@ void fillWithUsers()
 	useController()->c_setCurrentUserPasswordHash(std::string("sam"));
 	useController()->c_setCurrentUserSecretQuestion(string("number?"));
 	useController()->c_setCurrentUserSecretAnswerHash(string("eight"));
-	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/pixmaps/foxy_smile.png"));
+	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/images/foxy_smile.png"));
 	useController()->c_setCurrentUserCanPlayUnknown(true);
 	useController()->c_setCurrentUserMaxPlayLevel(R);
 	useController()->storeCurrentUser();

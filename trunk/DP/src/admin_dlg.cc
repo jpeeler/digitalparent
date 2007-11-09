@@ -22,14 +22,64 @@ void admin_dlg::on_logout_button_clicked()
 
 void admin_dlg::on_admin_settings_button_clicked()
 {  
+	ad_state = AD_SETTINGS;
 }
 
-void admin_dlg::fill_image_button_scroller()
+void admin_dlg::fill_image_button_scroller( int mode )
 {
+	switch ( mode )
+	{
+		case ALL_ICONS:
+		{
+			m_icon_list = useController()->getIconList();					
+			
+			for ( unsigned int j = 0; j < m_file_list.size(); j++ )
+			{
+				bool user_icon = false;
+				for ( unsigned int i = 0; i < m_icon_list.size(); i++ )
+				{						
+					if ( m_file_list.at(j) == m_icon_list.at(i) )											
+						user_icon = true;
+				}
+				if ( user_icon )				
+					m_button_list.at(j)->hide();					
+				else
+					m_button_list.at(j)->show();
+			}
+
+			frame2->show();		
+		break;
+		}
+		
+		case USER_ICONS:
+		{
+			m_icon_list = useController()->getIconList();
+			m_user_list = useController()->getUserList();			
+			
+			for ( unsigned int j = 0; j < m_file_list.size(); j++ )
+			{
+				bool user_icon = false;
+				for ( unsigned int i = 0; i < m_icon_list.size(); i++ )
+				{						
+					if ( m_file_list.at(j) == m_icon_list.at(i) )											
+						user_icon = true;
+				}
+				if ( user_icon )				
+					m_button_list.at(j)->show();					
+				else
+					m_button_list.at(j)->hide();
+			}
+
+			frame2->show();			
+		break;
+		}
+	}
 }
 
 void admin_dlg::on_add_user_button_clicked()
 {  	
+	ad_state = AD_ADD_USER;
+	fill_image_button_scroller(ALL_ICONS);
 	m_user_image = "";
 	
 	hseparator2->show();
@@ -67,11 +117,20 @@ void admin_dlg::on_add_user_button_clicked()
 
 void admin_dlg::on_edit_user_button_clicked()
 {  
-	
+	ad_state = AD_EDIT_USER;
+	frame1->hide();
+	frame3->hide();	
+	fill_image_button_scroller(USER_ICONS);
+	frame2->show();	
 }
 
 void admin_dlg::on_remove_user_button_clicked()
 {  
+	ad_state = AD_DELETE_USER;	
+	frame1->hide();
+	frame3->hide();	
+	fill_image_button_scroller(USER_ICONS);
+	frame2->show();
 }
 
 void admin_dlg::on_screen_movies_button_clicked()
@@ -109,19 +168,22 @@ void admin_dlg::oninit_user()
 	admin_settings_button->hide();
 }
 
-void admin_dlg::oninit_images()
+void admin_dlg::oninit_icons()
 {
 	system("ls /Projects/DP/images > pixmaps.dat");
 	FILE *fp = fopen("pixmaps.dat","r");
 	int c;
-	string fname = "/Projects/DP/images/";
+	string fname = useController()->img_dir;//"/Projects/DP/images/";
 	c = fgetc(fp);
 	class Gtk::Button *button;
 	class Gtk::Image *image;
+	m_icon_list = useController()->getIconList();
+						
 	while ( c != EOF )
 	{
 		if ( c == '\n' )
 		{
+														
 			m_file_list.push_back(fname);
 			image = Gtk::manage(new class Gtk::Image(fname)); 
 			image->set_alignment(0.5,0.5);
@@ -131,28 +193,42 @@ void admin_dlg::oninit_images()
 			button->set_flags(Gtk::CAN_FOCUS);
   			button->set_relief(Gtk::RELIEF_NORMAL);
 			button->add(*image);
-   			image->show();	
-			button->show();
+   			image->show();							
+			button->show();				
 			m_button_list.push_back(button);
 			hbox5->pack_start(*button, Gtk::PACK_SHRINK, 0);
-			button->signal_clicked().connect(SigC::slot(*this, &admin_dlg_glade::onIconButtonClicked), false);
+			button->signal_clicked().connect(SigC::slot(*this, &admin_dlg_glade::onIconButtonClicked), false);					
 			fname = "/Projects/DP/images/";
 		}
 		else	fname+=c;
 		c = fgetc(fp);
-	}	
+	}
 }
 
 void admin_dlg::on_user_save_button_clicked()
 {  
-string password = password_edit_box->get_text();
+	if ( m_user_image == "" )
+	{
+		error_label->set_text("Please choose an image");
+		return;
+	}
+	
+	string user = user_name_edit_box->get_text();
+	
+	if ( user == "" )
+	{
+		error_label->set_text("Please choose a name");
+		return;
+	}
+	
+	string password = password_edit_box->get_text();
 	string confirm = confirm_edit_box->get_text();		
 	
 	if ( password != confirm || password == "" || confirm == "" )
 	{		
 		password_edit_box->set_text("");
 		confirm_edit_box->set_text("");
-		error_label->set_text("Please set and confirm a valid password");
+		error_label->set_text("Password or Confirm error");
 		return;
 	}
 	
@@ -160,7 +236,7 @@ string password = password_edit_box->get_text();
 	{		
 		password_edit_box->set_text("");
 		confirm_edit_box->set_text("");
-		error_label->set_text("Your password must have at least 5 characters");
+		error_label->set_text("Password not long enough");
 		return;
 	}
 	
@@ -171,23 +247,8 @@ string password = password_edit_box->get_text();
 	{
 		sq_edit_box->set_text("");
 		sa_edit_box->set_text("");
-		error_label->set_text("Question and answer must have at least 1 character");
+		error_label->set_text("Q or A not filled in");
 		return;	
-	}
-	
-	string user = user_name_edit_box->get_text();
-	printf("\n\n%s",user.c_str());	
-	
-	if ( user == "" )
-	{
-		error_label->set_text("You must enter a name for this user");
-		return;
-	}
-	
-	if ( m_user_image == "" )
-	{
-		error_label->set_text("You must select an image for this user");
-		return;
 	}
 	
 	bool unknown = nr_checkbox->get_state();
@@ -218,6 +279,11 @@ string password = password_edit_box->get_text();
 	{
 		error_label->set_text("User saved successfully");
 		useController()->c_clearUserOther();
+		for ( unsigned int i = 0; i < m_file_list.size(); i ++ )
+		{
+			if ( m_file_list.at(i) == m_user_image )
+				m_button_list.at(i)->hide();
+		}			
 	}
 }
 
