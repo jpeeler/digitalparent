@@ -370,6 +370,8 @@ media_player_dlg_glade::media_player_dlg_glade(
    mute_button->signal_toggled().connect(SigC::slot(*this, &media_player_dlg_glade::on_mute_button_toggled), false);
    open_media_button->signal_clicked().connect(SigC::slot(*this, &media_player_dlg_glade::on_open_media_button_clicked), false);
    time_slider->signal_value_changed().connect(SigC::slot(*this, &media_player_dlg_glade::on_time_slider_value_changed), false);
+   time_slider->signal_button_press_event().connect(SigC::slot(*this, &media_player_dlg_glade::on_time_slider_button_press), false);
+   time_slider->signal_button_release_event().connect(SigC::slot(*this, &media_player_dlg_glade::on_time_slider_button_release_event), false);
 }
 
 media_player_dlg_glade::~media_player_dlg_glade()
