@@ -112,5 +112,7 @@ private:
         virtual void on_mute_button_toggled() = 0;
         virtual void on_open_media_button_clicked() = 0;
         virtual void on_time_slider_value_changed() = 0;
+		virtual bool on_time_slider_button_press(GdkEventButton *ev) = 0;
+		virtual bool on_time_slider_button_release_event(GdkEventButton *ev) = 0;
 };
 #endif

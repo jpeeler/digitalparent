@@ -557,6 +557,8 @@
 	  <property name="inverted">False</property>
 	  <property name="adjustment">0 0 100 1 0 0</property>
 	  <signal name="value_changed" handler="on_time_slider_value_changed" last_modification_time="Fri, 26 Oct 2007 02:22:44 GMT"/>
+	  <signal name="button_press_event" handler="on_time_slider_button_press" last_modification_time="Fri, 09 Nov 2007 20:23:14 GMT"/>
+	  <signal name="button_release_event" handler="on_time_slider_button_release_event" last_modification_time="Fri, 09 Nov 2007 21:49:33 GMT"/>
 	</widget>
 	<packing>
 	  <property name="x">152</property>

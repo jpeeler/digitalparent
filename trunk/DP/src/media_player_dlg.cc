@@ -52,7 +52,7 @@ void media_player_dlg::init()
 	
 	time_slider->set_range(0,VLC_LengthGet(id));
 	
-	Glib::signal_idle().connect(SigC::slot(*this, &media_player_dlg::update_slider));
+	slider_signal = Glib::signal_idle().connect(SigC::slot(*this, &media_player_dlg::update_slider));
 
 }
 
@@ -136,6 +136,21 @@ void media_player_dlg::on_time_slider_value_changed()
 	//time_slider->set_range(0,VLC_LengthGet(id));	
 	//VLC_TimeSet(id,(int)time_slider->get_value(),false);
 }
+
+bool media_player_dlg::on_time_slider_button_press(GdkEventButton *ev)
+{  
+       slider_signal.disconnect();
+       return 0;
+}
+
+bool media_player_dlg::on_time_slider_button_release_event(GdkEventButton *ev)
+{
+       VLC_TimeSet(id,(int)time_slider->get_value(),false);
+       slider_signal = Glib::signal_idle().connect(SigC::slot(*this, &media_player_dlg::update_slider));
+
+       return 0;
+}
+
 
 void media_player_dlg::on_playlist_button_toggled()
 {

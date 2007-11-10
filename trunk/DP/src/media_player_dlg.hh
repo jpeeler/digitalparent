@@ -31,11 +31,13 @@ class media_player_dlg : public media_player_dlg_glade
         void on_time_slider_value_changed();
         void on_cut_video_toggled();
 		bool update_slider();
+		bool on_time_slider_button_press(GdkEventButton *ev);
+		bool on_time_slider_button_release_event(GdkEventButton *ev);
 	public:
 		void init();
 	private:	
 		libvlc_exception_t excp;
 		libvlc_instance_t *inst;
-		
+		SigC::Connection slider_signal;		
 };
 #endif
