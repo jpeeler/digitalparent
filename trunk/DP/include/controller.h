@@ -121,7 +121,7 @@ public:
 	*/
 	
 	// controller skip method (not wrapper) PROBABLY BETTER?
-	void addSkipTiming(long start, long stop/*, bool onlyAudio*/);
+	void c_addSkipTiming(long start, long stop/*, bool onlyAudio*/);
 	
 	friend class TestController; // (allows access to m_data in test class)
 	

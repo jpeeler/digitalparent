@@ -325,7 +325,7 @@ void Controller::c_removeSkipChapter(int chapter)
 }
 
 // controller skip method (not wrapper) PROBABLY BETTER?
-void Controller::addSkipTiming(long start, long stop/*, bool onlyAudio*/)
+void Controller::c_addSkipTiming(long start, long stop/*, bool onlyAudio*/)
 {
 	Profile* profile = m_data.getProfile();
 	
@@ -422,6 +422,26 @@ void TestController::do_test()
 	printf("Play unknown? %d\n",user->getPlayUnknownDisc());
 	printf("Max play level = %d\n",user->getMaxPlayLevel());
 	printf("Last movie ID = %d\n",user->getLastMovieID());
-	printf("Last movie position = %ld\n",user->getLastMoviePos());	
+	printf("Last movie position = %ld\n",user->getLastMoviePos());
 	
+	theController.c_addSkipTiming(1, 2);
+	theController.c_addSkipTiming(17,18);
+	theController.c_addSkipTiming(29,30);
+	theController.c_addSkipTiming(12,13);
+	theController.c_addSkipTiming(15,26);
+	
+	// get skip times from data structure (reference to skiptimes vector)
+	const Profile *aprofile = theController.c_getProfile();
+	const std::vector<SkipTime>& myvector = aprofile->getSkipTimes();
+	
+	// access all skiptimes	
+	for (std::vector<SkipTime>::const_iterator it = myvector.begin();
+		it!=myvector.end(); ++it)
+	{
+		printf("[%ld-%ld] ",it->getSkipStart(), it->getSkipStop());
+	}
+	puts("");
+	
+	// access specific skiptimes
+	printf("[%ld-%ld] ", myvector.at(3).getSkipStart(), myvector.at(3).getSkipStop());
 }
