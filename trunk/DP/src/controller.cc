@@ -19,6 +19,19 @@
 #include "controller.h"
 #include "database.h"
 
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <inttypes.h>
+#include <assert.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+#define DVD_VIDEO_LB_LEN 2048
+#define MSG_OUT stdout
+
 // wrappers to database methods
 int Controller::loadCurrentUser(std::string username, std::string password)
 {
@@ -74,13 +87,90 @@ int Controller::deleteProfile()
 	return (m_database.deleteProfile(profile));
 }
 
-// -------------------------------------
-int Controller::loadDisc(std::string discName, long discLength, int numChapters)
+void Controller::dvd_read_info(char *name, char *serial)
 {
+	const char *device = "/dev/dvd";
+//end my code
+
+    /* Because we are compiling with _FILE_OFFSET_BITS=64
+     * all off_t are 64bit.
+     */
+    off_t off;
+    int fd, i;
+    //uint8_t data[DVD_VIDEO_LB_LEN];
+	char data[DVD_VIDEO_LB_LEN];
+
+    /* Read DVD name */
+    fd = open(device, O_RDONLY);
+    if (fd > 0) { 
+      off = lseek( fd, 32 * (off_t) DVD_VIDEO_LB_LEN, SEEK_SET );
+      if( off == ( 32 * (off_t) DVD_VIDEO_LB_LEN ) ) {
+        off = read( fd, data, DVD_VIDEO_LB_LEN ); 
+        close(fd);
+        if (off == ( (off_t) DVD_VIDEO_LB_LEN )) {
+          fprintf(MSG_OUT, "libdvdnav: DVD Title: ");
+          for(i=25; i < 73; i++ ) {
+            if((data[i] == 0)) break;
+            if((data[i] > 32) && (data[i] < 127)) {
+              fprintf(MSG_OUT, "%c", data[i]);
+            } else {
+              fprintf(MSG_OUT, " ");
+            }
+          }
+          strncpy(name, &data[25], 48);
+          name[48] = 0;
+          fprintf(MSG_OUT, "\nlibdvdnav: DVD Serial Number: ");
+          for(i=73; i < 89; i++ ) {
+            if((data[i] == 0)) break;
+            if((data[i] > 32) && (data[i] < 127)) {
+              fprintf(MSG_OUT, "%c", data[i]);
+            } else {
+              fprintf(MSG_OUT, " ");
+            } 
+          }
+//start my code
+	  strncpy(serial, &data[73], 16);
+          serial[16] = 0;
+//end my code
+          fprintf(MSG_OUT, "\nlibdvdnav: DVD Title (Alternative): ");
+          for(i=89; i < 128; i++ ) {
+            if((data[i] == 0)) break;
+            if((data[i] > 32) && (data[i] < 127)) {
+              fprintf(MSG_OUT, "%c", data[i]);
+            } else {
+              fprintf(MSG_OUT, " ");
+            }
+          }
+          fprintf(MSG_OUT, "\n");
+        } else {
+          fprintf(MSG_OUT, "libdvdnav: Can't read name block. Probably not a DVD-ROM device.\n");
+        }
+      } else {
+        fprintf(MSG_OUT, "libdvdnav: Can't seek to block %u\n", 32 );
+      }
+      close(fd);
+    } else {
+    fprintf(MSG_OUT, "NAME OPEN FAILED\n");
+  }
+}
+
+
+// -------------------------------------
+int Controller::loadDisc()
+{
+	// get the disc_name and disc_serial straight from the DVD
+	char disc_name[50];
+	char disc_serial[25];
+	dvd_read_info(disc_name, disc_serial);
+	
+	// create C++ strings and set them in disc object
+	std::string discName(disc_name);
+	std::string discSerial(disc_serial);
 	Disc* disc = m_data.getDisc();
 	disc->setDiscName(discName);
-	disc->setDiscLength(discLength);
-	disc->setDiscChapterNum(numChapters);
+	disc->setDiscSerial(discSerial);
+	//disc->setDiscLength(discLength);
+	//disc->setDiscChapterNum(numChapters);
 	return (m_database.getDisc(disc));
 }
 

@@ -47,7 +47,7 @@ public:
 	int storeProfile();
 	int deleteProfile();
 	
-	int loadDisc(std::string discName, long discLength, int numChapters);
+	int loadDisc();
 	int storeDisc();
 
 	int populateUserInfo(std::string username);
@@ -127,8 +127,8 @@ public:
 	
 private:
 	DataStructure m_data;
-	Database m_database; // added so that object is not re-instantiated
-                         // everytime a database operation is needed
+	Database m_database; 
+	void dvd_read_info(char *name, char* serial);
 };
 
 class TestController
