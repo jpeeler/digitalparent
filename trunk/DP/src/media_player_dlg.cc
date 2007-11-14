@@ -63,7 +63,7 @@ void media_player_dlg::init()
 	
 	
 	slider_signal = Glib::signal_idle().connect(SigC::slot(*this, &media_player_dlg::update_slider));
-	buildPlaylist();
+	//buildPlaylist();				//commented out so reduces seg faults
 
 }
 
