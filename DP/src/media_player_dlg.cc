@@ -1,3 +1,4 @@
+//trying to figure out lock
 // generated 2007/10/18 15:52:33 EDT by jmorey@jmorey-laptop.(none)
 // using glademm V2.6.0
 //
