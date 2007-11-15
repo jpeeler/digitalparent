@@ -586,12 +586,13 @@ int Database::storeDisc(Disc *discInfo)
 {
 	tntdb::Statement query;
 	tntdb::Row row;
-	std::string discname;
+	std::string discname, serial;
 
 	discname = (*discInfo).getDiscName();
+	serial = (*discInfo).getDiscSerial();
 	
-	query = conn.prepare("SELECT Disc_ID, Disc_Rating_ID FROM Disc WHERE Disc_Name = :v1 AND Disc_Length = :v2 AND Disc_NumChapters = :v3");
-	query.setString("v1", discname).setInt("v2", (*discInfo).getDiscLength()).setInt("v3", (*discInfo).getDiscChapterNum());
+	query = conn.prepare("SELECT Disc_ID, Disc_Rating_ID FROM Disc WHERE Disc_Name = :v1 AND Disc_Length = :v2 AND Disc_NumChapters = :v3 AND Disc_Serial = :v4");
+	query.setString("v1", discname).setInt("v2", (*discInfo).getDiscLength()).setInt("v3", (*discInfo).getDiscChapterNum()).setString("v4", serial);
 	
 	try {
 		row = query.selectRow();
@@ -604,11 +605,18 @@ int Database::storeDisc(Disc *discInfo)
 	catch(tntdb::Error &e) {
       if(0 == strcmp("not found", e.what())) {
 		   //if error thrown is tntdb::NotFound, this disc does not exist so insert
-		   query = conn.prepare("INSERT INTO Disc (Disc_Name, Disc_Length, Disc_NumChapters, Disc_Rating_ID) VALUES (:v1, :v2, :v3, :v4)");
+		   query = conn.prepare("INSERT INTO Disc (Disc_Name, Disc_Length, Disc_NumChapters, Disc_Rating_ID, Disc_Serial) VALUES (:v1, :v2, :v3, :v4, :v5)");
 		   query.setString("v1", discname).setInt("v2", (*discInfo).getDiscLength()).setInt("v3", (*discInfo).getDiscChapterNum()).setInt("v4", (*discInfo).getDiscRating());
+		   query.setString("v5", serial);
          
          try {
 		      query.execute();
+			 
+			  query = conn.prepare("SELECT Disc_ID FROM Disc WHERE Disc_Name = :v1 AND Disc_Length = :v2 AND Disc_NumChapters = :v3 AND Disc_Serial = :v4");
+			  query.setString("v1", discname).setInt("v2", (*discInfo).getDiscLength()).setInt("v3", (*discInfo).getDiscChapterNum()).setString("v4", serial);
+			 
+			  (*discInfo).setDiscID(query.selectValue());
+	
          }
          catch(tntdb::Error &e) {
             return DB_GEN_ERROR;
@@ -629,10 +637,11 @@ int Database::getDisc(Disc *disc)
 	tntdb::Statement query;
 	tntdb::Row row;
 	std::string discname = (*disc).getDiscName();
+	std::string serial = (*disc).getDiscSerial();
 	
-	query = conn.prepare("SELECT Disc_ID, Disc_Rating_ID FROM Disc WHERE Disc_Name = :v1 AND Disc_Length = :v2 AND Disc_NumChapters = :v3");
+	query = conn.prepare("SELECT Disc_ID, Disc_Rating_ID FROM Disc WHERE Disc_Name = :v1 AND Disc_Length = :v2 AND Disc_NumChapters = :v3 AND Disc_Serial = :v4");
 	query.setString("v1", discname).setInt("v2", (*disc).getDiscLength());
-	query.setInt("v3", (*disc).getDiscChapterNum());
+	query.setInt("v3", (*disc).getDiscChapterNum()).setString("v4", serial);
 	
 	try {
 		row = query.selectRow();
