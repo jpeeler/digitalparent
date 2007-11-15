@@ -19,7 +19,7 @@
 
 #include <string>
 #include <vector>
-
+#include "std_errors.h"
 
 class Disc
 {
@@ -29,7 +29,7 @@ public:
              m_disc_serial(""),
              m_disc_length(0),
              m_disc_chapters(0),
-             m_disc_rating(0)
+             m_disc_rating(NR)
 	{}
 	~Disc() {}
 		
@@ -59,7 +59,7 @@ private:
 	std::string m_disc_serial;
 	long m_disc_length;
 	int m_disc_chapters;
-	int m_disc_rating; // using 1:G, 2:PG, 3:PG-13, 4:R, 5:NC-17, 6:X, 7:NR
+	int m_disc_rating; // using 1:G, 2:PG, 3:PG-13, 4:R, 5:NC-17, 6:X, 7:NR (enum in std_errors.h)
 };
 
 class User
