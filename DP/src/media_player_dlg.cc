@@ -1,4 +1,3 @@
-//trying to figure out lock
 // generated 2007/10/18 15:52:33 EDT by jmorey@jmorey-laptop.(none)
 // using glademm V2.6.0
 //
@@ -21,7 +20,9 @@
 
 std::string filename= "/dev/dvd";
 const char **dvdtitle;
-const char *playtimes[4]={":start-time=0",":stop-time=30",":start-time=45",":stop-time=60"};
+//const char *playtimes[4]={":start-time=0",":stop-time=30",":start-time=45",":stop-time=60"};
+//const char* playtimes[2]={":start-time=30",":stop-time=45"};
+std::vector<std::string> playTimes;
 int item;
 int id;
 bool firstTime = true;
@@ -33,6 +34,7 @@ bool isAdmin;
 long startTime;
 long endTime;
 int dvdLength;
+int vlcSpeed;
 
 
 extern Controller* useController();
@@ -41,12 +43,31 @@ extern Controller* useController();
 
 void media_player_dlg::init()
 {
+	buildPlaylist();
+	
+	
+	printf("Skip Times start\n");
+	const char *times[playTimes.size()];
+	for(uint i=0; i<playTimes.size(); i++){
+		times[i]=playTimes.at(i).c_str();
+		printf("times[%d]= %s\n",i,times[i]);
+	}
+	printf("Skip Times end\n");
+	
 	isAdmin = useController()->c_getUserLoggedIn()->getUser()=="admin";
 	char **test =NULL;					//used for VLC only
 	libvlc_exception_init(&excp);
   	inst = libvlc_new (0, test, &excp);
 	id = libvlc_get_vlc_id(inst);
-	item = libvlc_playlist_add_extended (inst, filename.c_str(), NULL,sizeof playtimes/sizeof *playtimes,playtimes, &excp);
+	//item = libvlc_playlist_add_extended (inst, filename.c_str(), NULL,sizeof playtimes/sizeof *playtimes,playtimes, &excp);
+	if(playTimes.size()==0){
+		const char *noTimes[1]={":start-time=0"};
+		playTimes.push_back(":start-time=0");	
+		item = libvlc_playlist_add_extended (inst, filename.c_str(), NULL,sizeof noTimes/sizeof *noTimes,noTimes, &excp);
+	} else {
+		item = libvlc_playlist_add_extended (inst, filename.c_str(), NULL,sizeof times/sizeof *times,times, &excp);
+	}
+	vlcSpeed=0;
 	
 	useController()->loadDisc();
 	
@@ -57,20 +78,22 @@ void media_player_dlg::init()
 	}
 	
 	playlist_dlg = new class playlist_dlg();
-	playlist_dlg->hide();						//made so the dlg isn't shown
+	playlist_dlg->hide();						//hide the dlg
 	
 	volume_slider->set_value(libvlc_audio_get_volume(inst,&excp));
 	time_slider->set_range(0,VLC_LengthGet(id));
 	
 	
 	slider_signal = Glib::signal_idle().connect(SigC::slot(*this, &media_player_dlg::update_slider));
-	//buildPlaylist();				//commented out so reduces seg faults
+	
 
 }
 
 void media_player_dlg::on_open_media_button_clicked()
 {  
 	libvlc_destroy(inst);
+	playTimes.clear();
+	printf("size of cleared playtimes %d\n",playTimes.size());
 	init();
 /* 	if(inst==NULL){
  * 	printf("VLC set up\n");
@@ -100,13 +123,14 @@ void media_player_dlg::on_previous_button_clicked()
 
 void media_player_dlg::on_rewind_button_clicked()
 {
-	VLC_SpeedSlower(id);
+	//VLC_SpeedSlower(id);   //adjusted functions
+	VLC_TimeSet(id,(int)time_slider->get_value()-10,false);
+	
 }
 
 void media_player_dlg::on_cut_video_toggled()
 {
 	
-	//time = libvlc_vlm_get_media_time(inst,filename,time,&excp);
 	if(cut_video->get_active()){
 		startTime = (long)VLC_TimeGet(id);
 		dvdLength = VLC_LengthGet(id);
@@ -116,10 +140,10 @@ void media_player_dlg::on_cut_video_toggled()
 		printf("Cut Video end time:  %ld\n",endTime);
 	
 		if(startTime < endTime){
-			//useController()->addSkipTiming(startTime,endTime);
+			useController()->c_addSkipTiming(startTime,endTime);
 			printf("Added skip time\tStart time: %ld\tEnd time: %ld\n",startTime, endTime);
 		} else {
-			//useController()->addSkipTiming(startTime,(long)dvdLength);
+			useController()->c_addSkipTiming(startTime,(long)dvdLength);
 			printf("Length: %d\n",VLC_LengthGet(id));
 			printf("Start time not smaller then end time\n");
 			printf("Added skip time\tStart time: %ld\tEnd time: %d\n",startTime,dvdLength);
@@ -135,6 +159,10 @@ void media_player_dlg::on_next_button_clicked()
 void media_player_dlg::on_fastforward_button_clicked()
 {
 	VLC_SpeedFaster(id);
+	if(vlcSpeed < 3){
+		vlcSpeed++;
+	}
+	printf("VLC speed is %d\n",vlcSpeed);
 }
 
 void media_player_dlg::on_pause_button_clicked()
@@ -146,7 +174,16 @@ void media_player_dlg::on_play_button_clicked()
 {
 	//not using becuase it will restart playback if play is hit when paused
 	//libvlc_playlist_play (inst, item, 0, NULL, &excp); 
-	VLC_Play(id);
+	if(vlcSpeed==0){
+		VLC_Play(id);
+	} else {
+		for(int i=vlcSpeed;i!=0;i--){
+			VLC_SpeedSlower(id);
+		}
+		vlcSpeed=0;
+		VLC_Play(id);
+	}
+	
 }
 
 bool media_player_dlg::update_slider()
@@ -188,12 +225,11 @@ void media_player_dlg::on_playlist_button_toggled()
 	if(playlist_button->get_active()){
 		if(firstTime){
 			firstTime=false;
-			for(uint i=0; i< sizeof playtimes/sizeof *playtimes; i++){
- 				printf("i: %d\n", i);
+			for(uint i=0; i< playTimes.size(); i++){
 				if(i%2==0){
-				checkbutton = new class Gtk::CheckButton(playtimes[i]);
+				checkbutton = new class Gtk::CheckButton(playTimes[i]);
 				} else {
-					checkbutton->set_label(checkbutton->get_label() +" , " + playtimes[i]);
+					checkbutton->set_label(checkbutton->get_label() +" , " + playTimes[i]);
 				}
 				checkbutton->set_active();
 				//checkbutton->show();
@@ -221,7 +257,7 @@ void media_player_dlg::on_Logout_clicked()
 	if(inst!=NULL){
 		libvlc_destroy (inst);
 	}
-	if(!isAdmin){
+	if(isAdmin){
 		hide();
 	} else {
 		useController()->dp_state=DP_LOGIN;
@@ -241,97 +277,57 @@ void media_player_dlg::on_mute_button_toggled()
 
 
 bool media_player_dlg::on_delete_event(GdkEventAny * event){
-	libvlc_destroy(inst);
+	//libvlc_destroy(inst);
+	on_Logout_clicked();
 	return true;
 }
 
 
 
 void media_player_dlg::buildPlaylist(){
-	//const Profile *aprofile = useController()->c_getProfile();
-	//const std::vector<SkipTime>& skipTimes = aprofile->getSkipTimes();
-	std::vector<SkipTime> skipTimes;
-	SkipTime askiptime1;
-	askiptime1.setSkipStart(30);
-	askiptime1.setSkipStop(60);
-	skipTimes.push_back(askiptime1);
-	SkipTime askiptime2;
-	askiptime2.setSkipStart(90);
-	askiptime2.setSkipStop(100);
-	skipTimes.push_back(askiptime2);
-	SkipTime askiptime3;
-	askiptime3.setSkipStart(110);
-	askiptime3.setSkipStop(200);
-	skipTimes.push_back(askiptime3);
-	const char *times[6];
+	const Profile *aprofile = useController()->c_getProfile();
+	const std::vector<SkipTime>& skipTimes = aprofile->getSkipTimes();
+	//~ std::vector<SkipTime> skipTimes;
+ 	//~ SkipTime askiptime0;
+ 	//~ askiptime0.setSkipStart(0);
+ 	//~ askiptime0.setSkipStop(10);
+ 	//~ skipTimes.push_back(askiptime0);
+ 	//~ SkipTime askiptime1;
+ 	//~ askiptime1.setSkipStart(30);
+	//~ askiptime1.setSkipStop(60);
+	//~ skipTimes.push_back(askiptime1);
+	//~ SkipTime askiptime2;
+ 	//~ askiptime2.setSkipStart(90);
+	//~ askiptime2.setSkipStop(100);
+	//~ skipTimes.push_back(askiptime2);
+	//~ SkipTime askiptime3;
+	//~ askiptime3.setSkipStart(110);
+ 	//~ askiptime3.setSkipStop(200);
+	//~ skipTimes.push_back(askiptime3);
+ 
 
 	
 	printf("Correct Skip Times\n");
-/* 	for (std::vector<SkipTime>::const_iterator itt = skipTimes.begin();
- * 		itt!=skipTimes.end(); ++itt)
- * 	{
- * 		printf("[%ld-%ld] ",itt->getSkipStart(), itt->getSkipStop());
- * 	}
- * 	puts("");
- */
-	int counter=0;
-	std::string temp;
-	std::vector<SkipTime>::const_iterator it;
-	for (it = skipTimes.begin(); it!=skipTimes.end(); ++it){
-		if(it->getSkipStart()!=0 && counter==0){
-			printf("$$$$$Entering Skip time != zero$$$$$\n");
-			times[counter]=":startTime=0";
-			printf("times[%d]: %s\n",counter,times[counter]);
-			counter++;
-			temp=":endTime="+to_string(it->getSkipStart());
-			times[counter]= temp.c_str();
-			printf("times[%d]: %s\n",counter,times[counter]);
-			counter++;
-			temp=":startTime="+to_string(it->getSkipStop());
-			times[counter]=temp.c_str();
-			printf("times[%d]: %s\n",counter,times[counter]);
-			counter++;
-			printf("$$$$$Leaving skip time != zero$$$$$\n");
-		} else {
-			printf("*****entering Else*****\n");
-			temp=":startTime="+ to_string(it->getSkipStop());
-			times[counter]=temp.c_str();
-			printf("times[%d]: %s\n",counter,times[counter]);
-			counter++;
-			temp=":endTime=" + to_string(it->getSkipStart());
-			times[counter]=temp.c_str();
-			printf("times[%d]: %s\n",counter,times[counter]);
-			counter++;
-			printf("*****end of else*****\n");
-		}
-		if(counter%2==0){
-			temp=":endTime="+ to_string(it->getSkipStop());
-			times[counter]=temp.c_str();
-			printf("times[%d]: %s\n",counter,times[counter]);
-			counter++;
-			temp=":startTime=" + to_string(it->getSkipStart());
-			times[counter]=temp.c_str();
-			printf("times[%d]: %s\n",counter,times[counter]);
-			counter++;
-		} else {
-			temp=":startTime="+ to_string(it->getSkipStart());
-			times[counter]=temp.c_str();
-			printf("times[%d]: %s\n",counter,times[counter]);
-			counter++;
-			temp=":endTime=" + to_string(it->getSkipStop());
-			times[counter]=temp.c_str();
-			printf("times[%d]: %s\n",counter,times[counter]);
-			counter++;
-		}
-			
+	for (std::vector<SkipTime>::const_iterator it = skipTimes.begin();
+		it!=skipTimes.end(); ++it)
+	{
+		printf("[%ld-%ld] ",it->getSkipStart(), it->getSkipStop());
 	}
-	printf("Skip Times start\n");
-	for(uint i=0; i< sizeof times/sizeof *times; i++){
-		printf(times[i]);
-		printf("\n");
+	puts("");
+	//std::vector<std::string> tempPlayTimes;
+	std::string start = ":start-Time=";
+	std::string stop = ":stop-Time=";
+	for (uint i =0;i<skipTimes.size();i++){
+		if(skipTimes.at(0).getSkipStart()!=0 && i==0){
+			playTimes.push_back(start + "0");			
+		} else if (skipTimes.at(0).getSkipStart()==0 && i==0){
+			playTimes.push_back(start + to_string(skipTimes.at(0).getSkipStop()));
+			i++;
+		}
+		playTimes.push_back(stop + to_string(skipTimes.at(i).getSkipStart()));
+		playTimes.push_back(start + to_string(skipTimes.at(i).getSkipStop()));
 	}
-	printf("Skip Times end\n");
-	
+
 }
 
 template <class T>

@@ -125,9 +125,9 @@ int main(int argc, char **argv)
 		   {
 			  media_player_dlg = new class media_player_dlg();
 					media_player_dlg->init();  
-			  		m.run(*media_player_dlg);			
+			  		m.run(*media_player_dlg);
 			  delete media_player_dlg;
-			  useController()->dp_state = DP_USER_PANEL;		   	
+			  //useController()->dp_state = DP_USER_PANEL;		   	
 		   break;
 		   }		     
 		   case DP_ADMIN_PLAY:
