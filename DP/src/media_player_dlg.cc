@@ -81,7 +81,7 @@ void media_player_dlg::init()
 	playlist_dlg->hide();						//hide the dlg
 	
 	volume_slider->set_value(libvlc_audio_get_volume(inst,&excp));
-	time_slider->set_range(0,VLC_LengthGet(id));
+	time_slider->set_range(0,(useController()->c_getDisc()->getDiscLength())/1000);
 	
 	
 	slider_signal = Glib::signal_idle().connect(SigC::slot(*this, &media_player_dlg::update_slider));
@@ -94,6 +94,7 @@ void media_player_dlg::on_open_media_button_clicked()
 	libvlc_destroy(inst);
 	playTimes.clear();
 	printf("size of cleared playtimes %d\n",playTimes.size());
+	firstTime = true;
 	init();
 /* 	if(inst==NULL){
  * 	printf("VLC set up\n");
@@ -142,7 +143,7 @@ void media_player_dlg::on_cut_video_toggled()
 		if(startTime < endTime){
 			useController()->c_addSkipTiming(startTime,endTime);
 			printf("Added skip time\tStart time: %ld\tEnd time: %ld\n",startTime, endTime);
-		} else {
+		} else if(startTime!=-20) {
 			useController()->c_addSkipTiming(startTime,(long)dvdLength);
 			printf("Length: %d\n",VLC_LengthGet(id));
 			printf("Start time not smaller then end time\n");
@@ -257,7 +258,9 @@ void media_player_dlg::on_Logout_clicked()
 	if(inst!=NULL){
 		libvlc_destroy (inst);
 	}
-	if(isAdmin){
+	playTimes.clear();
+	firstTime=true;
+	if(isAdmin){		
 		hide();
 	} else {
 		useController()->dp_state=DP_LOGIN;
