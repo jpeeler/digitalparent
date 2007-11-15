@@ -87,7 +87,7 @@ int Controller::deleteProfile()
 	return (m_database.deleteProfile(profile));
 }
 
-void Controller::dvd_read_info(char *name, char *serial)
+void Controller::dvd_read_info(char *name, char *serial, long *length, int *numChapters)
 {
 	const char *device = "/dev/dvd";
 //end my code
@@ -152,6 +152,58 @@ void Controller::dvd_read_info(char *name, char *serial)
     } else {
     fprintf(MSG_OUT, "NAME OPEN FAILED\n");
   }
+  
+  // get length and num chapters
+  
+	FILE *ptr;
+	char lengthString[35];
+	long hours, minutes, seconds, decimal;
+	char buf[4];
+
+	if((ptr = popen("lsdvd | grep -o -E \"Length: .* Chapters: [0-9]*\"", "r")) != NULL) {
+		fgets(lengthString, 35, ptr);
+	}
+
+	//do hours
+	buf[0] = '0';
+	buf[1] = lengthString[8];
+	buf[2] = lengthString[9];
+	buf[3] = '\0';
+	hours = strtol(buf, NULL, 10);
+
+	//do minutes
+	buf[0] = '0';
+	buf[1] = lengthString[11];
+	buf[2] = lengthString[12];
+	buf[3] = '\0';
+	minutes = strtol(buf, NULL, 10);
+
+	//do seconds
+	buf[0] = '0';
+	buf[1] = lengthString[14];
+	buf[2] = lengthString[15];
+	buf[3] = '\0';
+	seconds = strtol(buf, NULL, 10);
+
+	//do decimal
+	buf[0] = lengthString[17];
+	buf[1] = lengthString[18];
+	buf[2] = lengthString[19];
+	buf[3] = '\0';
+	decimal = strtol(buf, NULL, 10);
+
+	*length = decimal + 1000 * (seconds + 60 * minutes + 3600 * hours);
+
+	//do chapters
+	buf[0] = '0';
+	buf[1] = lengthString[31];
+	buf[2] = lengthString[32];
+	buf[3] = '\0';
+	*numChapters = strtol(buf, NULL, 10);
+
+	printf("lsdvd: %s\n", lengthString);
+
+  	pclose(ptr);  
 }
 
 
@@ -161,7 +213,10 @@ int Controller::loadDisc()
 	// get the disc_name and disc_serial straight from the DVD
 	char disc_name[50];
 	char disc_serial[25];
-	dvd_read_info(disc_name, disc_serial);
+	long discLength;
+	int discNumChapters;
+	
+	dvd_read_info(disc_name, disc_serial, &discLength, &discNumChapters);
 	
 	// create C++ strings and set them in disc object
 	std::string discName(disc_name);
@@ -169,9 +224,9 @@ int Controller::loadDisc()
 	Disc* disc = m_data.getDisc();
 	disc->setDiscName(discName);
 	disc->setDiscSerial(discSerial);
-	//disc->setDiscLength(discLength);
-	//disc->setDiscChapterNum(numChapters);
-	return (m_database.getDisc(disc));
+	disc->setDiscLength(discLength);
+	disc->setDiscChapterNum(discNumChapters);
+	return (m_database.storeDisc(disc));
 }
 
 int Controller::storeDisc()
@@ -203,7 +258,7 @@ bool hashString(std::string& input)
 	MHASH td;
 	std::string output;
 	unsigned char *hash;
-	char *hashOut;
+	char hashOut[40] = "";
 
 	td = mhash_init(MHASH_SHA1);
 
