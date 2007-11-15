@@ -26,7 +26,7 @@ void Disc::clear()
 	m_disc_serial = "";
 	m_disc_length = 0;
 	m_disc_chapters = 0;
-	m_disc_rating = 0;
+	m_disc_rating = NR;
 }
 
 void Disc::setDiscID(int ID)
