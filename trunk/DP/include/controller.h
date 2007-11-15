@@ -128,7 +128,7 @@ public:
 private:
 	DataStructure m_data;
 	Database m_database; 
-	void dvd_read_info(char *name, char* serial);
+	void dvd_read_info(char *name, char *serial, long *length, int *numChapters);
 };
 
 class TestController
