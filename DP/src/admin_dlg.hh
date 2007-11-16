@@ -39,19 +39,17 @@ enum {
 
 class admin_dlg : public admin_dlg_glade
 {  
-        void on_logout_button_clicked();
-        void on_admin_settings_button_clicked();
-        void on_add_user_button_clicked();
-        void on_edit_user_button_clicked();
-		void on_remove_user_button_clicked();
+        void on_logout_button_clicked();        
+        void on_add_user_button_clicked(); 	
 		void on_screen_movies_button_clicked();		
-        void on_user_save_button_clicked();
-        void on_un_checkbox_toggled();
+        void on_user_save_button_clicked();       
         void on_pw_checkbox_toggled();
         void on_cf_checkbox_toggled();
-        void on_sq_checkbutton_toggled();
+        void on_sq_checkbox_toggled();
         void on_sa_checkbox_toggled();
 		void onIconButtonClicked();
+		void on_delete_user_button_clicked();
+		void on_media_player_button_clicked();
 		vector<class Gtk::Image*> m_image_list;					
 		vector<class Gtk::Button*> m_button_list;
 		vector<string> m_icon_list;	
@@ -61,6 +59,7 @@ class admin_dlg : public admin_dlg_glade
 		void oninit_admin();
 		void oninit_user();
 		void oninit_icons();
+		void reset_frame3();
 		void fill_image_button_scroller(int mode);
 		vector<string> m_file_list;
 		AD_STATE ad_state;
