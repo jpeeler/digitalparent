@@ -20,60 +20,31 @@ void admin_dlg::on_logout_button_clicked()
 	hide();
 }
 
-void admin_dlg::on_admin_settings_button_clicked()
-{  
-	ad_state = AD_SETTINGS;
-}
+//void admin_dlg::on_admin_settings_button_clicked()
+//{  
+//	ad_state = AD_SETTINGS;
+//}
 
 void admin_dlg::fill_image_button_scroller( int mode )
 {
-	switch ( mode )
+	m_icon_list = useController()->getIconList();					
+			
+	for ( unsigned int j = 0; j < m_file_list.size(); j++ )
 	{
-		case ALL_ICONS:
-		{
-			m_icon_list = useController()->getIconList();					
-			
-			for ( unsigned int j = 0; j < m_file_list.size(); j++ )
-			{
-				bool user_icon = false;
-				for ( unsigned int i = 0; i < m_icon_list.size(); i++ )
-				{						
-					if ( m_file_list.at(j) == m_icon_list.at(i) )											
-						user_icon = true;
-				}
-				if ( user_icon )				
-					m_button_list.at(j)->hide();					
-				else
-					m_button_list.at(j)->show();
-			}
-
-			frame2->show();		
-		break;
+		bool user_icon = false;
+		for ( unsigned int i = 0; i < m_icon_list.size(); i++ )
+		{						
+			if ( m_file_list.at(j) == m_icon_list.at(i) )											
+				user_icon = true;
 		}
-		
-		case USER_ICONS:
-		{
-			m_icon_list = useController()->getIconList();
-			m_user_list = useController()->getUserList();			
-			
-			for ( unsigned int j = 0; j < m_file_list.size(); j++ )
-			{
-				bool user_icon = false;
-				for ( unsigned int i = 0; i < m_icon_list.size(); i++ )
-				{						
-					if ( m_file_list.at(j) == m_icon_list.at(i) )											
-						user_icon = true;
-				}
-				if ( user_icon )				
-					m_button_list.at(j)->show();					
-				else
-					m_button_list.at(j)->hide();
-			}
-
-			frame2->show();			
-		break;
-		}
+		if ( mode == ALL_ICONS && !user_icon )				
+			m_button_list.at(j)->show();					
+		else if ( mode == USER_ICONS && user_icon )
+			m_button_list.at(j)->show();
+		else m_button_list.at(j)->hide();
 	}
+
+	frame2->show();			
 }
 
 void admin_dlg::on_add_user_button_clicked()
@@ -84,13 +55,12 @@ void admin_dlg::on_add_user_button_clicked()
 	
 	hseparator2->show();
 	vseparator1->show();
+	//remove_user_button->hide();
 	frame2->show();
 	icon_select_frame_label->show();
 	frame1->show();
 	
 	user_label->set_text("");	
-	user_name_edit_box->set_text("");
-	user_name_edit_box->set_editable(true);	
 	
 	admin_icon->hide();	
 	fixed8->remove(*admin_icon);
@@ -98,6 +68,19 @@ void admin_dlg::on_add_user_button_clicked()
 	fixed8->put(*admin_icon, 0, 40);		
 	admin_icon->show();	
 	
+	reset_frame3();	
+	frame3->show();
+	
+	g_radio_button->set_active(true);	
+	nr_checkbox->set_active(false);		
+			
+	user_save_button->show();
+}
+
+void admin_dlg::reset_frame3()
+{
+	user_name_edit_box->set_text("");
+	user_name_edit_box->set_editable(true);	
 	password_edit_box->set_text("");
 	password_edit_box->show();
 	pw_checkbox->set_active(true);		
@@ -107,30 +90,28 @@ void admin_dlg::on_add_user_button_clicked()
 	sq_checkbox->set_active(true);	
 	sa_edit_box->set_text("");
 	sa_checkbox->set_active(true);
-	
-	frame3->show();
-	g_radio_button->set_active(true);	
-	nr_checkbox->set_active(false);		
-			
-	user_save_button->show();
 }
 
-void admin_dlg::on_edit_user_button_clicked()
-{  
-	ad_state = AD_EDIT_USER;
-	frame1->hide();
-	frame3->hide();	
-	fill_image_button_scroller(USER_ICONS);
-	frame2->show();	
-}
+//void admin_dlg::on_edit_user_button_clicked()
+//{  
+//	ad_state = AD_EDIT_USER;
+//	frame1->hide();
+//	frame3->hide();	
+//	fill_image_button_scroller(USER_ICONS);
+//	frame2->show();	
+//}
 
-void admin_dlg::on_remove_user_button_clicked()
+//void admin_dlg::on_remove_user_button_clicked()
+//{  
+//	ad_state = AD_DELETE_USER;	
+//	frame1->hide();
+//	frame3->hide();	
+//	fill_image_button_scroller(USER_ICONS);
+//	frame2->show();
+//}
+
+void admin_dlg::on_delete_user_button_clicked()
 {  
-	ad_state = AD_DELETE_USER;	
-	frame1->hide();
-	frame3->hide();	
-	fill_image_button_scroller(USER_ICONS);
-	frame2->show();
 }
 
 void admin_dlg::on_screen_movies_button_clicked()
@@ -162,10 +143,11 @@ void admin_dlg::oninit_user()
 	frame3->hide();
 	frame2->hide();
 	frame1->hide();
-	edit_user_button->hide();
+	reset_frame3();
+	//edit_user_button->hide();
 	add_user_button->hide();
-	remove_user_button->hide();
-	admin_settings_button->hide();
+	//remove_user_button->hide();
+	//admin_settings_button->hide();
 }
 
 void admin_dlg::oninit_icons()
@@ -173,7 +155,7 @@ void admin_dlg::oninit_icons()
 	system("ls /Projects/DP/images > pixmaps.dat");
 	FILE *fp = fopen("pixmaps.dat","r");
 	int c;
-	string fname = useController()->img_dir;//"/Projects/DP/images/";
+	string fname = useController()->img_dir;
 	c = fgetc(fp);
 	class Gtk::Button *button;
 	class Gtk::Image *image;
@@ -224,21 +206,13 @@ void admin_dlg::on_user_save_button_clicked()
 	string password = password_edit_box->get_text();
 	string confirm = confirm_edit_box->get_text();		
 	
-	if ( password != confirm || password == "" || confirm == "" )
+	if ( password != confirm )
 	{		
 		password_edit_box->set_text("");
 		confirm_edit_box->set_text("");
-		error_label->set_text("Password or Confirm error");
+		error_label->set_text("Password and Confirm do not match");
 		return;
-	}
-	
-	if ( password.size() < 5 )
-	{		
-		password_edit_box->set_text("");
-		confirm_edit_box->set_text("");
-		error_label->set_text("Password not long enough");
-		return;
-	}
+	}	
 	
 	string question = sq_edit_box->get_text();
 	string answer = sa_edit_box->get_text();
@@ -274,9 +248,12 @@ void admin_dlg::on_user_save_button_clicked()
 	useController()->c_setOtherUserCanPlayUnknown( unknown );
 	useController()->c_setOtherUserMaxPlayLevel( max_level );
 	if ( useController()->storeOtherUser() != SUCCESS )
-		error_label->set_text("can't create user");
-	else
 	{
+		reset_frame3();
+		error_label->set_text("can't create user");		
+	}
+	else
+	{		
 		error_label->set_text("User saved successfully");
 		useController()->c_clearUserOther();
 		for ( unsigned int i = 0; i < m_file_list.size(); i ++ )
@@ -285,10 +262,6 @@ void admin_dlg::on_user_save_button_clicked()
 				m_button_list.at(i)->hide();
 		}			
 	}
-}
-
-void admin_dlg::on_un_checkbox_toggled()
-{  
 }
 
 void admin_dlg::on_pw_checkbox_toggled()
@@ -305,7 +278,7 @@ void admin_dlg::on_cf_checkbox_toggled()
 	else confirm_edit_box->set_visibility(true);
 }
 
-void admin_dlg::on_sq_checkbutton_toggled()
+void admin_dlg::on_sq_checkbox_toggled()
 {  
 	bool visible = sq_edit_box->get_visibility();
 	if ( visible ) sq_edit_box->set_visibility(false);
@@ -334,4 +307,8 @@ void admin_dlg::onIconButtonClicked()
 			return;
 		}
 	}
+}
+
+void admin_dlg::on_media_player_button_clicked()
+{  
 }
