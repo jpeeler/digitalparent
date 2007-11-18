@@ -37,6 +37,7 @@ class media_player_dlg : public media_player_dlg_glade
 		void buildPlaylist();
 		bool on_time_slider_button_press(GdkEventButton *ev);
 		bool on_time_slider_button_release_event(GdkEventButton *ev);
+		void on_time_slider_button_move_event();
 		template <class T>
 inline std::string to_string (const T& t);
 	public:
