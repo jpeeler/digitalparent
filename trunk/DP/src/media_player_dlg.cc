@@ -43,6 +43,7 @@ extern Controller* useController();
 
 void media_player_dlg::init()
 {
+	/*
 	buildPlaylist();
 	
 	
@@ -53,13 +54,25 @@ void media_player_dlg::init()
 		printf("times[%d]= %s\n",i,times[i]);
 	}
 	printf("Skip Times end\n");
-	
+	*/
 	isAdmin = useController()->c_getUserLoggedIn()->getUser()=="admin";
 	char **test =NULL;					//used for VLC only
 	libvlc_exception_init(&excp);
   	inst = libvlc_new (0, test, &excp);
 	id = libvlc_get_vlc_id(inst);
 	//item = libvlc_playlist_add_extended (inst, filename.c_str(), NULL,sizeof playtimes/sizeof *playtimes,playtimes, &excp);
+	/*
+	libvlc_media_descriptor_t *md;
+	vlc_int64_t len;
+	libvlc_media_instance_t *mi;
+	md = libvlc_media_descriptor_new(inst, filename, &excp);
+	len = libvlc_media_descriptor_get_duration(md, &excp);
+	mi = libvlc_media_instance_new_from_media_descriptor(mi, &excp);
+	libvlc_media_instance_play(mi, &excp);
+	*/
+	//printf("Length: %d\n", len);
+	
+	/*
 	if(playTimes.size()==0){
 		const char *noTimes[1]={":start-time=0"};
 		playTimes.push_back(":start-time=0");	
@@ -67,6 +80,21 @@ void media_player_dlg::init()
 	} else {
 		item = libvlc_playlist_add_extended (inst, filename.c_str(), NULL,sizeof times/sizeof *times,times, &excp);
 	}
+	*/
+	std::string option;
+	std::string name;
+	int chap;
+	//the following line may be commented out if we don't want to show the menu
+	item = libvlc_playlist_add(inst, filename.c_str(), "Root Menu", &excp);
+	//!!!!!!! need to change chap limit to disc->getChapterNum() once the
+	//disc info is loaded
+	for(chap = 1; chap <= 20; chap++) {
+		option = "dvd:///dev/dvd@1:" + to_string(chap);
+		name = "Chapter " + to_string(chap);
+		libvlc_playlist_add(inst, option.c_str(), name.c_str(), &excp);
+	}
+	
+	libvlc_playlist_play(inst, 0, 0, NULL, &excp);
 	vlcSpeed=0;
 	
 	useController()->loadDisc();
@@ -155,6 +183,19 @@ void media_player_dlg::on_cut_video_toggled()
 void media_player_dlg::on_next_button_clicked()
 {  
 	libvlc_playlist_next(inst,&excp);
+	
+	/** this is how the skins controller does it:
+	input_thread_t *p_input =
+        (input_thread_t *)vlc_object_find( getIntf(), VLC_OBJECT_INPUT,
+                                           FIND_ANYWHERE );
+    if( p_input )
+    {
+        vlc_value_t val;
+        val.b_bool = VLC_TRUE;
+        var_Set( p_input, "next-chapter", val );
+        vlc_object_release( p_input );
+    }
+	*/
 }
 
 void media_player_dlg::on_fastforward_button_clicked()
@@ -206,15 +247,24 @@ void media_player_dlg::on_time_slider_value_changed()
 	//VLC_TimeSet(id,(int)time_slider->get_value(),false);
 }
 
+void media_player_dlg::on_time_slider_button_move_event() {
+	VLC_TimeSet(id,(int)time_slider->get_value(),false);
+	usleep(50);
+}
+
 bool media_player_dlg::on_time_slider_button_press(GdkEventButton *ev)
 {  
        slider_signal.disconnect();
+	   //slider_signal = Glib::signal_timeout().connect(SigC::slot(*this, &media_player_dlg::on_time_slider_button_move_event), 500);
+	   slider_signal = time_slider->signal_value_changed().connect(SigC::slot(*this, &media_player_dlg::on_time_slider_button_move_event), 500);
+
        return 0;
 }
 
 bool media_player_dlg::on_time_slider_button_release_event(GdkEventButton *ev)
 {
-       VLC_TimeSet(id,(int)time_slider->get_value(),false);
+	   slider_signal.disconnect();
+	   //VLC_TimeSet(id,(int)time_slider->get_value(),false);
        slider_signal = Glib::signal_idle().connect(SigC::slot(*this, &media_player_dlg::update_slider));
 
        return 0;
