@@ -352,88 +352,6 @@
       </child>
 
       <child>
-	<widget class="GtkToggleButton" id="cut_video">
-	  <property name="width_request">96</property>
-	  <property name="height_request">32</property>
-	  <property name="visible">True</property>
-	  <property name="can_focus">True</property>
-	  <property name="relief">GTK_RELIEF_NORMAL</property>
-	  <property name="focus_on_click">True</property>
-	  <property name="active">False</property>
-	  <property name="inconsistent">False</property>
-	  <signal name="toggled" handler="on_cut_video_toggled" last_modification_time="Fri, 26 Oct 2007 02:27:12 GMT"/>
-
-	  <child>
-	    <widget class="GtkAlignment" id="alignment3">
-	      <property name="visible">True</property>
-	      <property name="xalign">0.5</property>
-	      <property name="yalign">0.5</property>
-	      <property name="xscale">0</property>
-	      <property name="yscale">0</property>
-	      <property name="top_padding">0</property>
-	      <property name="bottom_padding">0</property>
-	      <property name="left_padding">0</property>
-	      <property name="right_padding">0</property>
-
-	      <child>
-		<widget class="GtkHBox" id="hbox3">
-		  <property name="visible">True</property>
-		  <property name="homogeneous">False</property>
-		  <property name="spacing">2</property>
-
-		  <child>
-		    <widget class="GtkImage" id="image11">
-		      <property name="visible">True</property>
-		      <property name="stock">gtk-cut</property>
-		      <property name="icon_size">4</property>
-		      <property name="xalign">0.5</property>
-		      <property name="yalign">0.5</property>
-		      <property name="xpad">0</property>
-		      <property name="ypad">0</property>
-		    </widget>
-		    <packing>
-		      <property name="padding">0</property>
-		      <property name="expand">False</property>
-		      <property name="fill">False</property>
-		    </packing>
-		  </child>
-
-		  <child>
-		    <widget class="GtkLabel" id="label3">
-		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">Video</property>
-		      <property name="use_underline">True</property>
-		      <property name="use_markup">False</property>
-		      <property name="justify">GTK_JUSTIFY_LEFT</property>
-		      <property name="wrap">False</property>
-		      <property name="selectable">False</property>
-		      <property name="xalign">0.5</property>
-		      <property name="yalign">0.5</property>
-		      <property name="xpad">0</property>
-		      <property name="ypad">0</property>
-		      <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
-		      <property name="width_chars">-1</property>
-		      <property name="single_line_mode">False</property>
-		      <property name="angle">0</property>
-		    </widget>
-		    <packing>
-		      <property name="padding">0</property>
-		      <property name="expand">False</property>
-		      <property name="fill">False</property>
-		    </packing>
-		  </child>
-		</widget>
-	      </child>
-	    </widget>
-	  </child>
-	</widget>
-	<packing>
-	  <property name="x">560</property>
-	  <property name="y">0</property>
-	</packing>
-      </child>
-
-      <child>
 	<widget class="GtkToggleButton" id="mute_button">
 	  <property name="width_request">48</property>
 	  <property name="height_request">27</property>
@@ -448,7 +366,7 @@
 	  <child>
 	    <widget class="GtkImage" id="sound">
 	      <property name="visible">True</property>
-	      <property name="pixbuf">audio-volume-muted.png</property>
+	      <property name="pixbuf">audio-volume-high.png</property>
 	      <property name="xalign">0.5</property>
 	      <property name="yalign">0.5</property>
 	      <property name="xpad">0</property>
@@ -503,6 +421,54 @@
 	<packing>
 	  <property name="x">104</property>
 	  <property name="y">8</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkLabel" id="media">
+	  <property name="width_request">304</property>
+	  <property name="height_request">16</property>
+	  <property name="visible">True</property>
+	  <property name="label" translatable="yes">Now Playing</property>
+	  <property name="use_underline">False</property>
+	  <property name="use_markup">False</property>
+	  <property name="justify">GTK_JUSTIFY_LEFT</property>
+	  <property name="wrap">True</property>
+	  <property name="selectable">False</property>
+	  <property name="xalign">0.5</property>
+	  <property name="yalign">0.5</property>
+	  <property name="xpad">0</property>
+	  <property name="ypad">0</property>
+	  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
+	  <property name="width_chars">-1</property>
+	  <property name="single_line_mode">False</property>
+	  <property name="angle">0</property>
+	</widget>
+	<packing>
+	  <property name="x">248</property>
+	  <property name="y">8</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkHScale" id="time_slider">
+	  <property name="width_request">360</property>
+	  <property name="height_request">16</property>
+	  <property name="visible">True</property>
+	  <property name="can_focus">True</property>
+	  <property name="draw_value">False</property>
+	  <property name="value_pos">GTK_POS_TOP</property>
+	  <property name="digits">0</property>
+	  <property name="update_policy">GTK_UPDATE_CONTINUOUS</property>
+	  <property name="inverted">False</property>
+	  <property name="adjustment">0 0 100 1 0 0</property>
+	  <signal name="value_changed" handler="on_time_slider_value_changed" last_modification_time="Fri, 26 Oct 2007 02:22:44 GMT"/>
+	  <signal name="button_press_event" handler="on_time_slider_button_press" last_modification_time="Fri, 09 Nov 2007 20:23:14 GMT"/>
+	  <signal name="button_release_event" handler="on_time_slider_button_release_event" last_modification_time="Fri, 09 Nov 2007 21:49:33 GMT"/>
+	</widget>
+	<packing>
+	  <property name="x">144</property>
+	  <property name="y">48</property>
 	</packing>
       </child>
 
@@ -581,56 +547,90 @@
 	  </child>
 	</widget>
 	<packing>
-	  <property name="x">560</property>
-	  <property name="y">32</property>
+	  <property name="x">568</property>
+	  <property name="y">0</property>
 	</packing>
       </child>
 
       <child>
-	<widget class="GtkLabel" id="media">
-	  <property name="width_request">304</property>
-	  <property name="height_request">16</property>
-	  <property name="visible">True</property>
-	  <property name="label" translatable="yes">Now Playing</property>
-	  <property name="use_underline">False</property>
-	  <property name="use_markup">False</property>
-	  <property name="justify">GTK_JUSTIFY_LEFT</property>
-	  <property name="wrap">True</property>
-	  <property name="selectable">False</property>
-	  <property name="xalign">0.5</property>
-	  <property name="yalign">0.5</property>
-	  <property name="xpad">0</property>
-	  <property name="ypad">0</property>
-	  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
-	  <property name="width_chars">-1</property>
-	  <property name="single_line_mode">False</property>
-	  <property name="angle">0</property>
-	</widget>
-	<packing>
-	  <property name="x">248</property>
-	  <property name="y">8</property>
-	</packing>
-      </child>
-
-      <child>
-	<widget class="GtkHScale" id="time_slider">
-	  <property name="width_request">360</property>
-	  <property name="height_request">16</property>
+	<widget class="GtkToggleButton" id="cut_video">
+	  <property name="width_request">96</property>
+	  <property name="height_request">32</property>
 	  <property name="visible">True</property>
 	  <property name="can_focus">True</property>
-	  <property name="draw_value">False</property>
-	  <property name="value_pos">GTK_POS_TOP</property>
-	  <property name="digits">0</property>
-	  <property name="update_policy">GTK_UPDATE_CONTINUOUS</property>
-	  <property name="inverted">False</property>
-	  <property name="adjustment">0 0 100 1 0 0</property>
-	  <signal name="value_changed" handler="on_time_slider_value_changed" last_modification_time="Fri, 26 Oct 2007 02:22:44 GMT"/>
-	  <signal name="button_press_event" handler="on_time_slider_button_press" last_modification_time="Fri, 09 Nov 2007 20:23:14 GMT"/>
-	  <signal name="button_release_event" handler="on_time_slider_button_release_event" last_modification_time="Fri, 09 Nov 2007 21:49:33 GMT"/>
+	  <property name="relief">GTK_RELIEF_NORMAL</property>
+	  <property name="focus_on_click">True</property>
+	  <property name="active">False</property>
+	  <property name="inconsistent">False</property>
+	  <signal name="toggled" handler="on_cut_video_toggled" last_modification_time="Fri, 26 Oct 2007 02:27:12 GMT"/>
+
+	  <child>
+	    <widget class="GtkAlignment" id="alignment3">
+	      <property name="visible">True</property>
+	      <property name="xalign">0.5</property>
+	      <property name="yalign">0.5</property>
+	      <property name="xscale">0</property>
+	      <property name="yscale">0</property>
+	      <property name="top_padding">0</property>
+	      <property name="bottom_padding">0</property>
+	      <property name="left_padding">0</property>
+	      <property name="right_padding">0</property>
+
+	      <child>
+		<widget class="GtkHBox" id="hbox3">
+		  <property name="visible">True</property>
+		  <property name="homogeneous">False</property>
+		  <property name="spacing">2</property>
+
+		  <child>
+		    <widget class="GtkImage" id="image11">
+		      <property name="visible">True</property>
+		      <property name="stock">gtk-cut</property>
+		      <property name="icon_size">4</property>
+		      <property name="xalign">0.5</property>
+		      <property name="yalign">0.5</property>
+		      <property name="xpad">0</property>
+		      <property name="ypad">0</property>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">False</property>
+		      <property name="fill">False</property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkLabel" id="label3">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">Video</property>
+		      <property name="use_underline">True</property>
+		      <property name="use_markup">False</property>
+		      <property name="justify">GTK_JUSTIFY_LEFT</property>
+		      <property name="wrap">False</property>
+		      <property name="selectable">False</property>
+		      <property name="xalign">0.5</property>
+		      <property name="yalign">0.5</property>
+		      <property name="xpad">0</property>
+		      <property name="ypad">0</property>
+		      <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
+		      <property name="width_chars">-1</property>
+		      <property name="single_line_mode">False</property>
+		      <property name="angle">0</property>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">False</property>
+		      <property name="fill">False</property>
+		    </packing>
+		  </child>
+		</widget>
+	      </child>
+	    </widget>
+	  </child>
 	</widget>
 	<packing>
-	  <property name="x">144</property>
-	  <property name="y">48</property>
+	  <property name="x">568</property>
+	  <property name="y">32</property>
 	</packing>
       </child>
     </widget>
@@ -984,45 +984,6 @@
 	  </child>
 
 	  <child>
-	    <widget class="GtkHSeparator" id="hseparator1">
-	      <property name="width_request">768</property>
-	      <property name="height_request">16</property>
-	      <property name="visible">True</property>
-	    </widget>
-	    <packing>
-	      <property name="x">8</property>
-	      <property name="y">176</property>
-	    </packing>
-	  </child>
-
-	  <child>
-	    <widget class="GtkButton" id="admin_login_button">
-	      <property name="width_request">160</property>
-	      <property name="height_request">144</property>
-	      <property name="visible">True</property>
-	      <property name="can_focus">True</property>
-	      <property name="relief">GTK_RELIEF_NORMAL</property>
-	      <property name="focus_on_click">True</property>
-	      <signal name="clicked" handler="on_admin_login_button_clicked" last_modification_time="Mon, 15 Oct 2007 15:26:01 GMT"/>
-
-	      <child>
-		<widget class="GtkImage" id="admin_icon">
-		  <property name="visible">True</property>
-		  <property name="pixbuf">crystal_ball.png</property>
-		  <property name="xalign">0.5</property>
-		  <property name="yalign">0.5</property>
-		  <property name="xpad">0</property>
-		  <property name="ypad">0</property>
-		</widget>
-	      </child>
-	    </widget>
-	    <packing>
-	      <property name="x">24</property>
-	      <property name="y">8</property>
-	    </packing>
-	  </child>
-
-	  <child>
 	    <widget class="GtkButton" id="previous_user_button">
 	      <property name="width_request">96</property>
 	      <property name="height_request">40</property>
@@ -1127,6 +1088,45 @@
 	  </child>
 
 	  <child>
+	    <widget class="GtkButton" id="admin_login_button">
+	      <property name="width_request">160</property>
+	      <property name="height_request">144</property>
+	      <property name="visible">True</property>
+	      <property name="can_focus">True</property>
+	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="focus_on_click">True</property>
+	      <signal name="clicked" handler="on_admin_login_button_clicked" last_modification_time="Mon, 15 Oct 2007 15:26:01 GMT"/>
+
+	      <child>
+		<widget class="GtkImage" id="admin_icon">
+		  <property name="visible">True</property>
+		  <property name="pixbuf">tux.png</property>
+		  <property name="xalign">0.5</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
+		</widget>
+	      </child>
+	    </widget>
+	    <packing>
+	      <property name="x">24</property>
+	      <property name="y">8</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkHSeparator" id="hseparator1">
+	      <property name="width_request">768</property>
+	      <property name="height_request">16</property>
+	      <property name="visible">True</property>
+	    </widget>
+	    <packing>
+	      <property name="x">8</property>
+	      <property name="y">176</property>
+	    </packing>
+	  </child>
+
+	  <child>
 	    <widget class="GtkButton" id="user_icon_select_button_1">
 	      <property name="width_request">152</property>
 	      <property name="height_request">144</property>
@@ -1182,6 +1182,7 @@
 
 	  <child>
 	    <widget class="GtkButton" id="user_icon_select_button_3">
+	      <property name="border_width">2</property>
 	      <property name="width_request">160</property>
 	      <property name="height_request">144</property>
 	      <property name="visible">True</property>
