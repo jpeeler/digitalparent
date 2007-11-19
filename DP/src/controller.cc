@@ -160,7 +160,7 @@ void Controller::dvd_read_info(char *name, char *serial, long *length, int *numC
 	long hours, minutes, seconds, decimal;
 	char buf[4];
 
-	if((ptr = popen("lsdvd | grep -o -E \"Length: .* Chapters: [0-9]*\"", "r")) != NULL) {
+	if((ptr = popen("lsdvd | grep -o -E \"Length: .* Chapters: [0-9]*,\"", "r")) != NULL) {
 		fgets(lengthString, 35, ptr);
 	}
 
