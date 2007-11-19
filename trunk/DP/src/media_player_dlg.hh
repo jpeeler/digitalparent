@@ -38,6 +38,9 @@ class media_player_dlg : public media_player_dlg_glade
 		bool on_time_slider_button_press(GdkEventButton *ev);
 		bool on_time_slider_button_release_event(GdkEventButton *ev);
 		void on_time_slider_button_move_event();
+		void on_save_button_clicked();
+		void on_playlist_clicked();
+		bool eraseFromSkipButtons(std::string toRemove);
 		template <class T>
 inline std::string to_string (const T& t);
 	public:

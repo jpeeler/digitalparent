@@ -22,19 +22,22 @@ std::string filename= "/dev/dvd";
 const char **dvdtitle;
 //const char *playtimes[4]={":start-time=0",":stop-time=30",":start-time=45",":stop-time=60"};
 //const char* playtimes[2]={":start-time=30",":stop-time=45"};
-std::vector<std::string> playTimes;
+std::vector<std::string> skipTimes;
+std::vector<int> skipChapters;
+std::vector<Gtk::CheckButton*> skipButtons;
 int item;
 int id;
 bool firstTime = true;
 playlist_dlg *playlist_dlg;
 media_chooser_dlg *media_chooser;
 bool audioSkipped=false;
-Gtk::CheckButton * checkbutton;
+Gtk::CheckButton *checkbutton;
 bool isAdmin;
 long startTime;
 long endTime;
 int dvdLength;
 int vlcSpeed;
+Gtk::Button *saveProfile;
 
 
 extern Controller* useController();
@@ -43,8 +46,9 @@ extern Controller* useController();
 
 void media_player_dlg::init()
 {
+	
+	//buildPlaylist();
 	/*
-	buildPlaylist();
 	
 	
 	printf("Skip Times start\n");
@@ -81,6 +85,7 @@ void media_player_dlg::init()
 		item = libvlc_playlist_add_extended (inst, filename.c_str(), NULL,sizeof times/sizeof *times,times, &excp);
 	}
 	*/
+	useController()->loadDisc();
 	std::string option;
 	std::string name;
 	int chap;
@@ -88,7 +93,8 @@ void media_player_dlg::init()
 	item = libvlc_playlist_add(inst, filename.c_str(), "Root Menu", &excp);
 	//!!!!!!! need to change chap limit to disc->getChapterNum() once the
 	//disc info is loaded
-	for(chap = 1; chap <= 20; chap++) {
+//	for(chap = 1; chap <= 20; chap++) {
+	for(chap = 1; chap <= useController()->c_getDisc()->getDiscChapterNum(); chap++) {
 		option = "dvd:///dev/dvd@1:" + to_string(chap);
 		name = "Chapter " + to_string(chap);
 		libvlc_playlist_add(inst, option.c_str(), name.c_str(), &excp);
@@ -97,21 +103,26 @@ void media_player_dlg::init()
 	libvlc_playlist_play(inst, 0, 0, NULL, &excp);
 	vlcSpeed=0;
 	
-	useController()->loadDisc();
+	const Profile *aprofile = useController()->c_getProfile();
+	
+	skipChapters = aprofile->getSkipChapters();
+	
 	
 	currentUser->set_text("User: " +useController()->c_getUserLoggedIn()->getUser());
 	media->set_text(useController()->c_getDisc()->getDiscName());
 	if(!isAdmin){
 		cut_video->hide();
 	}
-	
+	saveProfile = new class Gtk::Button("Save Profile");
 	playlist_dlg = new class playlist_dlg();
+	playlist_dlg->vbox4->pack_end(*saveProfile, Gtk::PACK_EXPAND_WIDGET, 0);
 	playlist_dlg->hide();						//hide the dlg
 	
 	volume_slider->set_value(libvlc_audio_get_volume(inst,&excp));
 	time_slider->set_range(0,(useController()->c_getDisc()->getDiscLength())/1000);
 	
 	
+	saveProfile->signal_clicked().connect(SigC::slot(*this, &media_player_dlg::on_save_button_clicked), false);
 	slider_signal = Glib::signal_idle().connect(SigC::slot(*this, &media_player_dlg::update_slider));
 	
 
@@ -120,8 +131,8 @@ void media_player_dlg::init()
 void media_player_dlg::on_open_media_button_clicked()
 {  
 	libvlc_destroy(inst);
-	playTimes.clear();
-	printf("size of cleared playtimes %d\n",playTimes.size());
+	skipTimes.clear();
+	skipChapters.clear();
 	firstTime = true;
 	init();
 /* 	if(inst==NULL){
@@ -270,19 +281,38 @@ bool media_player_dlg::on_time_slider_button_release_event(GdkEventButton *ev)
        return 0;
 }
 
+void media_player_dlg::on_save_button_clicked()
+{
+
+	printf("save button clicked\n");
+}
 
 void media_player_dlg::on_playlist_button_toggled()
 {
+	
 	if(playlist_button->get_active()){
 		if(firstTime){
 			firstTime=false;
-			for(uint i=0; i< playTimes.size(); i++){
+			printf("number of chapters %d\n",useController()->c_getDisc()->getDiscChapterNum());
+//			for(int chap = 1; chap <= useController()->c_getDisc()->getDiscChapterNum(); chap++) {
+			for(int chap = 1; chap <= 10; chap++) {
+				checkbutton = new class Gtk::CheckButton("Chapter" + to_string(chap));
+skipButtons.push_back(checkbutton);
+					printf("Chapter: %s\n", to_string(chap).c_str());
+				checkbutton->set_active();
+				checkbutton->signal_toggled().connect(SigC::slot(*this, &media_player_dlg::on_playlist_clicked), false);
+				
+				playlist_dlg->vbox4->pack_start(*checkbutton,Gtk::PACK_EXPAND_WIDGET,0);
+			}
+			for(uint i=0; i< skipTimes.size(); i++){
 				if(i%2==0){
-				checkbutton = new class Gtk::CheckButton(playTimes[i]);
+				checkbutton = new class Gtk::CheckButton(skipTimes[i]);
 				} else {
-					checkbutton->set_label(checkbutton->get_label() +" , " + playTimes[i]);
+					checkbutton->set_label(checkbutton->get_label() +" , " + skipTimes[i]);
 				}
 				checkbutton->set_active();
+skipButtons.push_back(checkbutton);
+				checkbutton->signal_toggled().connect(SigC::slot(*this, &media_player_dlg::on_playlist_clicked), false);
 				//checkbutton->show();
 				playlist_dlg->vbox4->pack_start(*checkbutton, Gtk::PACK_EXPAND_WIDGET, 0);
 			}
@@ -308,7 +338,8 @@ void media_player_dlg::on_Logout_clicked()
 	if(inst!=NULL){
 		libvlc_destroy (inst);
 	}
-	playTimes.clear();
+	skipTimes.clear();
+	skipChapters.clear();
 	firstTime=true;
 	if(isAdmin){		
 		hide();
@@ -325,7 +356,20 @@ void media_player_dlg::on_fullscreen_clicked()
 
 void media_player_dlg::on_mute_button_toggled()
 {  
-		VLC_VolumeMute(id);
+	VLC_VolumeMute(id);
+	if(mute_button->get_active()){	
+		sound->hide();	
+		fixed1->remove(*sound);
+		sound = Gtk::manage(new class Gtk::Image(std::string("/Projects/DP/images/audio-volume-muted.png")));
+		fixed1->put(*sound,22,93);
+		sound->show();
+	} else {
+		sound->hide();	
+		fixed1->remove(*sound);
+		sound = Gtk::manage(new class Gtk::Image(std::string("/Projects/DP/images/audio-volume-high.png")));
+		fixed1->put(*sound,22,93);
+		sound->show();
+	}
 }
 
 
@@ -338,31 +382,31 @@ bool media_player_dlg::on_delete_event(GdkEventAny * event){
 
 
 void media_player_dlg::buildPlaylist(){
-	const Profile *aprofile = useController()->c_getProfile();
-	const std::vector<SkipTime>& skipTimes = aprofile->getSkipTimes();
-	//~ std::vector<SkipTime> skipTimes;
- 	//~ SkipTime askiptime0;
- 	//~ askiptime0.setSkipStart(0);
- 	//~ askiptime0.setSkipStop(10);
- 	//~ skipTimes.push_back(askiptime0);
- 	//~ SkipTime askiptime1;
- 	//~ askiptime1.setSkipStart(30);
-	//~ askiptime1.setSkipStop(60);
-	//~ skipTimes.push_back(askiptime1);
-	//~ SkipTime askiptime2;
- 	//~ askiptime2.setSkipStart(90);
-	//~ askiptime2.setSkipStop(100);
-	//~ skipTimes.push_back(askiptime2);
-	//~ SkipTime askiptime3;
-	//~ askiptime3.setSkipStart(110);
- 	//~ askiptime3.setSkipStop(200);
-	//~ skipTimes.push_back(askiptime3);
+	//~ const Profile *aprofile = useController()->c_getProfile();
+	//~ const std::vector<SkipTime>& skipTimes = aprofile->getSkipTimes();
+	std::vector<SkipTime> playList;
+ 	SkipTime askiptime0;
+ 	askiptime0.setSkipStart(0);
+ 	askiptime0.setSkipStop(10);
+ 	playList.push_back(askiptime0);
+ 	SkipTime askiptime1;
+ 	askiptime1.setSkipStart(30);
+	askiptime1.setSkipStop(60);
+	playList.push_back(askiptime1);
+	SkipTime askiptime2;
+ 	askiptime2.setSkipStart(90);
+	askiptime2.setSkipStop(100);
+	playList.push_back(askiptime2);
+	SkipTime askiptime3;
+	askiptime3.setSkipStart(110);
+ 	askiptime3.setSkipStop(200);
+	playList.push_back(askiptime3);
  
 
 	
 	printf("Correct Skip Times\n");
-	for (std::vector<SkipTime>::const_iterator it = skipTimes.begin();
-		it!=skipTimes.end(); ++it)
+	for (std::vector<SkipTime>::const_iterator it = playList.begin();
+		it!=playList.end(); ++it)
 	{
 		printf("[%ld-%ld] ",it->getSkipStart(), it->getSkipStop());
 	}
@@ -370,18 +414,46 @@ void media_player_dlg::buildPlaylist(){
 	//std::vector<std::string> tempPlayTimes;
 	std::string start = ":start-Time=";
 	std::string stop = ":stop-Time=";
-	for (uint i =0;i<skipTimes.size();i++){
-		if(skipTimes.at(0).getSkipStart()!=0 && i==0){
-			playTimes.push_back(start + "0");			
-		} else if (skipTimes.at(0).getSkipStart()==0 && i==0){
-			playTimes.push_back(start + to_string(skipTimes.at(0).getSkipStop()));
+	for (uint i =0;i<playList.size();i++){
+		if(playList.at(0).getSkipStart()!=0 && i==0){
+			skipTimes.push_back(start + "0");			
+		} else if (playList.at(0).getSkipStart()==0 && i==0){
+			skipTimes.push_back(start + to_string(playList.at(0).getSkipStop()));
 			i++;
 		}
-		playTimes.push_back(stop + to_string(skipTimes.at(i).getSkipStart()));
-		playTimes.push_back(start + to_string(skipTimes.at(i).getSkipStop()));
+		skipTimes.push_back(stop + to_string(playList.at(i).getSkipStart()));
+		skipTimes.push_back(start + to_string(playList.at(i).getSkipStop()));
 	}
 
 }
+
+void media_player_dlg::on_playlist_clicked()
+{
+	for (uint i=0; i<skipButtons.size(); i++ )
+	{
+		//printf("active for %d is: %d\n" ,i,skipButtons.at(i)->property_active()==0);
+		if(skipButtons.at(i)->property_active()==0){
+			printf("Chapter not active was %s\n",skipButtons.at(i)->get_label().c_str());
+			eraseFromSkipButtons(skipButtons.at(i)->get_label());
+		} else {
+			//printf("Chapter active was %s\n",skipButtons.at(i)->get_label().c_str());
+		}
+	}	
+}
+
+bool media_player_dlg::eraseFromSkipButtons(std::string toRemove){
+	printf("Removing %s\n",toRemove.c_str());
+	for(uint i=0;i<skipButtons.size();i++){
+		printf("Vector[%d]: %s\n",i,skipButtons.at(i)->get_label().c_str());
+		if(skipButtons.at(i)->get_label()==toRemove){
+			//vector.remove(i);
+			printf("%s removed\n",toRemove.c_str());
+			return true;
+		}
+	}
+	return false;
+}
+
 
 template <class T>
 inline std::string media_player_dlg::to_string (const T& t)
