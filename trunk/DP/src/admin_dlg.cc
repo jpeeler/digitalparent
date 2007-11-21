@@ -131,7 +131,7 @@ void admin_dlg::oninit_admin()
 	frame1->hide();
 	admin_icon->hide();	
 	fixed8->remove(*admin_icon);
-	admin_icon = Gtk::manage(new class Gtk::Image(string("/Projects/DP/pixmaps/tux.png")));
+	admin_icon = Gtk::manage(new class Gtk::Image(string("/Projects/DP/images/tux.png")));
 	fixed8->put(*admin_icon, 0, 40);		
 	admin_icon->show();
 
@@ -256,6 +256,21 @@ void admin_dlg::on_user_save_button_clicked()
 	{		
 		error_label->set_text("User saved successfully");
 		useController()->c_clearUserOther();
+		
+		// reset selected icon to be null (actually no_user.png)
+		admin_icon->hide();	
+		fixed8->remove(*admin_icon);
+		admin_icon = Gtk::manage(new class Gtk::Image(string("/Projects/DP/pixmaps/no_user.png")));
+		fixed8->put(*admin_icon, 0, 40);		
+		admin_icon->show();
+		
+		// clear fields
+		user_name_edit_box->set_text("");
+		password_edit_box->set_text("");
+		confirm_edit_box->set_text("");
+		sq_edit_box->set_text("");
+		sa_edit_box->set_text("");
+		
 		for ( unsigned int i = 0; i < m_file_list.size(); i ++ )
 		{
 			if ( m_file_list.at(i) == m_user_image )
