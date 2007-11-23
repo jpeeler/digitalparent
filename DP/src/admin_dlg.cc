@@ -35,7 +35,7 @@ void admin_dlg::fill_image_button_scroller( int mode )
 		for ( unsigned int i = 0; i < m_icon_list.size(); i++ )
 		{						
 			if ( m_file_list.at(j) == m_icon_list.at(i) )											
-				user_icon = true;
+				user_icon = true;			
 		}
 		if ( mode == ALL_ICONS && !user_icon )				
 			m_button_list.at(j)->show();					
@@ -45,6 +45,11 @@ void admin_dlg::fill_image_button_scroller( int mode )
 	}
 
 	frame2->show();			
+}
+
+void admin_dlg::on_admin_settings_button_clicked()
+{
+	
 }
 
 void admin_dlg::on_add_user_button_clicked()
@@ -92,26 +97,22 @@ void admin_dlg::reset_frame3()
 	sa_checkbox->set_active(true);
 }
 
-//void admin_dlg::on_edit_user_button_clicked()
-//{  
-//	ad_state = AD_EDIT_USER;
-//	frame1->hide();
-//	frame3->hide();	
-//	fill_image_button_scroller(USER_ICONS);
-//	frame2->show();	
-//}
-
-//void admin_dlg::on_remove_user_button_clicked()
-//{  
-//	ad_state = AD_DELETE_USER;	
-//	frame1->hide();
-//	frame3->hide();	
-//	fill_image_button_scroller(USER_ICONS);
-//	frame2->show();
-//}
-
-void admin_dlg::on_delete_user_button_clicked()
+void admin_dlg::on_edit_user_button_clicked()
 {  
+	ad_state = AD_EDIT_USER;
+	frame1->hide();
+	frame3->hide();	
+	fill_image_button_scroller(USER_ICONS);
+	frame2->show();	
+}
+
+void admin_dlg::on_remove_user_button_clicked()
+{  
+	ad_state = AD_DELETE_USER;	
+	frame1->hide();
+	frame3->hide();	
+	fill_image_button_scroller(USER_ICONS);
+	frame2->show();
 }
 
 void admin_dlg::on_screen_movies_button_clicked()
@@ -124,16 +125,18 @@ void admin_dlg::on_screen_movies_button_clicked()
 
 void admin_dlg::oninit_admin()
 {
-	user_label->set_text("admin");
-	
-	frame3->hide();
-	frame2->hide();
-	frame1->hide();
+	// SHOW THE ADMIN ICON AND NAME
 	admin_icon->hide();	
 	fixed8->remove(*admin_icon);
 	admin_icon = Gtk::manage(new class Gtk::Image(string("/Projects/DP/images/tux.png")));
 	fixed8->put(*admin_icon, 0, 40);		
 	admin_icon->show();
+	user_label->set_text("admin");
+	
+	//SHOW ONLY THE USER BUTTONS AND SCROLLER
+	frame1->hide();
+	frame2->hide();
+	frame3->hide();	
 
 	m_admin = useController()->c_getUserLoggedIn();	
 }
