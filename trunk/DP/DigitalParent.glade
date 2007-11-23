@@ -1100,7 +1100,7 @@
 	      <child>
 		<widget class="GtkImage" id="admin_icon">
 		  <property name="visible">True</property>
-		  <property name="pixbuf">tux.png</property>
+		  <property name="pixbuf">no_user.png</property>
 		  <property name="xalign">0.5</property>
 		  <property name="yalign">0.5</property>
 		  <property name="xpad">0</property>
@@ -1139,7 +1139,7 @@
 	      <child>
 		<widget class="GtkImage" id="user_button1_icon">
 		  <property name="visible">True</property>
-		  <property name="pixbuf">smile.png</property>
+		  <property name="pixbuf">no_user.png</property>
 		  <property name="xalign">0.5</property>
 		  <property name="yalign">0.5</property>
 		  <property name="xpad">0</property>
@@ -1166,7 +1166,7 @@
 	      <child>
 		<widget class="GtkImage" id="user_button2_icon">
 		  <property name="visible">True</property>
-		  <property name="pixbuf">oooh_smile.png</property>
+		  <property name="pixbuf">no_user.png</property>
 		  <property name="xalign">0.5</property>
 		  <property name="yalign">0.5</property>
 		  <property name="xpad">0</property>
@@ -1194,7 +1194,7 @@
 	      <child>
 		<widget class="GtkImage" id="user_button3_icon">
 		  <property name="visible">True</property>
-		  <property name="pixbuf">smile.png</property>
+		  <property name="pixbuf">no_user.png</property>
 		  <property name="xalign">0.5</property>
 		  <property name="yalign">0.5</property>
 		  <property name="xpad">0</property>
@@ -1318,7 +1318,7 @@ as administrator.
 	      <property name="width_request">152</property>
 	      <property name="height_request">152</property>
 	      <property name="visible">True</property>
-	      <property name="pixbuf">tux.png</property>
+	      <property name="pixbuf">no_user.png</property>
 	      <property name="xalign">0.5</property>
 	      <property name="yalign">0.5</property>
 	      <property name="xpad">0</property>
@@ -2062,24 +2062,6 @@ as administrator.
       </child>
 
       <child>
-	<widget class="GtkButton" id="media_player_button">
-	  <property name="width_request">128</property>
-	  <property name="height_request">37</property>
-	  <property name="visible">True</property>
-	  <property name="can_focus">True</property>
-	  <property name="label" translatable="yes">Media Player</property>
-	  <property name="use_underline">True</property>
-	  <property name="relief">GTK_RELIEF_NORMAL</property>
-	  <property name="focus_on_click">True</property>
-	  <signal name="clicked" handler="on_media_player_button_clicked" last_modification_time="Fri, 16 Nov 2007 00:04:33 GMT"/>
-	</widget>
-	<packing>
-	  <property name="x">128</property>
-	  <property name="y">0</property>
-	</packing>
-      </child>
-
-      <child>
 	<widget class="GtkFrame" id="frame1">
 	  <property name="width_request">601</property>
 	  <property name="height_request">281</property>
@@ -2150,7 +2132,7 @@ as administrator.
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
 			      <property name="editable">True</property>
-			      <property name="visibility">False</property>
+			      <property name="visibility">True</property>
 			      <property name="max_length">16</property>
 			      <property name="text" translatable="yes"></property>
 			      <property name="has_frame">True</property>
@@ -2523,18 +2505,6 @@ as administrator.
       </child>
 
       <child>
-	<widget class="GtkHSeparator" id="hseparator3">
-	  <property name="width_request">640</property>
-	  <property name="height_request">16</property>
-	  <property name="visible">True</property>
-	</widget>
-	<packing>
-	  <property name="x">0</property>
-	  <property name="y">32</property>
-	</packing>
-      </child>
-
-      <child>
 	<widget class="GtkFrame" id="frame2">
 	  <property name="width_request">600</property>
 	  <property name="height_request">184</property>
@@ -2615,11 +2585,41 @@ as administrator.
       </child>
 
       <child>
+	<widget class="GtkHSeparator" id="hseparator3">
+	  <property name="width_request">768</property>
+	  <property name="height_request">16</property>
+	  <property name="visible">True</property>
+	</widget>
+	<packing>
+	  <property name="x">0</property>
+	  <property name="y">32</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkButton" id="media_player_button">
+	  <property name="width_request">128</property>
+	  <property name="height_request">37</property>
+	  <property name="visible">True</property>
+	  <property name="can_focus">True</property>
+	  <property name="label" translatable="yes">Media Player</property>
+	  <property name="use_underline">True</property>
+	  <property name="relief">GTK_RELIEF_NORMAL</property>
+	  <property name="focus_on_click">True</property>
+	  <signal name="clicked" handler="on_media_player_button_clicked" last_modification_time="Fri, 16 Nov 2007 00:04:33 GMT"/>
+	</widget>
+	<packing>
+	  <property name="x">128</property>
+	  <property name="y">0</property>
+	</packing>
+      </child>
+
+      <child>
 	<widget class="GtkImage" id="admin_icon">
 	  <property name="width_request">152</property>
 	  <property name="height_request">136</property>
 	  <property name="visible">True</property>
-	  <property name="pixbuf">tux.png</property>
+	  <property name="pixbuf">no_user.png</property>
 	  <property name="xalign">0.5</property>
 	  <property name="yalign">0.5</property>
 	  <property name="xpad">0</property>
