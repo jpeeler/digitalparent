@@ -20,36 +20,18 @@ void admin_dlg::on_logout_button_clicked()
 	hide();
 }
 
-//void admin_dlg::on_admin_settings_button_clicked()
-//{  
-//	ad_state = AD_SETTINGS;
-//}
-
-void admin_dlg::fill_image_button_scroller( int mode )
-{
-	m_icon_list = useController()->getIconList();					
-			
-	for ( unsigned int j = 0; j < m_file_list.size(); j++ )
-	{
-		bool user_icon = false;
-		for ( unsigned int i = 0; i < m_icon_list.size(); i++ )
-		{						
-			if ( m_file_list.at(j) == m_icon_list.at(i) )											
-				user_icon = true;			
-		}
-		if ( mode == ALL_ICONS && !user_icon )				
-			m_button_list.at(j)->show();					
-		else if ( mode == USER_ICONS && user_icon )
-			m_button_list.at(j)->show();
-		else m_button_list.at(j)->hide();
-	}
-
-	frame2->show();			
+void admin_dlg::on_media_player_button_clicked()
+{  
+	if ( useController()->dp_state == DP_ADMIN_PANEL )
+		useController()->dp_state = DP_ADMIN_PLAY;
+	else useController()->dp_state = DP_USER_PLAY;
+	hide();
 }
 
 void admin_dlg::on_admin_settings_button_clicked()
-{
-	
+{  
+	ad_state = AD_SETTINGS;
+	oninit_admin();
 }
 
 void admin_dlg::on_add_user_button_clicked()
@@ -73,37 +55,13 @@ void admin_dlg::on_add_user_button_clicked()
 	fixed8->put(*admin_icon, 0, 40);		
 	admin_icon->show();	
 	
-	reset_frame3();	
+	reset_frame3(NULL);	
 	frame3->show();
 	
 	g_radio_button->set_active(true);	
 	nr_checkbox->set_active(false);		
 			
 	user_save_button->show();
-}
-
-void admin_dlg::reset_frame3()
-{
-	user_name_edit_box->set_text("");
-	user_name_edit_box->set_editable(true);	
-	password_edit_box->set_text("");
-	password_edit_box->show();
-	pw_checkbox->set_active(true);		
-	confirm_edit_box->set_text("");
-	cf_checkbox->set_active(true);	
-	sq_edit_box->set_text("");	
-	sq_checkbox->set_active(true);	
-	sa_edit_box->set_text("");
-	sa_checkbox->set_active(true);
-}
-
-void admin_dlg::on_edit_user_button_clicked()
-{  
-	ad_state = AD_EDIT_USER;
-	frame1->hide();
-	frame3->hide();	
-	fill_image_button_scroller(USER_ICONS);
-	frame2->show();	
 }
 
 void admin_dlg::on_remove_user_button_clicked()
@@ -115,11 +73,112 @@ void admin_dlg::on_remove_user_button_clicked()
 	frame2->show();
 }
 
+void admin_dlg::on_edit_user_button_clicked()
+{  
+	ad_state = AD_EDIT_USER;
+	frame1->hide();
+	frame3->hide();	
+	fill_image_button_scroller(USER_ICONS);
+	frame2->show();	
+}
+
+
+void admin_dlg::fill_image_button_scroller( int mode )
+{
+	m_icon_list = useController()->getIconList();					
+			
+	for ( unsigned int j = 0; j < m_file_list.size(); j++ )
+	{
+		bool user_icon = false;
+		for ( unsigned int i = 0; i < m_icon_list.size(); i++ )
+		{						
+			if ( m_file_list.at(j) == m_icon_list.at(i) )											
+				user_icon = true;			
+		}
+		if ( mode == ALL_ICONS && !user_icon )				
+			m_button_list.at(j)->show();					
+		else if ( mode == USER_ICONS && user_icon )
+			m_button_list.at(j)->show();
+		else m_button_list.at(j)->hide();
+	}
+
+	frame2->show();			
+}
+
+void admin_dlg::onIconButtonClicked()
+{
+	unsigned int i;
+	for ( i = 0; i < m_button_list.size(); i++ )
+	{
+		if ( get_focus() == m_button_list.at(i) )							
+			break;
+				
+	}
+	admin_icon->hide();	
+	fixed8->remove(*admin_icon);
+	m_user_image = m_file_list.at(i);
+	admin_icon = Gtk::manage(new class Gtk::Image(m_file_list.at(i)));
+	fixed8->put(*admin_icon, 0, 40);		
+	admin_icon->show();	
+	switch (ad_state)
+	{			
+		case AD_SETTINGS:
+			// this case should not occur
+			printf("\nIcon Buttons should not be clickable in state ADMIN_SETTINGS");
+		break;			
+		case AD_USER_SETTINGS:
+			
+		break;
+		case AD_ADD_USER:
+			
+		break;
+		case AD_EDIT_USER:
+			unsigned int j;
+			for ( j = 0; j < m_user_list.size(); j++ )
+			{
+				if ( m_file_list.at(i) == m_icon_list.at(j) )
+					break;
+			}
+			user_label->set_text(m_user_list.at(j));
+		break;
+		case AD_DELETE_USER:
+			
+		break;
+	}	
+	return;
+}
+
+void admin_dlg::reset_frame3(const User *a_user)
+{
+	if ( a_user == NULL )
+	{
+		user_name_edit_box->set_text("");
+		password_edit_box->set_text("");
+		confirm_edit_box->set_text("");
+		sq_edit_box->set_text("");	
+		sa_edit_box->set_text("");
+	}
+	else
+	{
+		user_name_edit_box->set_text(a_user->getUser().c_str());
+		password_edit_box->set_text(a_user->getPasswordHash().c_str());
+		confirm_edit_box->set_text(a_user->getPasswordHash().c_str());
+		sq_edit_box->set_text(a_user->getQuestion().c_str());
+		sa_edit_box->set_text(a_user->getAnswer().c_str());
+	}	
+	
+	pw_checkbox->set_active(true);
+	password_edit_box->set_visibility(false);	
+	cf_checkbox->set_active(true);	
+	confirm_edit_box->set_visibility(false);	
+	sq_checkbox->set_active(true);	
+	sa_checkbox->set_active(true);
+	sa_edit_box->set_visibility(false);	
+}
+
 void admin_dlg::on_screen_movies_button_clicked()
 {  
-	if ( useController()->dp_state == DP_ADMIN_PANEL )
-		useController()->dp_state = DP_ADMIN_PLAY;
-	else useController()->dp_state = DP_USER_PLAY;
+	useController()->dp_state = DP_ADMIN_PLAY;	
 	hide();
 }
 
@@ -133,12 +192,25 @@ void admin_dlg::oninit_admin()
 	admin_icon->show();
 	user_label->set_text("admin");
 	
-	//SHOW ONLY THE USER BUTTONS AND SCROLLER
-	frame1->hide();
+	// GET ALL OF THE USER NAMES AND ICONS
+	m_user_list = useController()->getUserList();
+	m_icon_list = useController()->getIconList();
+	
+	// SHOW ONLY APPROPRIATE BUTTONS ALONG TOP OF DIALOG
+	m_user_list.size() == 0	? edit_user_button->hide() : edit_user_button->show(); 
+	m_user_list.size() == 0 ? remove_user_button->hide() : remove_user_button->show(); 
+	
+	// GET THE ADMIN INFO AND FILL IT ALL IN
+	m_admin = useController()->c_getUserLoggedIn();
+	reset_frame3(m_admin);	
+	
+	// SHOW / HIDE FRAMES
+	frame1->show();
 	frame2->hide();
-	frame3->hide();	
-
-	m_admin = useController()->c_getUserLoggedIn();	
+	frame3->hide();
+	user_save_button->hide();
+	user_name_edit_box->set_editable(false);
+		
 }
 
 void admin_dlg::oninit_user()
@@ -146,11 +218,13 @@ void admin_dlg::oninit_user()
 	frame3->hide();
 	frame2->hide();
 	frame1->hide();
-	reset_frame3();
-	//edit_user_button->hide();
+	
+	edit_user_button->hide();
 	add_user_button->hide();
-	//remove_user_button->hide();
-	//admin_settings_button->hide();
+	remove_user_button->hide();
+	admin_settings_button->hide();
+	m_user = useController()->c_getUserLoggedIn();
+	reset_frame3(m_user);
 }
 
 void admin_dlg::oninit_icons()
@@ -252,12 +326,12 @@ void admin_dlg::on_user_save_button_clicked()
 	useController()->c_setOtherUserMaxPlayLevel( max_level );
 	if ( useController()->storeOtherUser() != SUCCESS )
 	{
-		reset_frame3();
+		reset_frame3(NULL);
 		error_label->set_text("can't create user");		
 	}
 	else
 	{		
-		error_label->set_text("User saved successfully");
+		//error_label->set_text("User saved successfully");
 		useController()->c_clearUserOther();
 		
 		// reset selected icon to be null (actually no_user.png)
@@ -278,7 +352,8 @@ void admin_dlg::on_user_save_button_clicked()
 		{
 			if ( m_file_list.at(i) == m_user_image )
 				m_button_list.at(i)->hide();
-		}			
+		}
+		on_admin_settings_button_clicked();		
 	}
 }
 
@@ -308,25 +383,4 @@ void admin_dlg::on_sa_checkbox_toggled()
 	bool visible = sa_edit_box->get_visibility();
 	if ( visible ) sa_edit_box->set_visibility(false);
 	else sa_edit_box->set_visibility(true);
-}
-
-void admin_dlg::onIconButtonClicked()
-{
-	for ( unsigned int i = 0; i < m_button_list.size(); i++ )
-	{
-		if ( get_focus() == m_button_list.at(i) )
-		{			
-			admin_icon->hide();	
-			fixed8->remove(*admin_icon);
-			m_user_image = m_file_list.at(i);
-			admin_icon = Gtk::manage(new class Gtk::Image(m_file_list.at(i)));
-			fixed8->put(*admin_icon, 0, 40);		
-			admin_icon->show();
-			return;
-		}
-	}
-}
-
-void admin_dlg::on_media_player_button_clicked()
-{  
 }
