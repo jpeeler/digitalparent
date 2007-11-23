@@ -22,10 +22,8 @@ using namespace std;
 extern Controller *useController();
 //extern Controller g_img_dir;
 
-typedef enum {
-	AD_ADMIN_START,
-	AD_SETTINGS,
-	AD_USER_START,
+typedef enum {	
+	AD_SETTINGS,	
 	AD_USER_SETTINGS,
 	AD_ADD_USER,
 	AD_EDIT_USER,
@@ -61,12 +59,12 @@ class admin_dlg : public admin_dlg_glade
 		void oninit_admin();
 		void oninit_user();
 		void oninit_icons();
-		void reset_frame3();
+		void reset_frame3(const User *a_user);
 		void fill_image_button_scroller(int mode);
 		vector<string> m_file_list;
 		AD_STATE ad_state;
 		
-	private:
+	private:		
 		const User *m_user;
 		const User *m_admin;
 		string m_user_image;
