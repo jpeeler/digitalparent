@@ -34,6 +34,12 @@ void admin_dlg::on_admin_settings_button_clicked()
 	oninit_admin();
 }
 
+void admin_dlg::on_change_icon_clicked()
+{
+	fill_image_button_scroller(ALL_ICONS);
+	frame2->show();
+}
+
 void admin_dlg::on_add_user_button_clicked()
 {  	
 	ad_state = AD_ADD_USER;
@@ -47,20 +53,15 @@ void admin_dlg::on_add_user_button_clicked()
 	icon_select_frame_label->show();
 	frame1->show();
 	
-	user_label->set_text("");	
-	
-	admin_icon->hide();	
-	fixed8->remove(*admin_icon);
-	admin_icon = Gtk::manage(new class Gtk::Image(string("/Projects/DP/pixmaps/no_user.png")));
-	fixed8->put(*admin_icon, 0, 40);		
-	admin_icon->show();	
+	clear_user_icon();
+	user_name_edit_box->set_editable(true);
 	
 	reset_frame3(NULL);	
 	frame3->show();
 	
 	g_radio_button->set_active(true);	
 	nr_checkbox->set_active(false);		
-			
+	screen_movies_button->hide();		
 	user_save_button->show();
 }
 
@@ -71,6 +72,7 @@ void admin_dlg::on_remove_user_button_clicked()
 	frame3->hide();	
 	fill_image_button_scroller(USER_ICONS);
 	frame2->show();
+	clear_user_icon();
 }
 
 void admin_dlg::on_edit_user_button_clicked()
@@ -79,9 +81,9 @@ void admin_dlg::on_edit_user_button_clicked()
 	frame1->hide();
 	frame3->hide();	
 	fill_image_button_scroller(USER_ICONS);
-	frame2->show();	
+	frame2->show();
+	clear_user_icon();	
 }
-
 
 void admin_dlg::fill_image_button_scroller( int mode )
 {
@@ -100,40 +102,50 @@ void admin_dlg::fill_image_button_scroller( int mode )
 		else if ( mode == USER_ICONS && user_icon )
 			m_button_list.at(j)->show();
 		else m_button_list.at(j)->hide();
-	}
+	}				
+}
 
-	frame2->show();			
+void admin_dlg::clear_user_icon()
+{
+	set_user_icon(string(""),string("/Projects/DP/pixmaps/no_user.png"));	
+}
+
+void admin_dlg::set_user_icon(string user, string file_name )
+{
+	user_label->set_text(user.c_str());	
+	admin_icon->hide();	
+	fixed8->remove(*admin_icon);
+	admin_icon = Gtk::manage(new class Gtk::Image(file_name.c_str()));
+	fixed8->put(*admin_icon, 0, 40);		
+	admin_icon->show();
 }
 
 void admin_dlg::onIconButtonClicked()
 {
 	unsigned int i;
+	unsigned int j;	
 	for ( i = 0; i < m_button_list.size(); i++ )
 	{
 		if ( get_focus() == m_button_list.at(i) )							
 			break;
 				
 	}
-	admin_icon->hide();	
-	fixed8->remove(*admin_icon);
-	m_user_image = m_file_list.at(i);
-	admin_icon = Gtk::manage(new class Gtk::Image(m_file_list.at(i)));
-	fixed8->put(*admin_icon, 0, 40);		
-	admin_icon->show();	
+	
+	set_user_icon(string(""),m_file_list.at(i));
+	
 	switch (ad_state)
 	{			
 		case AD_SETTINGS:
 			// this case should not occur
 			printf("\nIcon Buttons should not be clickable in state ADMIN_SETTINGS");
 		break;			
-		case AD_USER_SETTINGS:
-			
+		case AD_USER_SETTINGS:				
+			user_label->set_text(m_user->getUser());
 		break;
 		case AD_ADD_USER:
 			
 		break;
-		case AD_EDIT_USER:
-			unsigned int j;
+		case AD_EDIT_USER:			
 			for ( j = 0; j < m_user_list.size(); j++ )
 			{
 				if ( m_file_list.at(i) == m_icon_list.at(j) )
@@ -142,6 +154,9 @@ void admin_dlg::onIconButtonClicked()
 			user_label->set_text(m_user_list.at(j));
 		break;
 		case AD_DELETE_USER:
+			
+		break;
+		default:
 			
 		break;
 	}	
@@ -184,13 +199,9 @@ void admin_dlg::on_screen_movies_button_clicked()
 
 void admin_dlg::oninit_admin()
 {
+	ad_state = AD_SETTINGS;
 	// SHOW THE ADMIN ICON AND NAME
-	admin_icon->hide();	
-	fixed8->remove(*admin_icon);
-	admin_icon = Gtk::manage(new class Gtk::Image(string("/Projects/DP/images/tux.png")));
-	fixed8->put(*admin_icon, 0, 40);		
-	admin_icon->show();
-	user_label->set_text("admin");
+	set_user_icon(string("admin"),string("/Projects/DP/images/tux.png"));	
 	
 	// GET ALL OF THE USER NAMES AND ICONS
 	m_user_list = useController()->getUserList();
@@ -199,22 +210,24 @@ void admin_dlg::oninit_admin()
 	// SHOW ONLY APPROPRIATE BUTTONS ALONG TOP OF DIALOG
 	m_user_list.size() == 0	? edit_user_button->hide() : edit_user_button->show(); 
 	m_user_list.size() == 0 ? remove_user_button->hide() : remove_user_button->show(); 
+	change_icon_button->hide();
 	
 	// GET THE ADMIN INFO AND FILL IT ALL IN
 	m_admin = useController()->c_getUserLoggedIn();
+	m_user_image = m_admin->getUserIcon();
 	reset_frame3(m_admin);	
 	
 	// SHOW / HIDE FRAMES
 	frame1->show();
 	frame2->hide();
 	frame3->hide();
-	user_save_button->hide();
-	user_name_edit_box->set_editable(false);
-		
+	//user_save_button->show();
+	user_name_edit_box->set_editable(false);		
 }
 
 void admin_dlg::oninit_user()
 {
+	ad_state = AD_USER_SETTINGS;
 	frame3->hide();
 	frame2->hide();
 	frame1->hide();
@@ -222,8 +235,16 @@ void admin_dlg::oninit_user()
 	edit_user_button->hide();
 	add_user_button->hide();
 	remove_user_button->hide();
-	admin_settings_button->hide();
+	admin_settings_button->hide();	
+	change_icon_button->show();
+	screen_movies_button->show();
 	m_user = useController()->c_getUserLoggedIn();
+	m_user_image = m_user->getUserIcon();
+	set_user_icon(m_user->getUser(),m_user_image);
+	user_name_edit_box->set_editable(false);
+	screen_movies_button->hide();
+	
+	//fill_image_button_scroller(ALL_ICONS);
 	reset_frame3(m_user);
 }
 
@@ -301,59 +322,58 @@ void admin_dlg::on_user_save_button_clicked()
 		error_label->set_text("Q or A not filled in");
 		return;	
 	}
-	
-	bool unknown = nr_checkbox->get_state();
-	int max_level = 0;
-	if ( x_radio_button->get_state() == true )
-		max_level = X;
-	else if ( r_radio_button->get_state() == true )
-		max_level = R;
-	else if ( nc17_radio_button->get_state() == true )
-		max_level = NC17;
-	else if ( pg13_radio_button->get_state() == true )
-		max_level = PG13;
-	else if ( pg_radio_button->get_state() == true )
-		max_level = PG;
-	else if ( g_radio_button->get_state() == true )
-		max_level = G;
-	
-	useController()->c_setOtherUser( user );
-	useController()->c_setOtherUserIcon( m_user_image );
-	useController()->c_setOtherUserPasswordHash( password );
-	useController()->c_setOtherUserSecretQuestion( question );
-	useController()->c_setOtherUserSecretAnswerHash( answer );
-	useController()->c_setOtherUserCanPlayUnknown( unknown );
-	useController()->c_setOtherUserMaxPlayLevel( max_level );
-	if ( useController()->storeOtherUser() != SUCCESS )
+	switch ( ad_state )
 	{
-		reset_frame3(NULL);
-		error_label->set_text("can't create user");		
-	}
-	else
-	{		
-		//error_label->set_text("User saved successfully");
-		useController()->c_clearUserOther();
-		
-		// reset selected icon to be null (actually no_user.png)
-		admin_icon->hide();	
-		fixed8->remove(*admin_icon);
-		admin_icon = Gtk::manage(new class Gtk::Image(string("/Projects/DP/pixmaps/no_user.png")));
-		fixed8->put(*admin_icon, 0, 40);		
-		admin_icon->show();
-		
-		// clear fields
-		user_name_edit_box->set_text("");
-		password_edit_box->set_text("");
-		confirm_edit_box->set_text("");
-		sq_edit_box->set_text("");
-		sa_edit_box->set_text("");
-		
-		for ( unsigned int i = 0; i < m_file_list.size(); i ++ )
+		case AD_SETTINGS:
+			useController()->c_setCurrentUserPasswordHash( password );
+			useController()->c_setCurrentUserSecretQuestion( question );
+			useController()->c_setCurrentUserSecretAnswerHash( answer );
+			error_label->set_text("");
+			on_admin_settings_button_clicked();			
+		break;
+		case AD_ADD_USER:
+		case AD_EDIT_USER:
 		{
-			if ( m_file_list.at(i) == m_user_image )
-				m_button_list.at(i)->hide();
+			bool unknown = nr_checkbox->get_state();
+			int max_level = 0;
+			if ( x_radio_button->get_state() == true )
+				max_level = X;
+			else if ( r_radio_button->get_state() == true )
+				max_level = R;
+			else if ( nc17_radio_button->get_state() == true )
+				max_level = NC17;
+			else if ( pg13_radio_button->get_state() == true )
+				max_level = PG13;
+			else if ( pg_radio_button->get_state() == true )
+				max_level = PG;
+			else if ( g_radio_button->get_state() == true )
+				max_level = G;
+			useController()->c_setOtherUser( user );
+			useController()->c_setOtherUserIcon( m_user_image );
+			useController()->c_setOtherUserPasswordHash( password );
+			useController()->c_setOtherUserSecretQuestion( question );
+			useController()->c_setOtherUserSecretAnswerHash( answer );
+			useController()->c_setOtherUserCanPlayUnknown( unknown );
+			useController()->c_setOtherUserMaxPlayLevel( max_level );
+			if ( useController()->storeOtherUser() != SUCCESS )	
+			{				
+				error_label->set_text("can't create user");	
+				reset_frame3(NULL);
+			}				
+			else							
+			{
+				useController()->c_clearUserOther();
+				error_label->set_text("");
+				on_admin_settings_button_clicked();				
+			}
+		break;
 		}
-		on_admin_settings_button_clicked();		
+		case AD_USER_SETTINGS:
+			
+		break;
+		default:
+			
+		break;			
 	}
 }
 
