@@ -46,6 +46,7 @@ class admin_dlg : public admin_dlg_glade
         void on_sq_checkbox_toggled();
         void on_sa_checkbox_toggled();
 		void onIconButtonClicked();
+		void on_change_icon_clicked();
 		void on_edit_user_button_clicked();
 		void on_admin_settings_button_clicked();
 		void on_remove_user_button_clicked();
@@ -61,6 +62,8 @@ class admin_dlg : public admin_dlg_glade
 		void oninit_icons();
 		void reset_frame3(const User *a_user);
 		void fill_image_button_scroller(int mode);
+		void clear_user_icon();
+		void set_user_icon(string user, string file_name);
 		vector<string> m_file_list;
 		AD_STATE ad_state;
 		
