@@ -139,6 +139,9 @@ void admin_dlg::onIconButtonClicked()
 		break;			
 		case AD_USER_SETTINGS:				
 			user_label->set_text(m_user->getUser());
+			useController()->c_setCurrentUserIcon(m_file_list.at(i));
+			useController()->storeCurrentUser();
+			fill_image_button_scroller(ALL_ICONS);
 		break;
 		case AD_ADD_USER:			
 			m_user_image = m_file_list.at(i);
