@@ -23,7 +23,8 @@ extern Controller *useController();
 //extern Controller g_img_dir;
 
 typedef enum {	
-	AD_SETTINGS,	
+	AD_SETTINGS,
+	AD_CHOOSE_EDIT,	
 	AD_USER_SETTINGS,
 	AD_ADD_USER,
 	AD_EDIT_USER,
