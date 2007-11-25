@@ -48,7 +48,6 @@ void admin_dlg::on_add_user_button_clicked()
 	
 	hseparator2->show();
 	vseparator1->show();
-	//remove_user_button->hide();
 	frame2->show();
 	icon_select_frame_label->show();
 	frame1->show();
