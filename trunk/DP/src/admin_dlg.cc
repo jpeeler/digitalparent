@@ -126,8 +126,7 @@ void admin_dlg::onIconButtonClicked()
 	for ( i = 0; i < m_button_list.size(); i++ )
 	{
 		if ( get_focus() == m_button_list.at(i) )							
-			break;
-				
+			break;				
 	}
 	
 	set_user_icon(string(""),m_file_list.at(i));
@@ -141,8 +140,8 @@ void admin_dlg::onIconButtonClicked()
 		case AD_USER_SETTINGS:				
 			user_label->set_text(m_user->getUser());
 		break;
-		case AD_ADD_USER:
-			
+		case AD_ADD_USER:			
+			m_user_image = m_file_list.at(i);
 		break;
 		case AD_EDIT_USER:			
 			for ( j = 0; j < m_user_list.size(); j++ )
