@@ -76,7 +76,7 @@ void admin_dlg::on_remove_user_button_clicked()
 
 void admin_dlg::on_edit_user_button_clicked()
 {  
-	ad_state = AD_EDIT_USER;
+	ad_state = AD_CHOOSE_EDIT;
 	frame1->hide();
 	frame3->hide();	
 	fill_image_button_scroller(USER_ICONS);
@@ -146,16 +146,31 @@ void admin_dlg::onIconButtonClicked()
 		case AD_ADD_USER:			
 			m_user_image = m_file_list.at(i);
 		break;
-		case AD_EDIT_USER:			
+		case AD_EDIT_USER:
+			
+		break;
+		case AD_CHOOSE_EDIT:			
 			for ( j = 0; j < m_user_list.size(); j++ )
 			{
 				if ( m_file_list.at(i) == m_icon_list.at(j) )
 					break;
 			}
 			user_label->set_text(m_user_list.at(j));
+			useController()->populateUserInfo(m_user_list.at(j));
+			m_user = useController()->c_getUserOther();			
+			fill_image_button_scroller(ALL_ICONS);
+			reset_frame3(m_user);
+			frame1->show();
+			frame3->show();
+			ad_state = AD_EDIT_USER;
 		break;
 		case AD_DELETE_USER:
-			
+			for ( j = 0; j < m_user_list.size(); j++ )
+			{
+				if ( m_file_list.at(i) == m_icon_list.at(j) )
+					break;
+			}
+			user_label->set_text(m_user_list.at(j));
 		break;
 		default:
 			
@@ -168,19 +183,23 @@ void admin_dlg::reset_frame3(const User *a_user)
 {
 	if ( a_user == NULL )
 	{
+		user_name_edit_box->set_editable(true);
 		user_name_edit_box->set_text("");
 		password_edit_box->set_text("");
 		confirm_edit_box->set_text("");
 		sq_edit_box->set_text("");	
-		sa_edit_box->set_text("");
+		sa_edit_box->set_text("");		
 	}
 	else
 	{
+		user_name_edit_box->set_editable(false);
+		printf("\n%s",a_user->getUser().c_str());
 		user_name_edit_box->set_text(a_user->getUser().c_str());
 		password_edit_box->set_text(a_user->getPasswordHash().c_str());
 		confirm_edit_box->set_text(a_user->getPasswordHash().c_str());
 		sq_edit_box->set_text(a_user->getQuestion().c_str());
 		sa_edit_box->set_text(a_user->getAnswer().c_str());
+		printf("\nTEST");
 	}	
 	
 	pw_checkbox->set_active(true);
