@@ -30,6 +30,7 @@
 	// TODO: put constructor code here
 	try {
 		conn = tntdb::connect("sqlite:DigitalParentDB");
+		printf("connected\n");
 	}
 	catch(const std::exception& e) {
 		std::cerr << e.what() << std::endl;
@@ -492,7 +493,8 @@ int Database::deleteUser(User *user)
       return DB_GEN_ERROR;
    }
    
-	(*user).setUserID(0);
+	//(*user).setUserID(0);
+    (*user).clear();
 	
 	return SUCCESS;
 }
@@ -545,7 +547,8 @@ std::vector <std::string> Database::getIconList()
 	std::vector <std::string> returnList;
 	tntdb::Statement query;
 	tntdb::Row row;
-	
+
+    if(!conn) printf("No DB Connection!!!!\n");
 	query = conn.prepare("SELECT User_Icon, Username FROM Users WHERE Username = 'admin'");	
 
 	try
