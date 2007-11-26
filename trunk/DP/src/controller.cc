@@ -254,6 +254,7 @@ int Controller::storeDisc()
 int Controller::populateUserInfo(std::string username)
 {
 	User* user = m_data.getUserOther();
+	user->setUser(username);
 	return (m_database.getUserForEdit(user));
 }
 
