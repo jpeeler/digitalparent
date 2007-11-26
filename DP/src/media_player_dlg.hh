@@ -40,7 +40,13 @@ class media_player_dlg : public media_player_dlg_glade
 		void on_time_slider_button_move_event();
 		void on_save_button_clicked();
 		void on_playlist_clicked();
-		bool eraseFromSkipButtons(std::string toRemove);
+		bool eraseFromSkipChapters(std::string toRemove);
+		bool eraseFromSkipTimes(std::string toRemove);
+		bool skipTimesContains(std::string toFind);
+		bool skipChaptersContains(std::string toFind);
+		int newSkipTime(int currentTime);
+		
+		int to_int(const std::string &str);
 		template <class T>
 inline std::string to_string (const T& t);
 	public:
