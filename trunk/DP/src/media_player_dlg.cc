@@ -94,7 +94,7 @@ void media_player_dlg::init()
 	std::string name;
 	int chap;
 	//the following line may be commented out if we don't want to show the menu
-	item = libvlc_playlist_add(inst, filename.c_str(), "Root Menu", &excp);
+	//item = libvlc_playlist_add(inst, filename.c_str(), "Root Menu", &excp);
 	if(isAdmin){
 		for(chap = 1; chap <= useController()->c_getDisc()->getDiscChapterNum(); chap++) {
 			option = "dvd:///dev/dvd@1:" + to_string(chap);
@@ -314,6 +314,7 @@ void media_player_dlg::on_save_button_clicked()
 			useController()->c_addSkipTiming(skipTimes.at(j).getSkipStart(),skipTimes.at(j).getSkipStop());
 		}
 		printf("&&&&& Skip Times End &&&&&\n");
+		useController()->storeProfile();
 	} else {
 		printf("save button clicked\n");
 		printf("&&&&& Skip Chapters Start &&&&&\n");
@@ -327,7 +328,7 @@ void media_player_dlg::on_save_button_clicked()
 		}
 	printf("&&&&& Skip Times End &&&&&\n");
 }
-	//useController()->storeProfile();
+	
 	
 }
 
@@ -526,7 +527,6 @@ printf("Checking Skip Chapters\n Size: %d\n",skipChapters.size());
 					
 			} else {
 printf("Checking SkipTimes\n Size: %d\n",skipTimes.size());	
-printf("buttonLabel at 6: %c at 7: %c\n",buttonLabel.at(6),buttonLabel.at(7));
 				for(uint m =7;buttonLabel.at(m)!='-'&&buttonLabel.at(0)=='S';m++){
 							toIntStart+=buttonLabel.at(m);
 					}
