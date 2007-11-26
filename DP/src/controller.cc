@@ -67,8 +67,24 @@ int Controller::deleteOtherUser()
 	return (m_database.deleteUser(user));
 }
 // -------------------------------------
-int Controller::loadProfile(int userID, int discID)
+int Controller::loadProfile()
 {
+	int userID;
+	int discID;
+	
+	discID = m_data.getDisc()->getDiscID();
+	
+	if (m_data.getUserOther()->getUser() != "")
+	{
+		// other user object not null, so load profile for that user
+		userID = m_data.getUserOther()->getUserID();
+	}
+	else
+	{
+		// other user object not used, load profile for current user
+		userID = m_data.getUserLoggedIn()->getUserID();
+	}
+	
 	Profile* profile = m_data.getProfile();
 	profile->setUserID(userID);
 	profile->setDiscID(discID);
@@ -209,7 +225,7 @@ void Controller::dvd_read_info(char *name, char *serial, long *length, int *numC
 
 // -------------------------------------
 int Controller::loadDisc()
-{
+{// TODO: check first if disc is in drive
 	// get the disc_name and disc_serial straight from the DVD
 	char disc_name[50];
 	char disc_serial[25];
