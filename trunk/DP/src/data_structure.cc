@@ -272,6 +272,12 @@ void Profile::clear()
 	m_skip_chapters.clear(); // empties vector of ints
 }
 
+void Profile::clearSkipVectors()
+{
+	m_skip_times.clear();
+	m_skip_chapters.clear();
+}
+
 void Profile::setProfileID(int ID)
 {
 	m_profileID = ID;
