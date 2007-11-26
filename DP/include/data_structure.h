@@ -174,6 +174,7 @@ public:
 	~Profile() {}
 		
 	void clear(); // clears object member variables
+	void clearSkipVectors(); // clears just the skiptimes and chapter vectors
 
 	void setProfileID(int ID);
 	const int getProfileID() const;

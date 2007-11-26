@@ -486,6 +486,12 @@ void Controller::c_removeSkipChapter(int chapter)
 	profile->removeSkipChapter(chapter);
 }
 
+void Controller::c_clearSkipVectors()
+{
+	Profile *profile = m_data.getProfile();
+	profile->clearSkipVectors();
+}
+
 // controller skip method (not wrapper) PROBABLY BETTER?
 void Controller::c_addSkipTiming(long start, long stop/*, bool onlyAudio*/)
 {

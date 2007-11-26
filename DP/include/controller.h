@@ -99,6 +99,7 @@ public:
 	void c_profileSetDiscID(int ID);
 	void c_addSkipChapter(int chapter);
 	void c_removeSkipChapter(int chapter);
+	void c_clearSkipVectors();
 	
 	// data structure class wrapper methods
 	const Disc* c_getDisc() const;
