@@ -225,7 +225,25 @@ void Controller::dvd_read_info(char *name, char *serial, long *length, int *numC
 
 // -------------------------------------
 int Controller::loadDisc()
-{// TODO: check first if disc is in drive
+{
+	// check first if disc is in drive	
+	FILE *ptr;
+	char buff[128]; // quite long enough
+	
+	if( !(ptr = popen("lshal | grep volume.disc.type","r")))
+	{
+		return C_HAL_ERROR;
+	}
+	
+	if (fgets(buff, sizeof(buff), ptr) == NULL)
+	{
+		pclose(ptr);
+		return C_DISC_NOT_LOADED;
+	}
+	
+	pclose(ptr);
+	// end disc check
+	
 	// get the disc_name and disc_serial straight from the DVD
 	char disc_name[50];
 	char disc_serial[25];
