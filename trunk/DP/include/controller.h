@@ -43,7 +43,7 @@ public:
 	int storeOtherUser();
 	int deleteOtherUser();
 
-	int loadProfile(int userID, int discID);
+	int loadProfile();
 	int storeProfile();
 	int deleteProfile();
 	
