@@ -5,6 +5,7 @@
 
 // This file is for your program, I won't touch it again!
 
+
 #include "config.h"
 #include "admin_dlg.hh"
 #include <gtkmm/image.h>
