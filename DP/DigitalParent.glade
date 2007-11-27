@@ -1720,43 +1720,6 @@ as administrator.
       </child>
 
       <child>
-	<widget class="GtkHSeparator" id="hseparator2">
-	  <property name="width_request">168</property>
-	  <property name="height_request">16</property>
-	</widget>
-	<packing>
-	  <property name="x">0</property>
-	  <property name="y">216</property>
-	</packing>
-      </child>
-
-      <child>
-	<widget class="GtkLabel" id="user_label">
-	  <property name="width_request">160</property>
-	  <property name="height_request">16</property>
-	  <property name="visible">True</property>
-	  <property name="label" translatable="yes">USER</property>
-	  <property name="use_underline">False</property>
-	  <property name="use_markup">True</property>
-	  <property name="justify">GTK_JUSTIFY_CENTER</property>
-	  <property name="wrap">False</property>
-	  <property name="selectable">False</property>
-	  <property name="xalign">0.5</property>
-	  <property name="yalign">0.5</property>
-	  <property name="xpad">0</property>
-	  <property name="ypad">0</property>
-	  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
-	  <property name="width_chars">-1</property>
-	  <property name="single_line_mode">False</property>
-	  <property name="angle">0</property>
-	</widget>
-	<packing>
-	  <property name="x">0</property>
-	  <property name="y">176</property>
-	</packing>
-      </child>
-
-      <child>
 	<widget class="GtkButton" id="logout_button">
 	  <property name="width_request">128</property>
 	  <property name="height_request">37</property>
@@ -2623,7 +2586,7 @@ as administrator.
 	  <property name="use_underline">True</property>
 	  <property name="relief">GTK_RELIEF_NORMAL</property>
 	  <property name="focus_on_click">True</property>
-	  <signal name="clicked" handler="on_admin_settings_clicked" last_modification_time="Sat, 24 Nov 2007 02:20:56 GMT"/>
+	  <signal name="clicked" handler="on_admin_settings_button_clicked" last_modification_time="Mon, 26 Nov 2007 18:26:58 GMT"/>
 	</widget>
 	<packing>
 	  <property name="x">256</property>
@@ -2646,6 +2609,102 @@ as administrator.
 	<packing>
 	  <property name="x">256</property>
 	  <property name="y">0</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkButton" id="confirm_delete_button">
+	  <property name="width_request">110</property>
+	  <property name="height_request">32</property>
+	  <property name="can_focus">True</property>
+	  <property name="label" translatable="yes">Confirm Delete</property>
+	  <property name="use_underline">True</property>
+	  <property name="relief">GTK_RELIEF_NORMAL</property>
+	  <property name="focus_on_click">True</property>
+	  <signal name="clicked" handler="on_confirm_delete_button_clicked" last_modification_time="Tue, 27 Nov 2007 20:19:14 GMT"/>
+	</widget>
+	<packing>
+	  <property name="x">248</property>
+	  <property name="y">152</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkLabel" id="user_label">
+	  <property name="width_request">160</property>
+	  <property name="height_request">16</property>
+	  <property name="visible">True</property>
+	  <property name="label" translatable="yes">USER</property>
+	  <property name="use_underline">False</property>
+	  <property name="use_markup">True</property>
+	  <property name="justify">GTK_JUSTIFY_CENTER</property>
+	  <property name="wrap">False</property>
+	  <property name="selectable">False</property>
+	  <property name="xalign">0.5</property>
+	  <property name="yalign">0.5</property>
+	  <property name="xpad">0</property>
+	  <property name="ypad">0</property>
+	  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
+	  <property name="width_chars">-1</property>
+	  <property name="single_line_mode">False</property>
+	  <property name="angle">0</property>
+	</widget>
+	<packing>
+	  <property name="x">0</property>
+	  <property name="y">176</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkHSeparator" id="hseparator2">
+	  <property name="width_request">168</property>
+	  <property name="height_request">16</property>
+	</widget>
+	<packing>
+	  <property name="x">0</property>
+	  <property name="y">216</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkButton" id="cancel_delete_button">
+	  <property name="width_request">110</property>
+	  <property name="height_request">32</property>
+	  <property name="can_focus">True</property>
+	  <property name="label" translatable="yes">Cancel</property>
+	  <property name="use_underline">True</property>
+	  <property name="relief">GTK_RELIEF_NORMAL</property>
+	  <property name="focus_on_click">True</property>
+	  <signal name="clicked" handler="on_cancel_delete_button_clicked" last_modification_time="Tue, 27 Nov 2007 20:21:27 GMT"/>
+	</widget>
+	<packing>
+	  <property name="x">392</property>
+	  <property name="y">152</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkLabel" id="confirn_delete_label">
+	  <property name="width_request">200</property>
+	  <property name="height_request">17</property>
+	  <property name="label" translatable="yes">&lt;b&gt;Delete this user?&lt;/b&gt;</property>
+	  <property name="use_underline">False</property>
+	  <property name="use_markup">True</property>
+	  <property name="justify">GTK_JUSTIFY_LEFT</property>
+	  <property name="wrap">False</property>
+	  <property name="selectable">False</property>
+	  <property name="xalign">0.5</property>
+	  <property name="yalign">0.519999980927</property>
+	  <property name="xpad">0</property>
+	  <property name="ypad">0</property>
+	  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
+	  <property name="width_chars">-1</property>
+	  <property name="single_line_mode">False</property>
+	  <property name="angle">0</property>
+	</widget>
+	<packing>
+	  <property name="x">280</property>
+	  <property name="y">40</property>
 	</packing>
       </child>
     </widget>
