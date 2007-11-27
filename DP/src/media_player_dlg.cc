@@ -47,7 +47,16 @@ extern Controller* useController();
 
 void media_player_dlg::init()
 {
+		useController()->loadDisc();
+	//returns c_disc_underscore_loaded
+	//useController()->loadProfile();
+	const Profile *aprofile = useController()->c_getProfile();
+		useController()->loadProfile();
 	
+	//skipChapters = aprofile->getSkipChapters();
+	skipChapters.clear();
+	skipTimes.clear();
+	skipTimes = aprofile->getSkipTimes();
 	//buildPlaylist();
 	/*
 	
@@ -86,10 +95,7 @@ void media_player_dlg::init()
 		item = libvlc_playlist_add_extended (inst, filename.c_str(), NULL,sizeof times/sizeof *times,times, &excp);
 	}
 	*/
-	useController()->loadDisc();
-	//returns c_disc_underscore_loaded
-	//useController()->loadProfile();
-	const Profile *aprofile = useController()->c_getProfile();
+
 	std::string option;
 	std::string name;
 	int chap;
@@ -99,6 +105,7 @@ void media_player_dlg::init()
 		for(chap = 1; chap <= useController()->c_getDisc()->getDiscChapterNum(); chap++) {
 			option = "dvd:///dev/dvd@1:" + to_string(chap);
 			name = "Chapter " + to_string(chap);
+skipChapters.push_back(chap);
 			libvlc_playlist_add(inst, option.c_str(), name.c_str(), &excp);
 		}
 	} else {
@@ -115,10 +122,7 @@ void media_player_dlg::init()
 	
 	libvlc_playlist_play(inst, 0, 0, NULL, &excp);
 	vlcSpeed=0;
-	useController()->loadProfile();
-	
-	skipChapters = aprofile->getSkipChapters();
-	skipTimes = aprofile->getSkipTimes();
+
 	
 	
 	currentUser->set_text("User: " +useController()->c_getUserLoggedIn()->getUser());
@@ -147,6 +151,9 @@ void media_player_dlg::on_open_media_button_clicked()
 	skipTimes.clear();
 	skipChapters.clear();
 	firstTime = true;
+	if(playlist_button->get_active()){
+		playlist_button->set_active(false);
+	}
 	delete playlist_dlg;
 	init();
 /* 	if(inst==NULL){
@@ -193,14 +200,32 @@ void media_player_dlg::on_cut_video_toggled()
 		endTime = (long)VLC_TimeGet(id);
 		printf("Cut Video end time:  %ld\n",endTime);
 	
-		if(startTime < endTime){
+		if(startTime < endTime && startTime >0){
 			useController()->c_addSkipTiming(startTime,endTime);
 			printf("Added skip time\tStart time: %ld\tEnd time: %ld\n",startTime, endTime);
+			SkipTime newSkip;
+			newSkip.setSkipStart(startTime);
+			newSkip.setSkipStop(endTime);
+			skipTimes.push_back(newSkip);
+			firstTime=true;
+		} else if(startTime ==-10){
+			useController()->c_addSkipTiming(0,endTime);
+			printf("Added skip time\tStart time: %d\tEnd time: %ld\n",0, endTime);
+			SkipTime newSkip;
+			newSkip.setSkipStart(0);
+			newSkip.setSkipStop(endTime);
+			skipTimes.push_back(newSkip);
+			firstTime=true;
 		} else if(startTime!=-20) {
 			useController()->c_addSkipTiming(startTime,(long)dvdLength);
 			printf("Length: %d\n",VLC_LengthGet(id));
 			printf("Start time not smaller then end time\n");
 			printf("Added skip time\tStart time: %ld\tEnd time: %d\n",startTime,dvdLength);
+			SkipTime newSkip;
+			newSkip.setSkipStart(startTime);
+			newSkip.setSkipStop(dvdLength);
+			skipTimes.push_back(newSkip);
+			firstTime=true;
 		}
 	}
 }
@@ -259,7 +284,12 @@ bool media_player_dlg::update_slider()
 		if(VLC_TimeGet(id)<0){
 			time_slider->set_value(newSkipTime(0));
 		} else {
-			time_slider->set_value(newSkipTime(VLC_TimeGet(id)));
+			if(newSkipTime(VLC_TimeGet(id))!=VLC_TimeGet(id)){
+				time_slider->set_value(newSkipTime(VLC_TimeGet(id)));
+				VLC_TimeSet(id,newSkipTime(VLC_TimeGet(id)),false);
+			} else {
+				time_slider->set_value(newSkipTime(VLC_TimeGet(id)));
+			}
 		}
 	}
 	
@@ -337,6 +367,7 @@ void media_player_dlg::on_playlist_button_toggled()
 	if(playlist_button->get_active()){
 		if(firstTime){
 			firstTime=false;
+			skipButtons.clear();
 			for(int chap = 1; chap <= useController()->c_getDisc()->getDiscChapterNum(); chap++) {
 				checkbutton = new class Gtk::CheckButton("Chapter" + to_string(chap));
 				skipButtons.push_back(checkbutton);
@@ -374,6 +405,7 @@ void media_player_dlg::on_Logout_clicked()
 	if(inst!=NULL){
 		libvlc_destroy (inst);
 	}
+	delete playlist_dlg;
 	skipTimes.clear();
 	skipChapters.clear();
 	firstTime=true;
@@ -481,12 +513,12 @@ void media_player_dlg::on_playlist_clicked()
 			printf("Button active was %s\n",skipButtons.at(i)->get_label().c_str());
 		//libvlc_playlist_add(inst, "dvd:///dev/dvd@1:" + to_string(i).c_str(), "Chapter " + to_string(i).c_str(), &excp);
 			std::vector<int>::iterator it;
-			printf("Skip Chapters size: %d\n",skipChapters.size());
+			//printf("Skip Chapters size: %d\n",skipChapters.size());
 			std::string testString = "Chapter1";
 			bool chapter1 = skipButtons.at(i)->get_label().c_str()==testString;
 			bool chapter1Button= skipButtons.at(i)->property_active()==1;
-			printf("Button at(%d) label is: %s\n Active: %d\n",i,skipButtons.at(i)->get_label().c_str(),skipButtons.at(i)->property_active()==1);
-			printf("Chapter 1: %d\n Chapter1 active: %d\n",chapter1,chapter1Button);
+			//printf("Button at(%d) label is: %s\n Active: %d\n",i,skipButtons.at(i)->get_label().c_str(),skipButtons.at(i)->property_active()==1);
+			//printf("Chapter 1: %d\n Chapter1 active: %d\n",chapter1,chapter1Button);
 			if(skipChapters.size()==0 && chapter1 && chapter1Button){
 				//printf("Adding Chapter %d\n",useController()->c_getProfile()->getSkipChapters().at(0));
 				printf("Adding Chapter 1\n");
@@ -494,12 +526,28 @@ void media_player_dlg::on_playlist_clicked()
 				skipChapters.push_back(1);
 			} else {
 printf("Checking Skip Chapters\n Size: %d\n",skipChapters.size());
-				for(uint j =0;j<skipChapters.size();j++){
-					
-					if(!skipChaptersContains(to_string(skipChapters.at(j)))){
-						it = skipChapters.begin() +j;
+printf("Number of Disc Chapters: %d\n",useController()->c_getDisc()->getDiscChapterNum());
+				std::string label = skipButtons.at(i)->get_label();
+				std::string tempLabel;
+				for(uint p =7;p<label.size();p++){
+					tempLabel +=label.at(p);
+				}
+				printf("tempLabel %s\n",tempLabel.c_str());
+				for(uint j =1;j<=(unsigned)useController()->c_getDisc()->getDiscChapterNum();j++){
+
+					if(!profileSkipChaptersContains(j)){
+	
+						if(j>=skipChapters.size() && !skipChaptersContains(tempLabel) && (signed)tempLabel.find_first_of("-")==-1){
+							printf("J is %d greater then skipChapters.size()\n",j);
+							printf("Adding: %d to skipChapters\n",j);
+							skipChapters.push_back(j);
+						//} else if(!skipChaptersContains(to_string(skipChapters.at(j)))){							
+						} else if(!skipChaptersContains(tempLabel) && j==(unsigned)to_int(tempLabel)){
+							printf("to_int(tempLabel): %d\n",to_int(tempLabel));
+						it = skipChapters.begin() +(j-1);
 						printf("Adding: %d to skipChapters\n",j);
-						skipChapters.insert(it+1,j);
+						skipChapters.insert(it,j);
+						}
 					}
 				}
 			}
@@ -527,15 +575,16 @@ printf("Checking Skip Chapters\n Size: %d\n",skipChapters.size());
 					
 			} else {
 printf("Checking SkipTimes\n Size: %d\n",skipTimes.size());	
-				for(uint m =7;buttonLabel.at(m)!='-'&&buttonLabel.at(0)=='S';m++){
-							toIntStart+=buttonLabel.at(m);
-					}
-					printf("toIntStart Final: %s\n",toIntStart.c_str());
+			for(uint m =7;buttonLabel.at(m)!='-'&&buttonLabel.at(0)=='S';m++){
+				toIntStart+=buttonLabel.at(m);
+			}
+			printf("toIntStart Final: %s\n",toIntStart.c_str());
+			
 			for(uint k=0;k<skipTimes.size();k++){
 				if(!skipTimesContains(to_string(skipTimes.at(k).getSkipStart()))){
 				//if(!skipTimesContains(toIntStart)){
 					it2 = skipTimes.begin() +k;
-printf("buttonLabel at 6: %c at 7: %c\n",buttonLabel.at(6),buttonLabel.at(7));
+//printf("buttonLabel at 6: %c at 7: %c\n",buttonLabel.at(6),buttonLabel.at(7));
 					
 						
 					for(uint n=buttonLabel.find_first_of("E")+4;n<buttonLabel.size();n++){
@@ -578,21 +627,21 @@ int media_player_dlg::newSkipTime(int currentTime){
 }
 
 bool media_player_dlg::eraseFromSkipChapters(std::string toRemove){
-	printf("Removing From Skip Chapters %s\n",toRemove.c_str());
+	//printf("Removing From Skip Chapters %s\n",toRemove.c_str());
 	std::vector<int>::iterator it;
 		for(uint i=0;i<skipChapters.size();i++){
-			printf("SkipChapters[%d]: %d\n",i,skipChapters.at(i));
-			printf("Found string: ");
+			//printf("SkipChapters[%d]: %d\n",i,skipChapters.at(i));
+			//printf("Found string: ");
 			std::string toCompare = "Chapter" +to_string(skipChapters.at(i));
 			bool temp = toCompare==toRemove;
-			printf(to_string(temp).c_str());
-			printf("\n");
+			//printf(to_string(temp).c_str());
+			//printf("\n");
 			if(toCompare==toRemove){
-				printf("Size before %d\n",skipChapters.size());
+				//printf("Size before %d\n",skipChapters.size());
 				it=skipChapters.begin()+i;
 				skipChapters.erase(it);
 				printf("%s removed\n",toRemove.c_str());
-				printf("Size after %d\n",skipChapters.size());
+				//printf("Size after %d\n",skipChapters.size());
 				return true;
 			}
 		}
@@ -600,9 +649,9 @@ bool media_player_dlg::eraseFromSkipChapters(std::string toRemove){
 }
 
 bool media_player_dlg::eraseFromSkipTimes(std::string toRemove){
-	printf("Removing from Skip Times %s\n",toRemove.c_str());
+	//printf("Removing from Skip Times %s\n",toRemove.c_str());
 	std::string toRemoveString;
-	printf("Size of toRemove: %d\n",toRemove.size());
+	//printf("Size of toRemove: %d\n",toRemove.size());
 	if(toRemove.size()<10){
 		return false;
 	}
@@ -613,15 +662,15 @@ bool media_player_dlg::eraseFromSkipTimes(std::string toRemove){
 			//printf("To remove[%d]: %s\n",m,toIntStart.c_str());
 		}
 	}
-	printf("toRemoveString Final: %s\n",toRemoveString.c_str());
+	//printf("toRemoveString Final: %s\n",toRemoveString.c_str());
 	
 	std::vector<SkipTime>::iterator it;
 	for(uint i=0;i<skipTimes.size();i++){
-		printf("SkipTimes[%d]: [%ld - %ld]\n",i,skipTimes.at(i).getSkipStart(),skipTimes.at(i).getSkipStop());		
+		//printf("SkipTimes[%d]: [%ld - %ld]\n",i,skipTimes.at(i).getSkipStart(),skipTimes.at(i).getSkipStop());		
 		std::string toString = to_string(skipTimes.at(i).getSkipStart());
 		bool temp = toString.compare(toRemoveString);
-		printf("Skiptimes Start: %s\n",toString.c_str());
-		printf("Found String %d\n",temp);
+		//printf("Skiptimes Start: %s\n",toString.c_str());
+		//printf("Found String %d\n",temp);
 		if(toString.compare(toRemoveString)){	
 			it=skipTimes.begin()+i;			
 			skipTimes.erase(it);
@@ -633,26 +682,44 @@ bool media_player_dlg::eraseFromSkipTimes(std::string toRemove){
 }
 
 bool media_player_dlg::skipChaptersContains(std::string toFind){
-	printf("Checking for %s in SkipChapters\n",toFind.c_str());
+	//printf("Checking for %s in SkipChapters\n",toFind.c_str());
 	for(uint i=0;i<skipChapters.size();i++){
 		if(skipChapters.at(i)==to_int(toFind)){	
-			printf("Found string in SkipChapters\n");
+			//printf("Found string in SkipChapters\n");
 			return true;
 		}
 	}
-	printf("String not found in SkipChapters\n");
+	//printf("String not found in SkipChapters\n");
 	return false;
 }
 
 bool media_player_dlg::skipTimesContains(std::string toFind){
-	printf("Checking for '%s' in skipTimes\n",toFind.c_str());
+	//printf("Checking for '%s' in skipTimes\n",toFind.c_str());
 	for(uint i=0;i<skipTimes.size();i++){
 		if(skipTimes.at(i).getSkipStart()==to_int(toFind)){	
-			printf("Found string in skipTimes\n");
+			//printf("Found string in skipTimes\n");
 			return true;
 		}
 	}
-	printf("String not found in skipTimes\n");
+	//printf("String not found in skipTimes\n");
+	return false;
+}
+
+bool media_player_dlg::profileSkipChaptersContains(int toFind){
+	//printf("Checking for %d in profileSkipChapters\n",toFind);
+	std::vector<int> profileSkipChapters = useController()->c_getProfile()->getSkipChapters();
+	if(isAdmin){
+		//printf("User is admin\n");
+		return false;
+	} else {
+		for(uint i=0;i<profileSkipChapters.size();i++){
+			if(profileSkipChapters.at(i)==toFind	){	
+				//printf("Found string in profileSkipChapters\n");
+				return true;
+			}
+		}
+	}
+	//printf("String not found in SkipChapters\n");
 	return false;
 }
 
