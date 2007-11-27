@@ -374,7 +374,8 @@ void media_player_dlg::on_playlist_button_toggled()
 				skipButtons.push_back(checkbutton);
 				checkbutton->set_active();
 				checkbutton->signal_toggled().connect(SigC::slot(*this, &media_player_dlg::on_playlist_clicked), false);				
-				playlist_dlg->vbox4->pack_start(*checkbutton,Gtk::PACK_EXPAND_WIDGET,0);
+				vbox8->pack_start(*checkbutton,Gtk::PACK_EXPAND_WIDGET,0);
+				//playlist_dlg->vbox4->pack_start(*checkbutton,Gtk::PACK_EXPAND_WIDGET,0);
 			}
 			for(uint i=0; i< skipTimes.size(); i++){
 				checkbutton = new class Gtk::CheckButton();
@@ -384,7 +385,8 @@ void media_player_dlg::on_playlist_button_toggled()
 				checkbutton->set_active();
 				skipButtons.push_back(checkbutton);
 				checkbutton->signal_toggled().connect(SigC::slot(*this, &media_player_dlg::on_playlist_clicked), false);
-				playlist_dlg->vbox4->pack_start(*checkbutton, Gtk::PACK_EXPAND_WIDGET, 0);
+				vbox8->pack_start(*checkbutton, Gtk::PACK_EXPAND_WIDGET, 0);
+				//playlist_dlg->vbox4->pack_start(*checkbutton, Gtk::PACK_EXPAND_WIDGET, 0);
 			}
 		}
 		frame4->show();
