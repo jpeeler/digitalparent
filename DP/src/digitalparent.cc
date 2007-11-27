@@ -48,7 +48,7 @@ int main(int argc, char **argv)
    Gtk::Main m(&argc, &argv);
    useController()->dp_state = DP_START;
    welcome_dlg *welcome_dlg;   
-   admin_dlg *admin_dlg;
+   admin_dlg *admin_dlg;   
    login_dlg *login_dlg;   
    media_player_dlg *media_player_dlg;
 	
@@ -87,6 +87,7 @@ int main(int argc, char **argv)
 		   case DP_RUNONCE:
 		   {
 			   welcome_dlg = new class welcome_dlg();
+				   welcome_dlg->oninit();
 				   m.run(*welcome_dlg);
 			   delete welcome_dlg;
 			   std::string password = "";							   
@@ -116,19 +117,17 @@ int main(int argc, char **argv)
 		   }			   
 		   case DP_ADMIN_PANEL:
 			   admin_dlg = new class admin_dlg();
-				   admin_dlg->oninit_icons();	
-				   admin_dlg->oninit_admin();  			       		   	   
-			   	   m.run(*admin_dlg);
-			   delete admin_dlg;			   
-		   break;
-		   
+			   		admin_dlg->oninit_icons();	
+			   		admin_dlg->oninit_admin();  			       		   	   
+			   		m.run(*admin_dlg);
+			   delete admin_dlg;			   		   			   
+		   break;		   
 		   case DP_USER_PLAY:
 		   {
 			  media_player_dlg = new class media_player_dlg();
 					media_player_dlg->init();  
 			  		m.run(*media_player_dlg);
-			  delete media_player_dlg;
-			  //useController()->dp_state = DP_USER_PANEL;		   	
+			  delete media_player_dlg;			  		   	
 		   break;
 		   }		     
 		   case DP_ADMIN_PLAY:
@@ -139,7 +138,7 @@ int main(int argc, char **argv)
 			   delete media_player_dlg;
 			   useController()->dp_state = DP_ADMIN_PANEL;
 		   break;
-		   }			   
+		   }		   	   
 	   	   default:
 			   //do nothing, should exit while loop
 		   break;

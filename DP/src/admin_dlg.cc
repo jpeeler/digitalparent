@@ -14,14 +14,14 @@
 using namespace std;
 
 void admin_dlg::on_logout_button_clicked()
-{  
+{  	
 	useController()->dp_state = DP_LOGIN;
 	useController()->c_clearUserLoggedIn();
 	hide();
 }
 
 void admin_dlg::on_media_player_button_clicked()
-{  
+{  	
 	if ( useController()->dp_state == DP_ADMIN_PANEL )
 		useController()->dp_state = DP_ADMIN_PLAY;
 	else useController()->dp_state = DP_USER_PLAY;
@@ -29,13 +29,13 @@ void admin_dlg::on_media_player_button_clicked()
 }
 
 void admin_dlg::on_admin_settings_button_clicked()
-{  
+{  	
 	ad_state = AD_SETTINGS;
 	oninit_admin();
 }
 
 void admin_dlg::on_change_icon_clicked()
-{
+{	
 	fill_image_button_scroller(ALL_ICONS);
 	frame2->show();
 }
@@ -65,7 +65,7 @@ void admin_dlg::on_add_user_button_clicked()
 }
 
 void admin_dlg::on_remove_user_button_clicked()
-{  
+{  	
 	ad_state = AD_DELETE_USER;	
 	frame1->hide();
 	frame3->hide();	
@@ -165,18 +165,68 @@ void admin_dlg::onIconButtonClicked()
 			ad_state = AD_EDIT_USER;
 		break;
 		case AD_DELETE_USER:
+		{
 			for ( j = 0; j < m_user_list.size(); j++ )
 			{
 				if ( m_file_list.at(i) == m_icon_list.at(j) )
 					break;
 			}
-			user_label->set_text(m_user_list.at(j));
+			user_label->set_text(m_user_list.at(j));			
+			useController()->populateUserInfo(m_user_list.at(j));
+			start_delete_confirm();								
+		break;
+		}
+		case AD_DELETE_DLG:
+			//do nothing
 		break;
 		default:
 			
 		break;
 	}	
 	return;
+}
+
+void admin_dlg::start_delete_confirm()
+{
+	frame2->hide();
+	logout_button->hide();
+	media_player_button->hide();
+	admin_settings_button->hide();
+	add_user_button->hide();
+	edit_user_button->hide();
+	remove_user_button->hide();
+	cancel_delete_button->show();
+	confirm_delete_button->show();
+	confirn_delete_label->show();
+}
+
+void admin_dlg::stop_delete_confirm()
+{
+	frame2->show();
+	logout_button->show();
+	media_player_button->show();
+	admin_settings_button->show();
+	add_user_button->show();
+	edit_user_button->show();
+	remove_user_button->show();
+	cancel_delete_button->hide();
+	confirm_delete_button->hide();
+	confirn_delete_label->hide();
+}
+
+void admin_dlg::on_confirm_delete_button_clicked()
+{
+	useController()->deleteOtherUser();
+	fill_image_button_scroller(USER_ICONS);
+	clear_user_icon();
+	stop_delete_confirm();
+}
+
+void admin_dlg::on_cancel_delete_button_clicked()
+{
+	useController()->c_clearUserOther();
+	clear_user_icon();
+	stop_delete_confirm();
 }
 
 void admin_dlg::reset_frame3(const User *a_user)
@@ -218,7 +268,7 @@ void admin_dlg::on_screen_movies_button_clicked()
 }
 
 void admin_dlg::oninit_admin()
-{
+{		
 	ad_state = AD_SETTINGS;
 	// SHOW THE ADMIN ICON AND NAME
 	set_user_icon(string("admin"),string("/Projects/DP/images/tux.png"));	
@@ -242,7 +292,7 @@ void admin_dlg::oninit_admin()
 	frame2->hide();
 	frame3->hide();
 	//user_save_button->show();
-	user_name_edit_box->set_editable(false);		
+	user_name_edit_box->set_editable(false);	
 }
 
 void admin_dlg::oninit_user()
@@ -264,7 +314,6 @@ void admin_dlg::oninit_user()
 	user_name_edit_box->set_editable(false);
 	screen_movies_button->hide();
 	
-	//fill_image_button_scroller(ALL_ICONS);
 	reset_frame3(m_user);
 }
 

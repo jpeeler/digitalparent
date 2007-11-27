@@ -12,6 +12,16 @@
 #include "std_errors.h"
 extern Controller *useController();
 
+
+void welcome_dlg::oninit()
+{
+	Tux_image->hide();	
+	fixed7->remove(*Tux_image);
+	Tux_image = Gtk::manage(new class Gtk::Image("/Projects/DP/images/tux.png"));
+	fixed7->put(*Tux_image, 24, 24);;		
+	Tux_image->show();
+}
+
 void welcome_dlg::on_welcome_next_button_clicked()
 {  
 	std::string password = init_password_edit_box->get_text();
