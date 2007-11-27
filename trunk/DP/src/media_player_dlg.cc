@@ -46,7 +46,7 @@ extern Controller* useController();
 
 
 void media_player_dlg::init()
-{
+{	
 	frame4->hide();
 		useController()->loadDisc();
 	//returns c_disc_underscore_loaded
@@ -387,11 +387,13 @@ void media_player_dlg::on_playlist_button_toggled()
 				playlist_dlg->vbox4->pack_start(*checkbutton, Gtk::PACK_EXPAND_WIDGET, 0);
 			}
 		}
-		playlist_dlg->show_all_children();
-		playlist_dlg->show();
+		frame4->show();
+		//playlist_dlg->show_all_children();
+		//playlist_dlg->show();
 	}
 	else{
-			playlist_dlg->hide();
+		frame4->hide();	
+		//playlist_dlg->hide();
 	}
 }
 
