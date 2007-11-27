@@ -44,6 +44,7 @@ class media_player_dlg : public media_player_dlg_glade
 		bool eraseFromSkipTimes(std::string toRemove);
 		bool skipTimesContains(std::string toFind);
 		bool skipChaptersContains(std::string toFind);
+		bool profileSkipChaptersContains(int toFind);
 		int newSkipTime(int currentTime);
 		
 		int to_int(const std::string &str);
