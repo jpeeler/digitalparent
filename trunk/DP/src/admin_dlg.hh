@@ -28,7 +28,8 @@ typedef enum {
 	AD_USER_SETTINGS,
 	AD_ADD_USER,
 	AD_EDIT_USER,
-	AD_DELETE_USER
+	AD_DELETE_USER,
+	AD_DELETE_DLG
 } AD_STATE;
 
 enum {
@@ -52,6 +53,10 @@ class admin_dlg : public admin_dlg_glade
 		void on_admin_settings_button_clicked();
 		void on_remove_user_button_clicked();
 		void on_media_player_button_clicked();
+		void on_confirm_delete_button_clicked();
+		void on_cancel_delete_button_clicked();
+		void start_delete_confirm();	
+		void stop_delete_confirm();	
 		vector<class Gtk::Image*> m_image_list;					
 		vector<class Gtk::Button*> m_button_list;
 		vector<string> m_icon_list;	
