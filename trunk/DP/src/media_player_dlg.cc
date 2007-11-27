@@ -47,6 +47,7 @@ extern Controller* useController();
 
 void media_player_dlg::init()
 {
+	frame4->hide();
 		useController()->loadDisc();
 	//returns c_disc_underscore_loaded
 	//useController()->loadProfile();
