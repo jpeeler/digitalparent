@@ -47,7 +47,6 @@ extern Controller* useController();
 
 void media_player_dlg::init()
 {	
-	frame4->hide();
 		useController()->loadDisc();
 	//returns c_disc_underscore_loaded
 	//useController()->loadProfile();
@@ -468,8 +467,7 @@ void media_player_dlg::on_playlist_button_toggled()
 				checkbutton->set_active();
 				checkbutton->show();
 				checkbutton->signal_toggled().connect(SigC::slot(*this, &media_player_dlg::on_playlist_clicked), false);				
-				vbox8->pack_start(*checkbutton,Gtk::PACK_EXPAND_WIDGET,0);
-				//playlist_dlg->vbox4->pack_start(*checkbutton,Gtk::PACK_EXPAND_WIDGET,0);
+				playlist_dlg->vbox4->pack_start(*checkbutton,Gtk::PACK_EXPAND_WIDGET,0);
 			}
 			for(uint i=0; i< skipTimes.size(); i++){
 				checkbutton = new class Gtk::CheckButton();
@@ -480,17 +478,14 @@ void media_player_dlg::on_playlist_button_toggled()
 				checkbutton->show();
 				skipButtons.push_back(checkbutton);
 				checkbutton->signal_toggled().connect(SigC::slot(*this, &media_player_dlg::on_playlist_clicked), false);
-				vbox8->pack_start(*checkbutton, Gtk::PACK_EXPAND_WIDGET, 0);				
-				//playlist_dlg->vbox4->pack_start(*checkbutton, Gtk::PACK_EXPAND_WIDGET, 0);
+				playlist_dlg->vbox4->pack_start(*checkbutton, Gtk::PACK_EXPAND_WIDGET, 0);
 			}
 		}
-		frame4->show();
-		//playlist_dlg->show_all_children();
-		//playlist_dlg->show();
+		playlist_dlg->show_all_children();
+		playlist_dlg->show();
 	}
 	else{
-		frame4->hide();	
-		//playlist_dlg->hide();
+		playlist_dlg->hide();
 	}
 }
 
