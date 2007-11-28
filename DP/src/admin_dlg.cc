@@ -88,7 +88,7 @@ void admin_dlg::on_edit_user_button_clicked()
 void admin_dlg::fill_image_button_scroller( int mode )
 {
 	m_icon_list = useController()->getIconList();					
-			
+	printf("\nMaking icon list:");		
 	for ( unsigned int j = 0; j < m_file_list.size(); j++ )
 	{
 		bool user_icon = false;
@@ -100,9 +100,13 @@ void admin_dlg::fill_image_button_scroller( int mode )
 		if ( mode == ALL_ICONS && !user_icon )				
 			m_button_list.at(j)->show();					
 		else if ( mode == USER_ICONS && user_icon )
+		{
 			m_button_list.at(j)->show();
+			printf("\n%s",m_file_list.at(j).c_str());
+		}
 		else m_button_list.at(j)->hide();
-	}				
+	}
+printf("\n");	
 }
 
 void admin_dlg::clear_user_icon()
@@ -174,12 +178,10 @@ void admin_dlg::onIconButtonClicked()
 			}
 			user_label->set_text(m_user_list.at(j));			
 			useController()->populateUserInfo(m_user_list.at(j));
+			m_user = useController()->c_getUserOther();			
 			start_delete_confirm();								
 		break;
-		}
-		case AD_DELETE_DLG:
-			//do nothing
-		break;
+		}		
 		default:
 			
 		break;
@@ -217,10 +219,15 @@ void admin_dlg::stop_delete_confirm()
 
 void admin_dlg::on_confirm_delete_button_clicked()
 {
+	printf("\nDeleting %s",m_user->getUser().c_str());
+	printf("\n");
 	useController()->deleteOtherUser();
+	m_icon_list = useController()->getIconList();
+	m_user_list = useController()->getUserList(); 
 	fill_image_button_scroller(USER_ICONS);
 	clear_user_icon();
 	stop_delete_confirm();
+	
 }
 
 void admin_dlg::on_cancel_delete_button_clicked()
@@ -243,14 +250,12 @@ void admin_dlg::reset_frame3(const User *a_user)
 	}
 	else
 	{
-		user_name_edit_box->set_editable(false);
-		printf("\n%s",a_user->getUser().c_str());
+		user_name_edit_box->set_editable(false);		
 		user_name_edit_box->set_text(a_user->getUser().c_str());
 		password_edit_box->set_text(a_user->getPasswordHash().c_str());
 		confirm_edit_box->set_text(a_user->getPasswordHash().c_str());
 		sq_edit_box->set_text(a_user->getQuestion().c_str());
-		sa_edit_box->set_text(a_user->getAnswer().c_str());
-		printf("\nTEST");
+		sa_edit_box->set_text(a_user->getAnswer().c_str());		
 	}	
 	
 	pw_checkbox->set_active(true);

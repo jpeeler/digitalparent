@@ -21,7 +21,7 @@
 #define TEST_DATA_STRUCTURE false
 #define TEST_WINDOWS false
 #define SHOW_WELCOME false
-#define TEST_USERS false //this tests a heavy load of users
+#define TEST_USERS true //this tests a heavy load of users
 
 // the one and only controller
 Controller m_control;
