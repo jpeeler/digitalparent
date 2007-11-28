@@ -466,6 +466,7 @@ void media_player_dlg::on_playlist_button_toggled()
 				checkbutton = new class Gtk::CheckButton("Chapter" + to_string(chap));
 				skipButtons.push_back(checkbutton);
 				checkbutton->set_active();
+				checkbutton->show();
 				checkbutton->signal_toggled().connect(SigC::slot(*this, &media_player_dlg::on_playlist_clicked), false);				
 				vbox8->pack_start(*checkbutton,Gtk::PACK_EXPAND_WIDGET,0);
 				//playlist_dlg->vbox4->pack_start(*checkbutton,Gtk::PACK_EXPAND_WIDGET,0);
@@ -476,9 +477,10 @@ void media_player_dlg::on_playlist_button_toggled()
 				std::string end = " - End: ";				
 				checkbutton->set_label(start + to_string(skipTimes.at(i).getSkipStart())+end + to_string(skipTimes.at(i).getSkipStop()));
 				checkbutton->set_active();
+				checkbutton->show();
 				skipButtons.push_back(checkbutton);
 				checkbutton->signal_toggled().connect(SigC::slot(*this, &media_player_dlg::on_playlist_clicked), false);
-				vbox8->pack_start(*checkbutton, Gtk::PACK_EXPAND_WIDGET, 0);
+				vbox8->pack_start(*checkbutton, Gtk::PACK_EXPAND_WIDGET, 0);				
 				//playlist_dlg->vbox4->pack_start(*checkbutton, Gtk::PACK_EXPAND_WIDGET, 0);
 			}
 		}
