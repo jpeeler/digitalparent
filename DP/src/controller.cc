@@ -74,7 +74,7 @@ int Controller::loadProfile()
 	
 	discID = m_data.getDisc()->getDiscID();
 	
-	if (m_data.getUserOther()->getUser() != "")
+	if (m_data.getUserOther()->getUserID() != 0)
 	{
 		// other user object not null, so load profile for that user
 		userID = m_data.getUserOther()->getUserID();
