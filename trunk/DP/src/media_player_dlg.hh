@@ -32,6 +32,7 @@ class media_player_dlg : public media_player_dlg_glade
         void on_time_slider_value_changed();
         void on_fullscreen_clicked();
         bool on_delete_event(GdkEventAny * event);
+        bool set_playback_time(int curVal, bool moving);
 		bool update_slider();
 		void dvd_read_name();
 		void buildPlaylist();

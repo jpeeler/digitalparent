@@ -108,6 +108,8 @@ void media_player_dlg::init()
 			name = "Chapter " + to_string(chap);
 skipChapters.push_back(chap);
 			libvlc_playlist_add(inst, option.c_str(), name.c_str(), &excp);
+		    //const char* options = ":auto-preparse";
+			//libvlc_playlist_add_extended(inst, option.c_str(), name.c_str(), 1, &options, &excp);
 		}
 	} else {
 		for(int i=1; i<useController()->c_getDisc()->getDiscChapterNum();i++){
@@ -138,7 +140,7 @@ skipChapters.push_back(chap);
 	
 	volume_slider->set_value(libvlc_audio_get_volume(inst,&excp));
 	time_slider->set_range(0,(useController()->c_getDisc()->getDiscLength())/1000);
-	
+	dvdLength = (useController()->c_getDisc()->getDiscLength())/1000;
 	
 	saveProfile->signal_clicked().connect(SigC::slot(*this, &media_player_dlg::on_save_button_clicked), false);
 	slider_signal = Glib::signal_idle().connect(SigC::slot(*this, &media_player_dlg::update_slider));
@@ -186,7 +188,8 @@ void media_player_dlg::on_previous_button_clicked()
 void media_player_dlg::on_rewind_button_clicked()
 {
 	//VLC_SpeedSlower(id);   //adjusted functions
-	VLC_TimeSet(id,(int)time_slider->get_value()-10,false);
+	//VLC_TimeSet(id,(int)time_slider->get_value()-10,false);
+    set_playback_time((int)time_slider->get_value()-10, false);
 	
 }
 
@@ -279,21 +282,64 @@ void media_player_dlg::on_play_button_clicked()
 	
 }
 
+bool media_player_dlg::set_playback_time(int curVal, bool moving)
+{
+   //int curVal = newSkipTime((int) time_slider->get_value());
+    //int dvdLen = 0;
+    int vlcVal;
+	if(libvlc_playlist_isplaying(inst,&excp)){
+	   vlcVal = VLC_TimeGet(id);
+	   if(5 > (dvdLength - curVal)) {
+		  VLC_TimeSet(id, dvdLength - 5, false);
+	   }
+	   else if(vlcVal < dvdLength && curVal < vlcVal) {
+	      VLC_TimeSet(id, curVal, false);
+	   }
+	   else {
+	      //printf("Debug: curVal = %d vlcVal = %d dvdLength = %d\n", curVal, vlcVal, dvdLength);
+	      while(vlcVal < curVal || vlcVal > dvdLength) {
+		     //printf("Debug: VLC: %d\n", vlcVal);
+		   	 if(vlcVal < curVal - 1 && curVal < dvdLength) {// && vlcVal != curVal + 1) {
+			    printf("Debug: set time to %d\n", curVal);
+		      	VLC_TimeSet(id, curVal, false);
+		   	 }
+		   
+		   	 while(0 > VLC_TimeGet(id) || dvdLength < VLC_TimeGet(id) || 1 >= abs(VLC_TimeGet(id) - curVal)) {
+			    //printf("Debug: stall - %d curVal %d\n", VLC_TimeGet(id), curVal); //stall
+			  	
+			  	if(moving)
+					return true;
+				else
+					usleep(25);
+		   	 }//usleep(200); //stall to let VLC catch up
+			  
+		   	 vlcVal = VLC_TimeGet(id);
+		   	 printf("Debug: end stall - %d curVal = %d\n", vlcVal, curVal);
+		  }
+	   }
+	}   
+    return true;
+}
+
 bool media_player_dlg::update_slider()
 {
-	if(libvlc_playlist_isplaying(inst,&excp)){
-		if(VLC_TimeGet(id)<0){
-			time_slider->set_value(newSkipTime(0));
+   int vlcTime = VLC_TimeGet(id);
+   if(libvlc_playlist_isplaying(inst, &excp)) {
+    	if(vlcTime <= 0 || vlcTime > dvdLength){
+			//time_slider->set_value(newSkipTime(0));
 		} else {
-			if(newSkipTime(VLC_TimeGet(id))!=VLC_TimeGet(id)){
-				time_slider->set_value(newSkipTime(VLC_TimeGet(id)));
-				VLC_TimeSet(id,newSkipTime(VLC_TimeGet(id)),false);
+			if(newSkipTime(vlcTime) != vlcTime){
+				//time_slider->set_value(newSkipTime(vlcTime));
+				//VLC_TimeSet(id,newSkipTime(vlcTime),false);
+			    set_playback_time(vlcTime, false);
 			} else {
-				time_slider->set_value(newSkipTime(VLC_TimeGet(id)));
+				time_slider->set_value(newSkipTime(vlcTime));
 			}
 		}
+	   
 	}
 	
+	usleep(50);
 	return true;
 }
 
@@ -305,9 +351,35 @@ void media_player_dlg::on_time_slider_value_changed()
 
 void media_player_dlg::on_time_slider_button_move_event() {
 	
-	VLC_TimeSet(id,newSkipTime((int)time_slider->get_value()),false);
+   // libvlc_media_instance_t *mi;
+    int newTime;
+/*     long currentTime, maxTime, vlcTime;
+ *    
+ *     vlcTime = VLC_TimeGet(id);
+ *     mi = libvlc_playlist_get_media_instance(inst, &excp);
+ *     currentTime = libvlc_media_instance_get_time(mi, &excp);
+ * 	maxTime = libvlc_media_instance_get_length(mi, &excp);
+ *    
+ *     printf("vlc: %d cT: %d mT: %d\n", vlcTime, currentTime, maxTime);
+ *    
+ */
+    int currentTime;
+    if(libvlc_playlist_isplaying(inst, &excp)) {
+	   currentTime = VLC_TimeGet(id);
+	   newTime = newSkipTime((int)time_slider->get_value());
+	   set_playback_time(newTime, true);
+	   //usleep(50);
+/* 	   VLC_TimeSet(id,newSkipTime((int)time_slider->get_value()),false);
+ * 	   usleep(50);
+ * 	   if(currentTime < 0 || currentTime > useController()->c_getDisc()->getDiscLength()) {
+ * 		  libvlc_playlist_next(inst, &excp);
+ * 		  VLC_TimeSet(id,newSkipTime((int)time_slider->get_value()),false);
+ * 	   }
+ */
+	   printf("New Time: %d, VLC Time %d, Playing %d\n", newTime, VLC_TimeGet(id), libvlc_playlist_isplaying(inst, &excp));
+	}
 	//VLC_TimeSet(id,(int)time_slider->get_value(),false);
-	usleep(50);
+	//usleep(50);
 }
 
 bool media_player_dlg::on_time_slider_button_press(GdkEventButton *ev)
@@ -315,6 +387,8 @@ bool media_player_dlg::on_time_slider_button_press(GdkEventButton *ev)
        slider_signal.disconnect();
 	   //slider_signal = Glib::signal_timeout().connect(SigC::slot(*this, &media_player_dlg::on_time_slider_button_move_event), 500);
 	   slider_signal = time_slider->signal_value_changed().connect(SigC::slot(*this, &media_player_dlg::on_time_slider_button_move_event), 500);
+   printf("Slider clicked, VLC Time %d\n", VLC_TimeGet(id));
+	   
 
        return 0;
 }
@@ -322,9 +396,28 @@ bool media_player_dlg::on_time_slider_button_press(GdkEventButton *ev)
 bool media_player_dlg::on_time_slider_button_release_event(GdkEventButton *ev)
 {
 	   slider_signal.disconnect();
+       set_playback_time((int)time_slider->get_value(), false);
 	   //VLC_TimeSet(id,(int)time_slider->get_value(),false);
+/*        while(VLC_TimeGet(id) == (int)time_slider->get_value()) ;
+ * 	
+ *        printf("Slider released int. 1, slider: %d VLC Time %d\n", (int)time_slider->get_value(), VLC_TimeGet(id));
+ * 	
+ *        if(VLC_TimeGet(id) < (int)time_slider->get_value()) {
+ *    	      while(VLC_TimeGet(id) != (int)time_slider->get_value()) {
+ * 		     if(VLC_TimeGet(id) < 0) {
+ * 		        libvlc_playlist_next(inst, &excp);
+ * 			    usleep(100);
+ * 		     }
+ * 		     VLC_TimeSet(id,newSkipTime((int)time_slider->get_value()),false);
+ * 		     usleep(200);
+ * 	   	     printf("Slider released int., slider: %d VLC Time %d\n", (int)time_slider->get_value(), VLC_TimeGet(id));
+ * 	
+ * 	      }
+ * 	   }
+ */
        slider_signal = Glib::signal_idle().connect(SigC::slot(*this, &media_player_dlg::update_slider));
-
+	   printf("Slider released, slider: %d VLC Time %d\n", (int)time_slider->get_value(), VLC_TimeGet(id));
+	
        return 0;
 }
 
