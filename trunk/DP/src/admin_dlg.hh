@@ -66,6 +66,7 @@ class admin_dlg : public admin_dlg_glade
 		void oninit_user();
 		void oninit_icons();
 		void reset_frame3(const User *a_user);
+		void reset_frame1(const User *a_user);
 		void fill_image_button_scroller(int mode);
 		void clear_user_icon();
 		void set_user_icon(string user, string file_name);

@@ -51,6 +51,7 @@ void admin_dlg::on_add_user_button_clicked()
 	vseparator1->show();
 	frame2->show();
 	icon_select_frame_label->show();
+	reset_frame1(NULL);
 	frame1->show();
 	
 	clear_user_icon();
@@ -59,8 +60,6 @@ void admin_dlg::on_add_user_button_clicked()
 	reset_frame3(NULL);	
 	frame3->show();
 	
-	g_radio_button->set_active(true);	
-	nr_checkbox->set_active(false);		
 	screen_movies_button->hide();		
 	user_save_button->show();
 }
@@ -87,8 +86,7 @@ void admin_dlg::on_edit_user_button_clicked()
 
 void admin_dlg::fill_image_button_scroller( int mode )
 {
-	m_icon_list = useController()->getIconList();					
-	printf("\nMaking icon list:");		
+	m_icon_list = useController()->getIconList();
 	for ( unsigned int j = 0; j < m_file_list.size(); j++ )
 	{
 		bool user_icon = false;
@@ -99,14 +97,10 @@ void admin_dlg::fill_image_button_scroller( int mode )
 		}
 		if ( mode == ALL_ICONS && !user_icon )				
 			m_button_list.at(j)->show();					
-		else if ( mode == USER_ICONS && user_icon )
-		{
-			m_button_list.at(j)->show();
-			printf("\n%s",m_file_list.at(j).c_str());
-		}
+		else if ( mode == USER_ICONS && user_icon )		
+			m_button_list.at(j)->show();			
 		else m_button_list.at(j)->hide();
 	}
-printf("\n");	
 }
 
 void admin_dlg::clear_user_icon()
@@ -122,6 +116,7 @@ void admin_dlg::set_user_icon(string user, string file_name )
 	admin_icon = Gtk::manage(new class Gtk::Image(file_name.c_str()));
 	fixed8->put(*admin_icon, 0, 40);		
 	admin_icon->show();
+	m_user_image = file_name;
 }
 
 void admin_dlg::onIconButtonClicked()
@@ -162,9 +157,11 @@ void admin_dlg::onIconButtonClicked()
 			}
 			user_label->set_text(m_user_list.at(j));
 			useController()->populateUserInfo(m_user_list.at(j));
-			m_user = useController()->c_getUserOther();			
+			m_user = useController()->c_getUserOther();
+			//m_user_image = m_user->getUserIcon();			
 			fill_image_button_scroller(ALL_ICONS);
 			reset_frame3(m_user);
+			reset_frame1(m_user);
 			frame1->show();
 			frame3->show();
 			ad_state = AD_EDIT_USER;
@@ -265,6 +262,43 @@ void admin_dlg::reset_frame3(const User *a_user)
 	sq_checkbox->set_active(true);	
 	sa_checkbox->set_active(true);
 	sa_edit_box->set_visibility(false);	
+}
+
+void admin_dlg::reset_frame1(const User *a_user)
+{
+	if ( a_user == NULL )
+	{
+		g_radio_button->set_active(true);		
+		nr_checkbox->set_active(false);		
+	}
+	else
+	{
+		switch( a_user->getMaxPlayLevel() )
+		{
+			case G:
+				g_radio_button->set_active(true);			    
+			break;
+			case PG:				
+				pg_radio_button->set_active(true);
+			break;
+			case PG13:
+				pg13_radio_button->set_active(true);			    
+			break;
+			case NC17:
+				nc17_radio_button->set_active(true);
+			break;
+			case R:
+				r_radio_button->set_active(true);
+			break;
+			case X:
+				x_radio_button->set_active(true);
+			break;
+			default:
+				//should not get here
+			break;
+		}
+		 nr_checkbox->set_active(a_user->getPlayUnknownDisc());
+	}
 }
 
 void admin_dlg::on_screen_movies_button_clicked()

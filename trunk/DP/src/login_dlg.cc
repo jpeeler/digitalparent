@@ -230,10 +230,10 @@ void login_dlg::oninit(int shifted)
 	//	printf("\n%s",m_icon_list.at(i).c_str());
 	//}
 	m_user_list = useController()->getUserList();
-	for(unsigned int i = 0; i < m_user_list.size(); i++ )
-	{
-		printf("\n%s",m_user_list.at(i).c_str());
-	}	
+	//for(unsigned int i = 0; i < m_user_list.size(); i++ )
+	//{
+	//	printf("\n%s",m_user_list.at(i).c_str());
+	//}	
 	m_admin = "admin";	
 	
 	icon1_password_edit_box->hide();
@@ -257,8 +257,7 @@ void login_dlg::oninit(int shifted)
 	
 	useController()->loadCurrentUser(m_admin,string(""));
 	const User *a_user = useController()->c_getUserLoggedIn();
-	const string filename = a_user->getUserIcon();
-	printf("\n\n%s\n\n",filename.c_str());
+	const string filename = a_user->getUserIcon();	
 	setupAdminButton( filename, m_admin );
 	
 	if ( m_icon_list.size() > 2 )
