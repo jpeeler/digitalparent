@@ -11,14 +11,14 @@ RunInTerminal=true
 clean before build=false
 
 [filenumbers]
-0=223
+0=210
 1=1
-2=15
-3=18
-4=108
-5=24
-6=20
-7=90
+2=108
+3=24
+4=20
+5=90
+6=175
+7=49
 8=175
 9=49
 
@@ -37,14 +37,12 @@ clean before build=false
 [filelist]
 0=/Projects/DP/src/admin_dlg_glade.cc
 1=/Projects/DP/include/controller.h
-2=/Projects/DP/src/delete_popup_dlg.hh
-3=/Projects/DP/src/delete_popup_dlg.cc
-4=/Projects/DP/src/admin_dlg_glade.hh
-5=/Projects/DP/src/welcome_dlg.hh
-6=/Projects/DP/src/welcome_dlg.cc
-7=/Projects/DP/src/digitalparent.cc
-8=/Projects/DP/src/admin_dlg.cc
-9=/Projects/DP/src/admin_dlg.hh
+2=/Projects/DP/src/admin_dlg_glade.hh
+3=/Projects/DP/src/welcome_dlg.hh
+4=/Projects/DP/src/welcome_dlg.cc
+5=/Projects/DP/src/digitalparent.cc
+6=/Projects/DP/src/admin_dlg.cc
+7=/Projects/DP/src/admin_dlg.hh
 
 [Project Tree]
 0=0
