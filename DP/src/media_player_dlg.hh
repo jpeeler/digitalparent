@@ -46,6 +46,8 @@ class media_player_dlg : public media_player_dlg_glade
 		bool skipTimesContains(std::string toFind);
 		bool skipChaptersContains(std::string toFind);
 		bool profileSkipChaptersContains(int toFind);
+		bool addToSkipTimes(std::string toAdd);
+		bool addToSkipChapters(std::string toAdd);
 		int newSkipTime(int currentTime);
 		
 		int to_int(const std::string &str);

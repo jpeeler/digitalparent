@@ -119,7 +119,7 @@ media_player_dlg_glade::media_player_dlg_glade(
    image3 = Gtk::manage(new class Gtk::Image(Gtk::StockID("gtk-media-next"), Gtk::IconSize(4)));
    next_button = Gtk::manage(new class Gtk::Button());
    image12 = Gtk::manage(new class Gtk::Image(Gtk::StockID("gtk-quit"), Gtk::IconSize(4)));
-   label4 = Gtk::manage(new class Gtk::Label(_("Logout")));
+   label4 = Gtk::manage(new class Gtk::Label(_("Back")));
    hbox4 = Gtk::manage(new class Gtk::HBox(false, 2));
    alignment4 = Gtk::manage(new class Gtk::Alignment(0.5, 0.5, 0, 0));
    Logout = Gtk::manage(new class Gtk::Button());
