@@ -359,7 +359,7 @@ void admin_dlg::oninit_user()
 
 void admin_dlg::oninit_icons()
 {
-	string cmd = "ls " + useController()->img_dir + " > pixmaps.dat";
+	string cmd = "ls " + useController()->img_dir + "| grep .png > pixmaps.dat";
 	system(cmd.c_str());
 	FILE *fp = fopen("pixmaps.dat","r");
 	int c;
