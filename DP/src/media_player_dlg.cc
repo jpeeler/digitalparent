@@ -541,13 +541,13 @@ void media_player_dlg::on_mute_button_toggled()
 	if(mute_button->get_active()){	
 		sound->hide();	
 		fixed1->remove(*sound);
-		sound = Gtk::manage(new class Gtk::Image(std::string("/Projects/DP/pixmaps/audio-volume-muted.png")));
+		sound = Gtk::manage(new class Gtk::Image(std::string(useController()->pixmaps_dir + "audio-volume-muted.png")));
 		fixed1->put(*sound,22,93);
 		sound->show();
 	} else {
 		sound->hide();	
 		fixed1->remove(*sound);
-		sound = Gtk::manage(new class Gtk::Image(std::string("/Projects/DP/pixmaps/audio-volume-high.png")));
+		sound = Gtk::manage(new class Gtk::Image(std::string(useController()->pixmaps_dir + "audio-volume-high.png")));
 		fixed1->put(*sound,22,93);
 		sound->show();
 	}

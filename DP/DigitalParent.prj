@@ -106,11 +106,40 @@ module.source.files=\
 
 module.pixmap.name=pixmaps
 module.pixmap.type=
-module.pixmap.files=
+module.pixmap.files=\
+	no_user.png\
+	audio-volume-high.png\
+	audio-volume-muted.png
 
 module.data.name=data
 module.data.type=
-module.data.files=
+module.data.files=\
+	atomic.png\
+	big_smile.png\
+	black_bomb.png\
+	blue_flower.png\
+	butterfly.png\
+	eye.png\
+	foxy_smile.png\
+	full_matrix.png\
+	hazard.jpg\
+	matrix_smile.png\
+	misdoubt_smile.png\
+	oogabada.png\
+	oooh_smile.png\
+	pirate.png\
+	polypheme_smile.png\
+	roswell_smile.png\
+	smile.png\
+	splash.png\
+	sun.png\
+	tired_smile.png\
+	truck.png\
+	tux.png\
+	watcha_smile.png\
+	weird.png\
+	what.png\
+	yelling.png
 
 module.help.name=help
 module.help.type=
@@ -128,8 +157,8 @@ compiler.options.include.paths=\
 compiler.options.library.paths=
 compiler.options.libraries=\
 	*/usr/lib/libtntdb.la\
-	vlc\
-	mhash
+	mhash\
+	vlc
 compiler.options.libraries.selected=1 1 1 
 compiler.options.defines=
 compiler.options.defines.selected=1 1 1 
