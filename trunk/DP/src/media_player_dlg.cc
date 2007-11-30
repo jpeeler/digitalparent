@@ -654,7 +654,7 @@ bool media_player_dlg::eraseFromSkipChapters(std::string toRemove){
 			//printf("SkipChapters[%d]: %d\n",i,skipChapters.at(i));
 			//printf("Found string: ");
 			std::string toCompare = "Chapter" +to_string(skipChapters.at(i));
-			bool temp = toCompare==toRemove;
+			//bool temp = toCompare==toRemove;
 			//printf(to_string(temp).c_str());
 			//printf("\n");
 			if(toCompare==toRemove){
