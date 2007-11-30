@@ -27,10 +27,16 @@
  
  Database::Database()
 {
-	// TODO: put constructor code here
 	try {
 		conn = tntdb::connect("sqlite:DigitalParentDB");
 		printf("connected\n");
+		
+		// create tables if they don't exist (should be first run)
+		conn.execute("CREATE TABLE if not exists Disc (Disc_Serial TEXT, Disc_ID INTEGER PRIMARY KEY, Disc_Length NUMERIC, Disc_Name TEXT, Disc_NumChapters NUMERIC, Disc_Rating_ID NUMERIC)");
+		conn.execute("CREATE TABLE Profiles (Disc_ID NUMERIC, Profile_ID INTEGER PRIMARY KEY, User_ID NUMERIC)");
+		conn.execute("CREATE TABLE Skip_Chapters (Chapter_Number NUMERIC, Profile_ID NUMERIC, Skip_Chapter_ID INTEGER PRIMARY KEY)");
+		conn.execute("CREATE TABLE Skip_Times (Audio_Only NUMERIC, Profile_ID NUMERIC, Skip_Start NUMERIC, Skip_Stop NUMERIC, Skip_Time_ID INTEGER PRIMARY KEY)");
+		conn.execute("CREATE TABLE Users (Secret_Answer TEXT, Secret_Question TEXT, Can_Play_Unknown NUMERIC, Disc_Rating_ID NUMERIC, Last_Movie_ID NUMERIC, Last_Movie_Position NUMERIC, Password TEXT, User_Icon TEXT, User_ID INTEGER PRIMARY KEY, Username TEXT)");
 	}
 	catch(const std::exception& e) {
 		std::cerr << e.what() << std::endl;
