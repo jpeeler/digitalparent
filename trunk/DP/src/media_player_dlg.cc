@@ -8,7 +8,6 @@
 #include "config.h"
 #include "media_player_dlg.hh"
 #include "playlist_dlg.hh"
-#include "media_chooser_dlg.hh"
 #include "controller.h"
 
 #include <vlc/libvlc.h>
@@ -27,7 +26,6 @@ int item;
 int id;
 bool firstTime = true;
 playlist_dlg *playlist_dlg;
-media_chooser_dlg *media_chooser;
 bool audioSkipped=false;
 Gtk::CheckButton *checkbutton;
 bool isAdmin;
@@ -83,11 +81,13 @@ void media_player_dlg::init()
 			//libvlc_playlist_add_extended(inst, option.c_str(), name.c_str(), 1, &options, &excp);
 		}
 	} else {
-		for(int i=1; i<=useController()->c_getDisc()->getDiscChapterNum();i++){
-			if(!skipChaptersContains(to_string(i))){
-				option = "dvd:///dev/dvd@1:" + to_string(chap);
-				name = "Chapter " + to_string(chap);
-				libvlc_playlist_add(inst, option.c_str(), name.c_str(), &excp);
+		if(useController()->c_getDisc()->getDiscRating() <= useController()->c_getUserLoggedIn()->getMaxPlayLevel()){
+			for(int i=1; i<=useController()->c_getDisc()->getDiscChapterNum();i++){
+				if(!skipChaptersContains(to_string(i))){
+					option = "dvd:///dev/dvd@1:" + to_string(chap);
+					name = "Chapter " + to_string(chap);
+					libvlc_playlist_add(inst, option.c_str(), name.c_str(), &excp);
+				}
 			}
 		}
 	}
@@ -119,7 +119,9 @@ void media_player_dlg::init()
 
 void media_player_dlg::on_open_media_button_clicked()
 {  
-	libvlc_destroy(inst);
+	if(inst!=NULL){
+		libvlc_destroy(inst);
+	}
 	firstTime = true;
 	if(playlist_button->get_active()){
 		playlist_button->set_active(false);
@@ -419,6 +421,7 @@ void media_player_dlg::on_save_button_clicked()
 void media_player_dlg::on_playlist_button_toggled()
 {
 	if(playlist_button->get_active()){
+if(useController()->c_getDisc()->getDiscRating() <= useController()->c_getUserLoggedIn()->getMaxPlayLevel()){		
 		if(firstTime){
 			firstTime=false;
 			int x; 
@@ -463,6 +466,7 @@ void media_player_dlg::on_playlist_button_toggled()
 		playlist_dlg->show_all_children();
 		playlist_dlg->show();
 	}
+	}//to if
 	else{
 		playlist_dlg->hide();
 	}
