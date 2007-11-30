@@ -122,7 +122,6 @@ module.data.files=\
 	eye.png\
 	foxy_smile.png\
 	full_matrix.png\
-	hazard.jpg\
 	matrix_smile.png\
 	misdoubt_smile.png\
 	oogabada.png\
@@ -139,7 +138,8 @@ module.data.files=\
 	watcha_smile.png\
 	weird.png\
 	what.png\
-	yelling.png
+	yelling.png\
+	hazard.png
 
 module.help.name=help
 module.help.type=
