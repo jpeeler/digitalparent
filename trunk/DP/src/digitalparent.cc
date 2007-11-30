@@ -21,7 +21,7 @@
 #define TEST_DATA_STRUCTURE false
 #define TEST_WINDOWS false
 #define SHOW_WELCOME false
-#define TEST_USERS false //this tests a heavy load of users
+#define TEST_USERS true //this tests a heavy load of users
 
 // the one and only controller
 Controller m_control;
@@ -37,7 +37,11 @@ using namespace std;
 void fillWithUsers();
 
 int main(int argc, char **argv)
-{  
+{
+   // the globally accessed hard coded paths
+   useController()->img_dir = "/Projects/DP/data/";   
+   useController()->pixmaps_dir = "/Projects/DP/pixmaps/";
+	
 #if defined(ENABLE_NLS)
    bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
@@ -56,10 +60,6 @@ int main(int argc, char **argv)
 #if TEST_USERS
 	fillWithUsers();
 #endif	   
-	
-   // the globally accessed hard coded paths
-   useController()->img_dir = "/Projects/DP/data/";
-   useController()->pixmaps_dir = "/Projects/DP/pixmaps/";
 	
    while ( useController()->dp_state != DP_STOP )
    {
@@ -211,12 +211,12 @@ delete media_player_dlg;
 
 void fillWithUsers()
 {
-	//setup user Jeremy
+	// setup user Jeremy
 	useController()->c_setCurrentUser(std::string("Jeremy"));
 	useController()->c_setCurrentUserPasswordHash(std::string("jeremys_password"));
 	useController()->c_setCurrentUserSecretQuestion(string("number?"));
 	useController()->c_setCurrentUserSecretAnswerHash(string("one"));
-	useController()->c_setCurrentUserIcon(std::string(useController()->img_dir + "tired_smile.png"));
+	useController()->c_setCurrentUserIcon(useController()->img_dir + "tired_smile.png");
 	useController()->c_setCurrentUserCanPlayUnknown(true);
 	useController()->c_setCurrentUserMaxPlayLevel(NR);
 	useController()->storeCurrentUser();
