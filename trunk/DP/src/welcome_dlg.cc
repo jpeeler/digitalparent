@@ -17,7 +17,7 @@ void welcome_dlg::oninit()
 {
 	Tux_image->hide();	
 	fixed7->remove(*Tux_image);
-	Tux_image = Gtk::manage(new class Gtk::Image("/Projects/DP/images/tux.png"));
+	Tux_image = Gtk::manage(new class Gtk::Image((useController()->img_dir + "tux.png")));
 	fixed7->put(*Tux_image, 24, 24);;		
 	Tux_image->show();
 }
@@ -53,7 +53,7 @@ void welcome_dlg::on_welcome_next_button_clicked()
 	}	
 	std::string user = "admin";	
 	useController()->c_setCurrentUser( user );	
-	useController()->c_setCurrentUserIcon(std::string("/Projects/DP/images/tux.png"));	
+	useController()->c_setCurrentUserIcon(std::string(useController()->img_dir + "tux.png"));	
 	useController()->c_setCurrentUserPasswordHash( password );
 	useController()->c_setCurrentUserSecretQuestion( question );
 	useController()->c_setCurrentUserSecretAnswerHash( answer );

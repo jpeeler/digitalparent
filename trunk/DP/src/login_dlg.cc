@@ -285,7 +285,7 @@ void login_dlg::oninit(int shifted)
 		user_icon_select_button_1->hide();
 		next_user_button->hide();
 		previous_user_button->hide();
-		setupButton2(string("/Projects/DP/pixmaps/no_user.png"),string("NO USERS EXIST"));		
+		setupButton2(string(useController()->pixmaps_dir + "no_user.png"),string("NO USERS EXIST"));		
 		return;
 	}	
 }

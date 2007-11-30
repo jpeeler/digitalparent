@@ -60,6 +60,7 @@ public:
 
 	DP_STATE dp_state;
 	std::string img_dir;
+	std::string pixmaps_dir;
 
 	// controller disc wrapper methods
 	void c_setDiscID(int ID);

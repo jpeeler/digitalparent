@@ -105,7 +105,7 @@ void admin_dlg::fill_image_button_scroller( int mode )
 
 void admin_dlg::clear_user_icon()
 {
-	set_user_icon(string(""),string("/Projects/DP/pixmaps/no_user.png"));	
+	set_user_icon(string(""),string(useController()->pixmaps_dir + "no_user.png"));	
 }
 
 void admin_dlg::set_user_icon(string user, string file_name )
@@ -311,7 +311,7 @@ void admin_dlg::oninit_admin()
 {		
 	ad_state = AD_SETTINGS;
 	// SHOW THE ADMIN ICON AND NAME
-	set_user_icon(string("admin"),string("/Projects/DP/images/tux.png"));	
+	set_user_icon(string("admin"),string(useController()->img_dir + "tux.png"));	
 	
 	// GET ALL OF THE USER NAMES AND ICONS
 	m_user_list = useController()->getUserList();
@@ -359,7 +359,8 @@ void admin_dlg::oninit_user()
 
 void admin_dlg::oninit_icons()
 {
-	system("ls /Projects/DP/images > pixmaps.dat");
+	string cmd = "ls " + useController()->img_dir + " > pixmaps.dat";
+	system(cmd.c_str());
 	FILE *fp = fopen("pixmaps.dat","r");
 	int c;
 	string fname = useController()->img_dir;
@@ -387,7 +388,7 @@ void admin_dlg::oninit_icons()
 			m_button_list.push_back(button);
 			hbox5->pack_start(*button, Gtk::PACK_SHRINK, 0);
 			button->signal_clicked().connect(SigC::slot(*this, &admin_dlg_glade::onIconButtonClicked), false);					
-			fname = "/Projects/DP/images/";
+			fname = useController()->img_dir;
 		}
 		else	fname+=c;
 		c = fgetc(fp);
