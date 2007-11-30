@@ -35,7 +35,6 @@ class media_player_dlg : public media_player_dlg_glade
         bool set_playback_time(int curVal, bool moving);
 		bool update_slider();
 		void dvd_read_name();
-		void buildPlaylist();
 		bool on_time_slider_button_press(GdkEventButton *ev);
 		bool on_time_slider_button_release_event(GdkEventButton *ev);
 		void on_time_slider_button_move_event();
@@ -45,7 +44,6 @@ class media_player_dlg : public media_player_dlg_glade
 		bool eraseFromSkipTimes(std::string toRemove);
 		bool skipTimesContains(std::string toFind);
 		bool skipChaptersContains(std::string toFind);
-		bool profileSkipChaptersContains(int toFind);
 		bool addToSkipTimes(std::string toAdd);
 		bool addToSkipChapters(std::string toAdd);
 		int newSkipTime(int currentTime);
