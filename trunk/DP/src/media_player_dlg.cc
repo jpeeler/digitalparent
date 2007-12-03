@@ -47,7 +47,6 @@ void media_player_dlg::init()
 	
 	if(useController()->loadDisc()==C_DISC_NOT_LOADED){
 		media->set_text("No Disc");
-		return;
 	} else {
 		media->set_text(useController()->c_getDisc()->getDiscName());
 	}
