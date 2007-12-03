@@ -481,9 +481,8 @@ void media_player_dlg::on_volume_slider_value_changed()
 
 void media_player_dlg::on_Logout_clicked()
 {  
-	if(inst!=NULL){
-		libvlc_destroy (inst);
-	}
+	libvlc_destroy (inst);
+	useController()->c_clearSkipVectors();
 	delete playlist_dlg;
 	skipTimes.clear();
 	skipChapters.clear();
