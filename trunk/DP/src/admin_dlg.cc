@@ -164,6 +164,7 @@ void admin_dlg::onIconButtonClicked()
 			reset_frame1(m_user);
 			frame1->show();
 			frame3->show();
+			screen_movies_button->show();
 			ad_state = AD_EDIT_USER;
 		break;
 		case AD_DELETE_USER:
