@@ -81,7 +81,7 @@ void media_player_dlg::init()
 			//libvlc_playlist_add_extended(inst, option.c_str(), name.c_str(), 1, &options, &excp);
 		}
 	} else {
-		if(useController()->c_getDisc()->getDiscRating() <= useController()->c_getUserLoggedIn()->getMaxPlayLevel()){
+		//if(useController()->c_getDisc()->getDiscRating() <= useController()->c_getUserLoggedIn()->getMaxPlayLevel()){
 			for(int i=1; i<=useController()->c_getDisc()->getDiscChapterNum();i++){
 				if(!skipChaptersContains(to_string(i))){
 					option = "dvd:///dev/dvd@1:" + to_string(chap);
@@ -89,7 +89,7 @@ void media_player_dlg::init()
 					libvlc_playlist_add(inst, option.c_str(), name.c_str(), &excp);
 				}
 			}
-		}
+		//}
 	}
 	
 	libvlc_playlist_play(inst, 0, 0, NULL, &excp);
@@ -389,13 +389,14 @@ void media_player_dlg::on_save_button_clicked()
 {
 	if(isAdmin){
 		useController()->c_clearSkipVectors();
-		printf("&&&&& Skip Chapters Start &&&&&\n");
+		printf("&&&&& Skip Chapters Start Admin &&&&&\n");
+		printf("skipChapter size: %d\n",skipChapters.size());
 		for(uint i=0;i<skipChapters.size();i++){
 				printf("Chapter: %d\n",skipChapters.at(i));
 				useController()->c_addSkipChapter(skipChapters.at(i));
 		}
 		printf("&&&&& Skip Chapters End &&&&&\n");
-		printf("&&&&& Skip Times Start &&&&&\n");
+		printf("&&&&& Skip Times Start Admin clewar&&&&&\n");
 		for(uint j =0;j<skipTimes.size();j++){		
 			printf("Start: %ld - End: %ld\n",skipTimes.at(j).getSkipStart(),skipTimes.at(j).getSkipStop());
 			useController()->c_addSkipTiming(skipTimes.at(j).getSkipStart(),skipTimes.at(j).getSkipStop());
@@ -421,7 +422,7 @@ void media_player_dlg::on_save_button_clicked()
 void media_player_dlg::on_playlist_button_toggled()
 {
 	if(playlist_button->get_active()){
-if(useController()->c_getDisc()->getDiscRating() <= useController()->c_getUserLoggedIn()->getMaxPlayLevel()){		
+//if(useController()->c_getDisc()->getDiscRating() <= useController()->c_getUserLoggedIn()->getMaxPlayLevel()){
 		if(firstTime){
 			firstTime=false;
 			int x; 
@@ -465,7 +466,7 @@ if(useController()->c_getDisc()->getDiscRating() <= useController()->c_getUserLo
 		}
 		playlist_dlg->show_all_children();
 		playlist_dlg->show();
-	}
+	//}
 	}//to if
 	else{
 		playlist_dlg->hide();
@@ -576,7 +577,8 @@ bool media_player_dlg::eraseFromSkipChapters(std::string toRemove){
 			std::string toCompare = "Chapter" +to_string(skipChapters.at(i));
 			//printf(to_string(temp).c_str());
 			//printf("\n");
-			if(toCompare.compare(toRemove)){
+			//printf("toCompare %s result: %d\n",toCompare.c_str(),toCompare.compare(toRemove));
+			if(toCompare.compare(toRemove)==0){
 				//printf("Size before %d\n",skipChapters.size());
 				it=skipChapters.begin()+i;
 				skipChapters.erase(it);
@@ -630,7 +632,7 @@ bool media_player_dlg::skipChaptersContains(std::string toFind){
 	int chapter = to_int(chapterString);
 	for(uint i=0;i<skipChapters.size();i++){
 		if(skipChapters.at(i)==chapter){	
-			printf("Found string in SkipChapters\n");
+			printf("Found string %s in SkipChapters\n",toFind.c_str());
 			return true;
 		}
 	}
@@ -678,17 +680,27 @@ bool media_player_dlg::addToSkipChapters(std::string toAdd){
 		//printf("Chapter String: '%s'\n",chapterString.c_str());
 		int chapter = to_int(chapterString);
 //find where it goes and insert it
+		//printf("Skip Chapters Size %d\n",skipChapters.size());
 		if(skipChapters.size()==0){
+			printf("Added: %d to skipChapters\n",chapter);
 			skipChapters.push_back(chapter);
+			return true;
 		} else {
 		std::vector<int>::iterator it;
 		for(uint i =0; i<skipChapters.size();i++){
 			//smaller then the first element
 			//insert at the beginning
 			if(i==0){
+				printf("in i ==0\n");
+				printf("skipChapters.at(%d): %d\n",i,skipChapters.at(i));
 				if(chapter<skipChapters.at(i)){
 					printf("Adding %d at beginning of skipChapters\n",chapter);
 					skipChapters.insert(skipChapters.begin(),chapter);
+					return true;
+				} 
+				if(skipChapters.at(i)<chapter){
+					printf("Adding %d at end of skipChapters\n",chapter);
+					skipChapters.insert(skipChapters.end(),chapter);
 					return true;
 				}
 //int the middle of the vector
