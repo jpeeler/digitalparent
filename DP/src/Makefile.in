@@ -56,7 +56,8 @@ am_digitalparent_OBJECTS = digitalparent.$(OBJEXT) login_dlg.$(OBJEXT) \
 	data_structure.$(OBJEXT) database.$(OBJEXT) \
 	welcome_dlg.$(OBJEXT) welcome_dlg_glade.$(OBJEXT) \
 	playlist_dlg.$(OBJEXT) playlist_dlg_glade.$(OBJEXT) \
-	admin_dlg.$(OBJEXT) admin_dlg_glade.$(OBJEXT)
+	admin_dlg.$(OBJEXT) admin_dlg_glade.$(OBJEXT) \
+	load_dlg.$(OBJEXT) load_dlg_glade.$(OBJEXT)
 digitalparent_OBJECTS = $(am_digitalparent_OBJECTS)
 am__DEPENDENCIES_1 =
 digitalparent_DEPENDENCIES = $(am__DEPENDENCIES_1) \
@@ -255,7 +256,11 @@ digitalparent_SOURCES = \
 	admin_dlg.cc\
 	admin_dlg.hh\
 	admin_dlg_glade.cc\
-	admin_dlg_glade.hh
+	admin_dlg_glade.hh\
+	load_dlg.cc\
+	load_dlg.hh\
+	load_dlg_glade.cc\
+	load_dlg_glade.hh
 
 digitalparent_LDFLAGS = 
 digitalparent_LDADD = \
@@ -339,6 +344,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/data_structure.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/database.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/digitalparent.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/load_dlg.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/load_dlg_glade.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/login_dlg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/login_dlg_glade.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/media_player_dlg.Po@am__quote@

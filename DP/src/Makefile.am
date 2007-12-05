@@ -42,7 +42,11 @@ digitalparent_SOURCES = \
 	admin_dlg.cc\
 	admin_dlg.hh\
 	admin_dlg_glade.cc\
-	admin_dlg_glade.hh
+	admin_dlg_glade.hh\
+	load_dlg.cc\
+	load_dlg.hh\
+	load_dlg_glade.cc\
+	load_dlg_glade.hh
 
 digitalparent_LDFLAGS = 
 
