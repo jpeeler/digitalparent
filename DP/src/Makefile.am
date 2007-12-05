@@ -31,12 +31,8 @@ digitalparent_SOURCES = \
 	welcome_dlg_glade.cc\
 	playlist_dlg.cc\
 	playlist_dlg_glade.cc\
-	media_chooser_dlg.cc\
-	media_chooser_dlg_glade.cc\
 	login_dlg.hh\
 	login_dlg_glade.hh\
-	media_chooser_dlg.hh\
-	media_chooser_dlg_glade.hh\
 	media_player_dlg.hh\
 	media_player_dlg_glade.hh\
 	playlist_dlg.hh\
@@ -52,5 +48,5 @@ digitalparent_LDFLAGS =
 
 digitalparent_LDADD = \
 	$(PACKAGE_LIBS)\
-	 /usr/lib/libtntdb.la -lvlc -lmhash
+	 /usr/lib/libtntdb.la -lmhash -lvlc
 
