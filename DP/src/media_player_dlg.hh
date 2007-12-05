@@ -51,6 +51,7 @@ class media_player_dlg : public media_player_dlg_glade
         int checkSkipWindows(int time);
         int checkSkipChapters(int time);
         int findChapter(int time);
+		void hideButtons();
 		int to_int(const std::string &str);
 		template <class T>
 inline std::string to_string (const T& t);
