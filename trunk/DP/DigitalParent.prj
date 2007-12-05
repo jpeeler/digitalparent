@@ -98,7 +98,11 @@ module.source.files=\
 	admin_dlg.cc\
 	admin_dlg.hh\
 	admin_dlg_glade.cc\
-	admin_dlg_glade.hh
+	admin_dlg_glade.hh\
+	load_dlg.cc\
+	load_dlg.hh\
+	load_dlg_glade.cc\
+	load_dlg_glade.hh
 
 module.pixmap.name=pixmaps
 module.pixmap.type=
