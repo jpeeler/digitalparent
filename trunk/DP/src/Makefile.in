@@ -56,7 +56,6 @@ am_digitalparent_OBJECTS = digitalparent.$(OBJEXT) login_dlg.$(OBJEXT) \
 	data_structure.$(OBJEXT) database.$(OBJEXT) \
 	welcome_dlg.$(OBJEXT) welcome_dlg_glade.$(OBJEXT) \
 	playlist_dlg.$(OBJEXT) playlist_dlg_glade.$(OBJEXT) \
-	media_chooser_dlg.$(OBJEXT) media_chooser_dlg_glade.$(OBJEXT) \
 	admin_dlg.$(OBJEXT) admin_dlg_glade.$(OBJEXT)
 digitalparent_OBJECTS = $(am_digitalparent_OBJECTS)
 am__DEPENDENCIES_1 =
@@ -245,12 +244,8 @@ digitalparent_SOURCES = \
 	welcome_dlg_glade.cc\
 	playlist_dlg.cc\
 	playlist_dlg_glade.cc\
-	media_chooser_dlg.cc\
-	media_chooser_dlg_glade.cc\
 	login_dlg.hh\
 	login_dlg_glade.hh\
-	media_chooser_dlg.hh\
-	media_chooser_dlg_glade.hh\
 	media_player_dlg.hh\
 	media_player_dlg_glade.hh\
 	playlist_dlg.hh\
@@ -265,7 +260,7 @@ digitalparent_SOURCES = \
 digitalparent_LDFLAGS = 
 digitalparent_LDADD = \
 	$(PACKAGE_LIBS)\
-	 /usr/lib/libtntdb.la -lvlc -lmhash
+	 /usr/lib/libtntdb.la -lmhash -lvlc
 
 all: all-am
 
@@ -346,8 +341,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/digitalparent.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/login_dlg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/login_dlg_glade.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/media_chooser_dlg.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/media_chooser_dlg_glade.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/media_player_dlg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/media_player_dlg_glade.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/playlist_dlg.Po@am__quote@
