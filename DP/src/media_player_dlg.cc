@@ -8,6 +8,7 @@
 #include "config.h"
 #include "media_player_dlg.hh"
 #include "playlist_dlg.hh"
+#include "load_dlg.hh"
 #include "controller.h"
 
 #include <vlc/libvlc.h>
@@ -26,6 +27,7 @@ int item;
 int id;
 bool firstTime = true;
 playlist_dlg *playlist_dlg;
+load_dlg *load_dlg;
 bool audioSkipped=false;
 Gtk::CheckButton *checkbutton;
 bool isAdmin;
@@ -67,6 +69,12 @@ void media_player_dlg::init()
 	//item = libvlc_playlist_add_extended (inst, filename.c_str(), NULL,sizeof playtimes/sizeof *playtimes,playtimes, &excp);
 
 
+    load_dlg = new class load_dlg();
+    load_dlg->set_progress(0);
+    load_dlg->show();
+    while(g_main_pending())
+    	g_main_iteration(false);
+   
 	std::string option;
 	std::string name;
 	int chap;
@@ -109,6 +117,7 @@ void media_player_dlg::init()
 	
     chapterMarks.push_back(0);
     for(int i = 2; i <= numChapters; i++) {
+	  load_dlg->set_progress((float) i/numChapters);
 	  while(chapterMarks.back() >= VLC_TimeGet(id) || VLC_TimeGet(id) > dvdLength) {
       //wait for VLC to settle
 		 usleep(25);
@@ -131,6 +140,8 @@ void media_player_dlg::init()
 	   
 	}
     chapterMarks.push_back(dvdLength);
+   
+    delete load_dlg;
     //go back to beginning
     set_time(0);
     //VLC_TimeSet(id, newSkipTime(0), false);
