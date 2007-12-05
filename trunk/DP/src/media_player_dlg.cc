@@ -34,7 +34,8 @@ long endTime;
 int dvdLength;
 int vlcSpeed;
 Gtk::Button *saveProfile;
-
+std::vector<int> chapterMarks;
+int currentChapter = 1;
 
 
 extern Controller* useController();
@@ -71,14 +72,16 @@ void media_player_dlg::init()
 	int chap;
 	//the following line may be commented out if we don't want to show the menu
 	//item = libvlc_playlist_add(inst, filename.c_str(), "Root Menu", &excp);
-	if(isAdmin){
+    
+	//if(isAdmin){
 		for(chap = 1; chap <= useController()->c_getDisc()->getDiscChapterNum(); chap++) {
-			option = "dvd:///dev/dvd@1:" + to_string(chap);
+		    option = "dvd:///dev/dvd@1:" + to_string(chap);
 			name = "Chapter " + to_string(chap);
 			libvlc_playlist_add(inst, option.c_str(), name.c_str(), &excp);
 		    //const char* options = ":auto-preparse";
 			//libvlc_playlist_add_extended(inst, option.c_str(), name.c_str(), 1, &options, &excp);
 		}
+   /*
 	} else {
 		//if(useController()->c_getDisc()->getDiscRating() <= useController()->c_getUserLoggedIn()->getMaxPlayLevel()){
 			for(int i=1; i<=useController()->c_getDisc()->getDiscChapterNum();i++){
@@ -90,10 +93,53 @@ void media_player_dlg::init()
 			}
 		//}
 	}
-	
+	*/
 	libvlc_playlist_play(inst, 0, 0, NULL, &excp);
-	vlcSpeed=0;
-
+    vlcSpeed=0;
+    
+    while(0 > VLC_TimeGet(id) || VLC_TimeGet(id) > dvdLength) {
+       //wait for VLC to settle
+	   usleep(25);
+	}
+    int numChapters = useController()->c_getDisc()->getDiscChapterNum();
+    if(1 < numChapters)
+    	libvlc_playlist_next(inst, &excp);
+	
+    dvdLength = (useController()->c_getDisc()->getDiscLength())/1000;
+	
+    chapterMarks.push_back(0);
+    for(int i = 2; i <= numChapters; i++) {
+	  while(chapterMarks.back() >= VLC_TimeGet(id) || VLC_TimeGet(id) > dvdLength) {
+      //wait for VLC to settle
+		 usleep(25);
+	  }
+	  if(1 < VLC_TimeGet(id) && VLC_TimeGet(id) != chapterMarks.back()) {
+		 chapterMarks.push_back(VLC_TimeGet(id) + 1);
+		 printf("pushed 2: %d chapter %d\n", VLC_TimeGet(id), chapterMarks.size());
+	  }
+	   
+	   if(i < numChapters) {
+	      libvlc_playlist_next(inst, &excp);
+	      while(chapterMarks.back() >= VLC_TimeGet(id) || VLC_TimeGet(id) > dvdLength) {
+      	     //wait for VLC to settle
+			 usleep(50);
+	      }
+	   }
+	   
+	   printf("Chapter %d found at VLC Time %d\n", i, VLC_TimeGet(id));
+	   //usleep(50);
+	   
+	}
+    chapterMarks.push_back(dvdLength);
+    //go back to beginning
+    set_time(0);
+    //VLC_TimeSet(id, newSkipTime(0), false);
+   
+    printf("\n\n[");
+    for(uint ind = 0; ind < chapterMarks.size(); ind++) {
+	   printf(" %d,", chapterMarks.at(ind));
+	}
+    printf(" ]\n\n");
 	
 	
 	currentUser->set_text("User: " +useController()->c_getUserLoggedIn()->getUser());
@@ -108,11 +154,11 @@ void media_player_dlg::init()
 	
 	volume_slider->set_value(libvlc_audio_get_volume(inst,&excp));
 	time_slider->set_range(0,(useController()->c_getDisc()->getDiscLength())/1000);
-	dvdLength = (useController()->c_getDisc()->getDiscLength())/1000;
+	//dvdLength = (useController()->c_getDisc()->getDiscLength())/1000;
 	
 	saveProfile->signal_clicked().connect(SigC::slot(*this, &media_player_dlg::on_save_button_clicked), false);
-	slider_signal = Glib::signal_idle().connect(SigC::slot(*this, &media_player_dlg::update_slider));
-	
+	//slider_signal = Glib::signal_idle().connect(SigC::slot(*this, &media_player_dlg::update_slider));
+	slider_signal = Glib::signal_timeout().connect(SigC::slot(*this, &media_player_dlg::update_slider), 25);
 
 }
 
@@ -134,20 +180,36 @@ void media_player_dlg::on_open_media_button_clicked()
 
 void media_player_dlg::on_stop_button_clicked()
 {
-  libvlc_playlist_stop(inst,&excp);
+   //libvlc_playlist_stop(inst,&excp);
+   set_time(0);
+   libvlc_playlist_pause(inst, &excp);
   
 }
 
 void media_player_dlg::on_previous_button_clicked()
 {  
-	libvlc_playlist_prev(inst,&excp);
+    if(currentChapter == 1) {
+	   set_time(0);
+	}
+    else {
+	   set_time(chapterMarks.at(currentChapter-2));
+	}
+    /*
+    libvlc_playlist_prev(inst,&excp);
+    if(0 < chapterMarks.size())
+	  chapterMarks.pop_back();
+   */
 }
 
 void media_player_dlg::on_rewind_button_clicked()
 {
 	//VLC_SpeedSlower(id);   //adjusted functions
 	//VLC_TimeSet(id,(int)time_slider->get_value()-10,false);
-    set_playback_time((int)time_slider->get_value()-10, false);
+    if((int)time_slider->get_value() <= 10)
+	   set_time(0);
+	else
+       set_time((int)time_slider->get_value()-10);   
+    //set_playback_time((int)time_slider->get_value()-10, false);
 	
 }
 
@@ -199,7 +261,9 @@ void media_player_dlg::on_cut_video_toggled()
 
 void media_player_dlg::on_next_button_clicked()
 {  
-	libvlc_playlist_next(inst,&excp);
+    printf("trying to set time to %d\n", chapterMarks.at(currentChapter));
+	set_time(chapterMarks.at(currentChapter));
+    //libvlc_playlist_next(inst,&excp);
 	
 	/** this is how the skins controller does it:
 	input_thread_t *p_input =
@@ -245,6 +309,96 @@ void media_player_dlg::on_play_button_clicked()
 	
 }
 
+int media_player_dlg::set_time(int time) {
+   //printf("Entered set_time\n");
+   if(libvlc_playlist_isplaying(inst, &excp)) {
+	  if(time >= 0 && time <= dvdLength) {
+         bool timeUnchecked = true;
+         int newTime = time;
+         while(timeUnchecked) {
+
+	        newTime = checkSkipWindows(time);
+	        timeUnchecked = (newTime != time);
+			//printf("SkipWindow - time: %d, newTime: %d\n", time, newTime);
+	  		
+	        time = checkSkipChapters(newTime);
+	        timeUnchecked = (timeUnchecked || newTime != time);
+			//printf("SkipChapters - time: %d, newTime: %d, timeUnchecked: %d\n", time, newTime, timeUnchecked);
+
+         }
+         //newTime now points to a valid time
+		 int vlcTime = VLC_TimeGet(id);
+		 
+		 if(time == dvdLength) {
+			//take us back to start and pause playback
+			time = set_time(0);
+			VLC_TimeSet(id, time, false);
+			while(0 >= VLC_TimeGet(id) || VLC_TimeGet(id) > dvdLength) {
+      	       //wait for VLC to settle
+	        }
+			libvlc_playlist_pause(inst, &excp);
+		 }
+		 else if(1 < abs(time - VLC_TimeGet(id))) {
+			   printf("Set time: %d VLC_Time: %d\n", time, vlcTime);
+         	   VLC_TimeSet(id, time, false);
+		 }
+	  
+		 currentChapter = findChapter(time);
+	     return time;
+	  }
+   }
+   
+   return 0;
+}//set_time
+
+int media_player_dlg::checkSkipWindows(int time) {
+   
+   for(uint i=0;i<skipTimes.size();i++){
+      if(time>=skipTimes.at(i).getSkipStart() && time<=skipTimes.at(i).getSkipStop()){
+         return skipTimes.at(i).getSkipStop();
+      }
+   }
+   
+   return time;
+}//checkSkipWindows
+
+int media_player_dlg::checkSkipChapters(int time) {
+   
+   //figure out which chapter this time belongs to
+   int i = findChapter(time);
+   
+   //figure out if this chapter is allowed
+   for(int j = 0; j < (int) skipChapters.size(); j++) {
+	  if(i == skipChapters.at(j)) {
+		 //this chapter is prohibited
+		 //return start value for next chapter
+		 return chapterMarks.at(i);
+	  }
+   }
+   
+   //if we're here, the time is allowed
+   return time;
+}//checkSkipChapters
+
+int media_player_dlg::findChapter(int time) {
+   
+   int i = currentChapter;
+   
+   //first check if we're in the current chapter
+   if(time < chapterMarks.at(i-1) || time >= chapterMarks.at(i)) {
+	  //we're not in the current chapter
+	  //find which chapter this time belongs to
+	  for(i = 1; i < (int) chapterMarks.size(); i++) {
+		 if(time >= chapterMarks.at(i-1) && time < chapterMarks.at(i)) {
+			//i == correct chapter
+			break;
+		 }
+   	  }
+   }
+   
+   return i;
+}//findChapter
+
 bool media_player_dlg::set_playback_time(int curVal, bool moving)
 {
    //int curVal = newSkipTime((int) time_slider->get_value());
@@ -254,6 +408,16 @@ bool media_player_dlg::set_playback_time(int curVal, bool moving)
 	   vlcVal = VLC_TimeGet(id);
 	   if(5 > (dvdLength - curVal)) {
 		  VLC_TimeSet(id, dvdLength - 5, false);
+	   }
+	   else if(0 < chapterMarks.size() && curVal < chapterMarks.back()) {
+		  
+		  while(0 < chapterMarks.size() && curVal < chapterMarks.back()) {
+			 //go back a chapter
+		  	 libvlc_playlist_prev(inst,&excp);
+		  	 printf("popped %d\n", chapterMarks.back());
+			 chapterMarks.pop_back();
+		  }
+		  VLC_TimeSet(id, curVal, false);
 	   }
 	   else if(vlcVal < dvdLength && curVal < vlcVal) {
 	      VLC_TimeSet(id, curVal, false);
@@ -267,30 +431,48 @@ bool media_player_dlg::set_playback_time(int curVal, bool moving)
 		      	VLC_TimeSet(id, curVal, false);
 		   	 }
 		   
-		   	 while(0 > VLC_TimeGet(id) || dvdLength < VLC_TimeGet(id) || 1 >= abs(VLC_TimeGet(id) - curVal)) {
+		   	 while(0 >= VLC_TimeGet(id) || dvdLength < VLC_TimeGet(id) || 1 >= abs(VLC_TimeGet(id) - curVal)) {
 			    //printf("Debug: stall - %d curVal %d\n", VLC_TimeGet(id), curVal); //stall
 			  	
-			  	if(moving)
-					return true;
-				else
-					usleep(25);
+			  	//if(moving)
+				//	return true;
+				//else
+					usleep(15);
 		   	 }//usleep(200); //stall to let VLC catch up
-			  
+			 
+			
+			 if(vlcVal > 0 && (0 == chapterMarks.size() || chapterMarks.back() != vlcVal)) {
+			 	chapterMarks.push_back(vlcVal);
+				printf("pushed 3: %d chapter: %d\n", vlcVal, chapterMarks.size());
+			 }
+			 
 		   	 vlcVal = VLC_TimeGet(id);
-		   	 printf("Debug: end stall - %d curVal = %d\n", vlcVal, curVal);
+		   	 printf("Debug: end stall - %d curVal = %d chap = %d\n", vlcVal, curVal, chapterMarks.size());
+			 
 		  }
 	   }
 	}   
+    
     return true;
 }
 
 bool media_player_dlg::update_slider()
 {
+   /*
    int vlcTime = VLC_TimeGet(id);
    if(libvlc_playlist_isplaying(inst, &excp)) {
     	if(vlcTime <= 0 || vlcTime > dvdLength){
 			//time_slider->set_value(newSkipTime(0));
+		   while(0 >= VLC_TimeGet(id) || dvdLength < VLC_TimeGet(id)) {
+			    usleep(15); //wait for VLC to settle
+		   	 }
+		   if(0 == chapterMarks.size() || VLC_TimeGet(id) != chapterMarks.back()) {
+		   	  chapterMarks.push_back(VLC_TimeGet(id));
+		      printf("pushed 1: %d chapter %d\n", VLC_TimeGet(id), chapterMarks.size());
+		   }
 		} else {
+		   
+		   
 			if(newSkipTime(vlcTime) != vlcTime){
 				//time_slider->set_value(newSkipTime(vlcTime));
 				//VLC_TimeSet(id,newSkipTime(vlcTime),false);
@@ -301,8 +483,13 @@ bool media_player_dlg::update_slider()
 		}
 	   
 	}
-	
-	usleep(50);
+	*/
+    //int time = set_time(VLC_TimeGet(id));
+    //if(time < dvdLength)
+    	time_slider->set_value(set_time(VLC_TimeGet(id)));
+    //else
+	  //  time_slider->set_value(dvdLength);
+	//usleep(50);
 	return true;
 }
 
@@ -314,8 +501,9 @@ void media_player_dlg::on_time_slider_value_changed()
 
 void media_player_dlg::on_time_slider_button_move_event() {
 	
+   printf("Slider: %d\n", set_time((int)time_slider->get_value()));
    // libvlc_media_instance_t *mi;
-    int newTime;
+   // int newTime;
 /*     long currentTime, maxTime, vlcTime;
  *    
  *     vlcTime = VLC_TimeGet(id);
@@ -326,11 +514,13 @@ void media_player_dlg::on_time_slider_button_move_event() {
  *     printf("vlc: %d cT: %d mT: %d\n", vlcTime, currentTime, maxTime);
  *    
  */
+   /*
     int currentTime;
     if(libvlc_playlist_isplaying(inst, &excp)) {
 	   currentTime = VLC_TimeGet(id);
 	   newTime = newSkipTime((int)time_slider->get_value());
 	   set_playback_time(newTime, true);
+   */
 	   //usleep(50);
 /* 	   VLC_TimeSet(id,newSkipTime((int)time_slider->get_value()),false);
  * 	   usleep(50);
@@ -339,8 +529,8 @@ void media_player_dlg::on_time_slider_button_move_event() {
  * 		  VLC_TimeSet(id,newSkipTime((int)time_slider->get_value()),false);
  * 	   }
  */
-	   printf("New Time: %d, VLC Time %d, Playing %d\n", newTime, VLC_TimeGet(id), libvlc_playlist_isplaying(inst, &excp));
-	}
+	   //printf("New Time: %d, VLC Time %d, Playing %d\n", newTime, VLC_TimeGet(id), libvlc_playlist_isplaying(inst, &excp));
+	//}
 	//VLC_TimeSet(id,(int)time_slider->get_value(),false);
 	//usleep(50);
 }
@@ -359,7 +549,8 @@ bool media_player_dlg::on_time_slider_button_press(GdkEventButton *ev)
 bool media_player_dlg::on_time_slider_button_release_event(GdkEventButton *ev)
 {
 	   slider_signal.disconnect();
-       set_playback_time((int)time_slider->get_value(), false);
+   	   set_time((int)time_slider->get_value());
+       //set_playback_time(newSkipTime((int)time_slider->get_value()), false);
 	   //VLC_TimeSet(id,(int)time_slider->get_value(),false);
 /*        while(VLC_TimeGet(id) == (int)time_slider->get_value()) ;
  * 	
@@ -378,7 +569,7 @@ bool media_player_dlg::on_time_slider_button_release_event(GdkEventButton *ev)
  * 	      }
  * 	   }
  */
-       slider_signal = Glib::signal_idle().connect(SigC::slot(*this, &media_player_dlg::update_slider));
+       slider_signal = Glib::signal_timeout().connect(SigC::slot(*this, &media_player_dlg::update_slider), 100);
 	   printf("Slider released, slider: %d VLC Time %d\n", (int)time_slider->get_value(), VLC_TimeGet(id));
 	
        return 0;
@@ -557,11 +748,54 @@ void media_player_dlg::on_playlist_clicked()
 
 
 int media_player_dlg::newSkipTime(int currentTime){
-	
+	//check skip windows
 	for(uint i=0;i<skipTimes.size();i++){
 		if(currentTime>=skipTimes.at(i).getSkipStart() && currentTime<=skipTimes.at(i).getSkipStop()){
 			return skipTimes.at(i).getSkipStop();
 		}
+	}
+    //check skip chapters
+    //determine which chapter this time belongs in
+    for(int i=chapterMarks.size(); i > 0; i--) {
+	   if(currentTime >= chapterMarks.at(i-1)) {
+		  //we've found the appropriate chapter
+		  
+		  //see if this chapter is supposed to be skipped
+		  for(int j=0; j < (int) skipChapters.size(); j++) {
+			 if(i == skipChapters.at(j)) {
+				//chapter should be skipped
+				//make playback skip to next chapter
+				if(i == (int) chapterMarks.size()) {
+				  //this is the last chapter played, advance playlist
+				  libvlc_playlist_next(inst, &excp);
+				  //wait for VLC to settle
+				  while(0 >= VLC_TimeGet(id) || dvdLength < VLC_TimeGet(id)) {
+			          //printf("Debug: stall - %d curVal %d\n", VLC_TimeGet(id), curVal); //stall
+			  		  usleep(15);
+		   	      }
+				  return VLC_TimeGet(id); 
+				}
+				else {
+				    printf("recursion: current = %d time = %d\n", currentTime, chapterMarks.at(i));
+				    set_playback_time(chapterMarks.at(i), false);
+					while(0 >= VLC_TimeGet(id) || dvdLength < VLC_TimeGet(id)) {
+			          //printf("Debug: stall - %d curVal %d\n", VLC_TimeGet(id), curVal); //stall
+			  		  usleep(15);
+		   	     	}
+				  	return VLC_TimeGet(id);
+				    //return chapterMarks.at(i);
+				   // libvlc_playlist_next(inst, &excp);
+				  //wait for VLC to settle
+				  //while(0 >= VLC_TimeGet(id) || dvdLength < VLC_TimeGet(id)) {
+			          //printf("Debug: stall - %d curVal %d\n", VLC_TimeGet(id), curVal); //stall
+			  		//  usleep(15);
+		   	      //}
+				  //return VLC_TimeGet(id);
+				}
+			 }
+		  }
+		  
+	   }
 	}
 	return currentTime;
 }

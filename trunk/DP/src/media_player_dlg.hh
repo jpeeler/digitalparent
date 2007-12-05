@@ -47,7 +47,10 @@ class media_player_dlg : public media_player_dlg_glade
 		bool addToSkipTimes(std::string toAdd);
 		bool addToSkipChapters(std::string toAdd);
 		int newSkipTime(int currentTime);
-		
+        int set_time(int time);
+        int checkSkipWindows(int time);
+        int checkSkipChapters(int time);
+        int findChapter(int time);
 		int to_int(const std::string &str);
 		template <class T>
 inline std::string to_string (const T& t);
