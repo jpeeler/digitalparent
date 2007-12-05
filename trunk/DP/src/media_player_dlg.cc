@@ -55,6 +55,7 @@ void media_player_dlg::init()
 	}
 	const Profile *aprofile = useController()->c_getProfile();
 	useController()->loadProfile();
+	currentUser->set_text("User: " +useController()->c_getUserLoggedIn()->getUser());
 	
 	skipChapters.clear();
 	skipTimes.clear();
@@ -102,7 +103,22 @@ void media_player_dlg::init()
 		//}
 	}
 	*/
-	libvlc_playlist_play(inst, 0, 0, NULL, &excp);
+	if(useController()->loadProfile()==DB_UNKNOWN_PROFILE && useController()->loadDisc()!=C_DISC_NOT_LOADED){
+		if(isAdmin){
+			printf("is admin\n");
+			/ibvlc_playlist_play(inst, 0, 0, NULL, &excp);
+		} else if(useController()->c_getDisc()->getDiscRating() > useController()->c_getUserLoggedIn()->getMaxPlayLevel()){
+			printf("user doens't have rights\n");
+			hideButtons();
+			media->set_text("Insufficient Privileges");
+			load_dlg->hide();
+			return;			
+		} else {
+			printf("user has rights\n");
+			libvlc_playlist_play(inst, 0, 0, NULL, &excp);
+		}
+	}
+	//libvlc_playlist_play(inst, 0, 0, NULL, &excp);
     vlcSpeed=0;
     
     while(0 > VLC_TimeGet(id) || VLC_TimeGet(id) > dvdLength) {
@@ -153,7 +169,7 @@ void media_player_dlg::init()
     printf(" ]\n\n");
 	
 	
-	currentUser->set_text("User: " +useController()->c_getUserLoggedIn()->getUser());
+	
 	
 	if(!isAdmin){
 		cut_video->hide();
@@ -1056,6 +1072,18 @@ bool media_player_dlg::addToSkipTimes(std::string toAdd){
 	return false;
 }
 
+void media_player_dlg::hideButtons(){
+	rewind_button->hide();
+	previous_button->hide();
+	stop_button->hide();
+	pause_button->hide();
+	play_button->hide();
+	fastforward_button->hide();
+	next_button->hide();
+	fullscreen->hide();
+	cut_video->hide();
+	playlist_button->hide();
+}
 
 int media_player_dlg::to_int(const std::string &str) {
 	std::stringstream ss(str);
