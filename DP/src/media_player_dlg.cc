@@ -106,7 +106,7 @@ void media_player_dlg::init()
 	if(useController()->loadProfile()==DB_UNKNOWN_PROFILE && useController()->loadDisc()!=C_DISC_NOT_LOADED){
 		if(isAdmin){
 			printf("is admin\n");
-			/ibvlc_playlist_play(inst, 0, 0, NULL, &excp);
+			//libvlc_playlist_play(inst, 0, 0, NULL, &excp);
 		} else if(useController()->c_getDisc()->getDiscRating() > useController()->c_getUserLoggedIn()->getMaxPlayLevel()){
 			printf("user doens't have rights\n");
 			hideButtons();
@@ -115,12 +115,12 @@ void media_player_dlg::init()
 			return;			
 		} else {
 			printf("user has rights\n");
-			libvlc_playlist_play(inst, 0, 0, NULL, &excp);
+			//libvlc_playlist_play(inst, 0, 0, NULL, &excp);
 		}
 	}
-	//libvlc_playlist_play(inst, 0, 0, NULL, &excp);
+	libvlc_playlist_play(inst, 0, 0, NULL, &excp); // this is necess
     vlcSpeed=0;
-    
+  if(useController()->loadDisc()!=C_DISC_NOT_LOADED  ){
     while(0 > VLC_TimeGet(id) || VLC_TimeGet(id) > dvdLength) {
        //wait for VLC to settle
 	   usleep(25);
@@ -156,7 +156,7 @@ void media_player_dlg::init()
 	   
 	}
     chapterMarks.push_back(dvdLength);
-   
+}//no dvd  
     delete load_dlg;
     //go back to beginning
     set_time(0);
