@@ -7,6 +7,8 @@
 #ifndef _STD_ERRORS_H
 #define _STD_ERRORS_H
 
+#define DEB_MODE false // this is for deb file creation only
+
 //#define SUCCESS 0
 //#define GEN_ERROR 1
 
