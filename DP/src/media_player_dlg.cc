@@ -59,6 +59,8 @@ void media_player_dlg::init()
 	
 	skipChapters.clear();
 	skipTimes.clear();
+    chapterMarks.clear();
+    slider_signal.disconnect();
 	skipTimes = aprofile->getSkipTimes();
 	skipChapters = aprofile->getSkipChapters();
 
@@ -131,6 +133,7 @@ void media_player_dlg::init()
 	
     dvdLength = (useController()->c_getDisc()->getDiscLength())/1000;
 	
+	//make sure chapterMarks is clear
     chapterMarks.push_back(0);
     for(int i = 2; i <= numChapters; i++) {
 	  load_dlg->set_progress((float) i/numChapters);
