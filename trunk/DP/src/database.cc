@@ -22,13 +22,17 @@
  */
  
  
- #include "database.h"
- 
- 
- Database::Database()
+#include "database.h"
+  
+Database::Database()
 {
 	try {
-		conn = tntdb::connect("sqlite:DigitalParentDB");
+		#if DEB_MODE
+			conn = tntdb::connect("sqlite:/usr/share/DigitalParent/DigitalParentDB");
+		#else
+			conn = tntdb::connect("sqlite:DigitalParentDB");
+		#endif
+		
 		printf("connected\n");
 		
 		// create tables if they don't exist (should be first run)

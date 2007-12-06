@@ -14,6 +14,7 @@
 #include "welcome_dlg.hh"
 #include "admin_dlg.hh"
 #include "controller.h"
+#include "std_errors.h"
 
 #define RUN_WINDOW true
 #define TEST_CONTROLLER false
@@ -38,9 +39,15 @@ void fillWithUsers();
 
 int main(int argc, char **argv)
 {
-   // the globally accessed hard coded paths
-   useController()->img_dir = "/Projects/DP/data/";   
-   useController()->pixmaps_dir = "/Projects/DP/pixmaps/";
+   #if DEB_MODE
+     // for creating debs
+     useController()->img_dir = "/usr/share/DigitalParent/";
+     useController()->pixmaps_dir = "/usr/share/pixmaps/";
+   #else
+     // the globally accessed hard coded paths
+     useController()->img_dir = "/Projects/DP/data/";   
+     useController()->pixmaps_dir = "/Projects/DP/pixmaps/";
+   #endif
 	
 #if defined(ENABLE_NLS)
    bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
