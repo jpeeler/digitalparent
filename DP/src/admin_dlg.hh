@@ -55,7 +55,8 @@ class admin_dlg : public admin_dlg_glade
 		void on_confirm_delete_button_clicked();
 		void on_cancel_delete_button_clicked();
 		void start_delete_confirm();	
-		void stop_delete_confirm();	
+		void stop_delete_confirm();
+		bool on_admin_dlg_delete_event(GdkEventAny *ev);
 		vector<class Gtk::Image*> m_image_list;					
 		vector<class Gtk::Button*> m_button_list;
 		vector<string> m_icon_list;	

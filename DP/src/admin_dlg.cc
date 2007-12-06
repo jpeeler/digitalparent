@@ -310,6 +310,7 @@ void admin_dlg::on_screen_movies_button_clicked()
 
 void admin_dlg::oninit_admin()
 {		
+	set_title(string("Administration "));
 	ad_state = AD_SETTINGS;
 	// SHOW THE ADMIN ICON AND NAME
 	set_user_icon(string("admin"),string(useController()->img_dir + "tux.png"));	
@@ -354,7 +355,7 @@ void admin_dlg::oninit_user()
 	set_user_icon(m_user->getUser(),m_user_image);
 	user_name_edit_box->set_editable(false);
 	screen_movies_button->hide();
-	
+	set_title(m_user->getUser());
 	reset_frame3(m_user);
 }
 
@@ -514,4 +515,10 @@ void admin_dlg::on_sa_checkbox_toggled()
 	bool visible = sa_edit_box->get_visibility();
 	if ( visible ) sa_edit_box->set_visibility(false);
 	else sa_edit_box->set_visibility(true);
+}
+
+bool admin_dlg::on_admin_dlg_delete_event(GdkEventAny * event)
+{
+	on_logout_button_clicked();
+	return true;
 }
