@@ -1860,7 +1860,7 @@ as administrator.
 		    <widget class="GtkRadioButton" id="x_radio_button">
 		      <property name="visible">True</property>
 		      <property name="can_focus">True</property>
-		      <property name="label" translatable="yes">X</property>
+		      <property name="label" translatable="yes">ALL</property>
 		      <property name="use_underline">True</property>
 		      <property name="relief">GTK_RELIEF_NORMAL</property>
 		      <property name="focus_on_click">True</property>
@@ -2553,23 +2553,6 @@ as administrator.
       </child>
 
       <child>
-	<widget class="GtkImage" id="admin_icon">
-	  <property name="width_request">152</property>
-	  <property name="height_request">136</property>
-	  <property name="visible">True</property>
-	  <property name="pixbuf">no_user.png</property>
-	  <property name="xalign">0.5</property>
-	  <property name="yalign">0.5</property>
-	  <property name="xpad">0</property>
-	  <property name="ypad">0</property>
-	</widget>
-	<packing>
-	  <property name="x">8</property>
-	  <property name="y">48</property>
-	</packing>
-      </child>
-
-      <child>
 	<widget class="GtkButton" id="admin_settings_button">
 	  <property name="width_request">128</property>
 	  <property name="height_request">37</property>
@@ -2698,6 +2681,23 @@ as administrator.
 	<packing>
 	  <property name="x">280</property>
 	  <property name="y">40</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkImage" id="admin_icon">
+	  <property name="width_request">152</property>
+	  <property name="height_request">136</property>
+	  <property name="visible">True</property>
+	  <property name="pixbuf">no_user.png</property>
+	  <property name="xalign">0.5</property>
+	  <property name="yalign">0.5</property>
+	  <property name="xpad">0</property>
+	  <property name="ypad">0</property>
+	</widget>
+	<packing>
+	  <property name="x">8</property>
+	  <property name="y">48</property>
 	</packing>
       </child>
     </widget>
