@@ -46,7 +46,11 @@ digitalparent_SOURCES = \
 	load_dlg.cc\
 	load_dlg.hh\
 	load_dlg_glade.cc\
-	load_dlg_glade.hh
+	load_dlg_glade.hh\
+	DiscRating.cc\
+	DiscRating.hh\
+	DiscRating_glade.cc\
+	DiscRating_glade.hh
 
 digitalparent_LDFLAGS = 
 

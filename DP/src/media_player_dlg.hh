@@ -30,7 +30,7 @@ class media_player_dlg : public media_player_dlg_glade
         void on_mute_button_toggled();
         void on_open_media_button_clicked();
         void on_time_slider_value_changed();
-        void on_fullscreen_clicked();
+        //void on_fullscreen_clicked();
         bool on_delete_event(GdkEventAny * event);
         bool set_playback_time(int curVal, bool moving);
 		bool update_slider();
@@ -52,6 +52,7 @@ class media_player_dlg : public media_player_dlg_glade
         int checkSkipChapters(int time);
         int findChapter(int time);
 		void hideButtons();
+		void on_discRatingButton_clicked();
 		int to_int(const std::string &str);
 		template <class T>
 inline std::string to_string (const T& t);

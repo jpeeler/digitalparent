@@ -10,7 +10,8 @@
 #include "playlist_dlg.hh"
 #include "load_dlg.hh"
 #include "controller.h"
-
+#include "DiscRating.hh"
+#include "std_errors.h"
 #include <vlc/libvlc.h>
 #include <gtkmm/checkbutton.h>
 #include <dvdnav/dvdnav.h>
@@ -38,6 +39,7 @@ int vlcSpeed;
 Gtk::Button *saveProfile;
 std::vector<int> chapterMarks;
 int currentChapter = 1;
+DiscRating *discRating;
 
 
 extern Controller* useController();
@@ -57,6 +59,9 @@ void media_player_dlg::init()
 	useController()->loadProfile();
 	currentUser->set_text("User: " +useController()->c_getUserLoggedIn()->getUser());
 	
+	discRating = new class DiscRating();
+	discRating->hide();
+	
 	skipChapters.clear();
 	skipTimes.clear();
     chapterMarks.clear();
@@ -65,10 +70,16 @@ void media_player_dlg::init()
 	skipChapters = aprofile->getSkipChapters();
 
 	isAdmin = useController()->c_getUserLoggedIn()->getUser()=="admin";
+	printf("**********isAdmin: %d\n",isAdmin);
 	char **test =NULL;					//used for VLC only
 	libvlc_exception_init(&excp);
   	inst = libvlc_new (0, test, &excp);
 	id = libvlc_get_vlc_id(inst);
+	
+	if(!isAdmin){
+		cut_video->hide();
+		discRatingButton->hide();
+	}
 	//item = libvlc_playlist_add_extended (inst, filename.c_str(), NULL,sizeof playtimes/sizeof *playtimes,playtimes, &excp);
 
 
@@ -104,12 +115,16 @@ void media_player_dlg::init()
 			}
 		//}
 	}
-	*/
+	*/printf("$$$$$$$$$$$$$$$$$$$$ Max play level: %d\n",useController()->c_getUserLoggedIn()->getMaxPlayLevel());
+		int maxLevel = useController()->c_getUserLoggedIn()->getMaxPlayLevel();
+		printf("@@@@@@@@@@@@@@@@@@@ Disc Level: %d\n",useController()->c_getDisc()->getDiscRating());
+		int discLevel = useController()->c_getDisc()->getDiscRating();
 	if(useController()->loadProfile()==DB_UNKNOWN_PROFILE && useController()->loadDisc()!=C_DISC_NOT_LOADED){
 		if(isAdmin){
 			printf("is admin\n");
 			//libvlc_playlist_play(inst, 0, 0, NULL, &excp);
-		} else if(useController()->c_getDisc()->getDiscRating() > useController()->c_getUserLoggedIn()->getMaxPlayLevel()){
+		//} else if((int)(useController()->c_getDisc()->getDiscRating()) > (int)(useController()->c_getUserLoggedIn()->getMaxPlayLevel())){
+		}else if(discLevel>maxLevel){
 			printf("user doens't have rights\n");
 			hideButtons();
 			media->set_text("Insufficient Privileges");
@@ -172,13 +187,10 @@ void media_player_dlg::init()
     printf(" ]\n\n");
 	
 	
-	
-	
-	if(!isAdmin){
-		cut_video->hide();
-	}
+
 	saveProfile = new class Gtk::Button("Save Profile");
 	playlist_dlg = new class playlist_dlg();
+
 	playlist_dlg->vbox4->pack_end(*saveProfile, Gtk::PACK_EXPAND_WIDGET, 0);
 	playlist_dlg->hide();						//hide the dlg
 	
@@ -281,10 +293,12 @@ void media_player_dlg::on_cut_video_toggled()
 			skipTimes.push_back(newSkip);
 			firstTime=true;
 		}
-			delete playlist_dlg;
+			 delete playlist_dlg;
 	saveProfile = new class Gtk::Button("Save Profile");
 	playlist_dlg = new class playlist_dlg();
+		playlist_dlg->hide();
 	playlist_dlg->vbox4->pack_end(*saveProfile, Gtk::PACK_EXPAND_WIDGET, 0);
+	saveProfile->signal_clicked().connect(SigC::slot(*this, &media_player_dlg::on_save_button_clicked), false);
 	on_playlist_button_toggled();
 	}
 }
@@ -704,6 +718,7 @@ void media_player_dlg::on_Logout_clicked()
 	libvlc_destroy (inst);
 	useController()->c_clearSkipVectors();
 	delete playlist_dlg;
+	delete discRating;
 	skipTimes.clear();
 	skipChapters.clear();
 	firstTime=true;
@@ -717,9 +732,27 @@ void media_player_dlg::on_Logout_clicked()
 
 }
 
-void media_player_dlg::on_fullscreen_clicked()
-{  
-	VLC_FullScreen(id);
+//~ void media_player_dlg::on_fullscreen_clicked()
+//~ {  
+	//~ VLC_FullScreen(id);
+//~ }
+
+void media_player_dlg::on_discRatingButton_clicked()
+{	const Disc *disc=useController()->c_getDisc();
+	if(disc->getDiscRating()==G){
+		discRating->gButton->set_active();
+	} else if(disc->getDiscRating()==PG){
+		discRating->pgButton->set_active();
+	} else if(disc->getDiscRating()==PG13){
+		discRating->pg13Button->set_active();
+	}else if(disc->getDiscRating()==NC17){
+		discRating->nc17Button->set_active();
+	} else if(disc->getDiscRating()==R){
+		discRating->rButton->set_active();
+	} else if(disc->getDiscRating()==X){
+		discRating->allButton->set_active();
+	}
+	discRating->show();
 }
 
 void media_player_dlg::on_mute_button_toggled()
@@ -1083,7 +1116,7 @@ void media_player_dlg::hideButtons(){
 	play_button->hide();
 	fastforward_button->hide();
 	next_button->hide();
-	fullscreen->hide();
+	discRatingButton->hide();
 	cut_video->hide();
 	playlist_button->hide();
 }
