@@ -172,7 +172,7 @@ int Database::storeProfile(Profile *profile)
       }
 	}
 	
-	//insert skip chaptersprintf("\n%s",m_user_image.c_str());	
+	//insert skip chapters	
 	query = conn.prepare("INSERT INTO Skip_Chapters (Chapter_Number, Profile_ID) VALUES (:v1, :v2)");
 	
 	for(index = 0; index < skipChapters.size(); index++)
@@ -604,42 +604,58 @@ int Database::storeDisc(Disc *discInfo)
 	discname = (*discInfo).getDiscName();
 	serial = (*discInfo).getDiscSerial();
 	
-	query = conn.prepare("SELECT Disc_ID, Disc_Rating_ID FROM Disc WHERE Disc_Name = :v1 AND Disc_Length = :v2 AND Disc_NumChapters = :v3 AND Disc_Serial = :v4");
-	query.setString("v1", discname).setInt("v2", (*discInfo).getDiscLength()).setInt("v3", (*discInfo).getDiscChapterNum()).setString("v4", serial);
-	
-	try {
-		row = query.selectRow();
+    if(0 == (*discInfo).getDiscID()) {
+   
+		query = conn.prepare("SELECT Disc_ID, Disc_Rating_ID FROM Disc WHERE Disc_Name = :v1 AND Disc_Length = :v2 AND Disc_NumChapters = :v3 AND Disc_Serial = :v4");
+		query.setString("v1", discname).setInt("v2", (*discInfo).getDiscLength()).setInt("v3", (*discInfo).getDiscChapterNum()).setString("v4", serial);
 		
-		//if error was not thrown, this disc is already in database;
-		//set Disc ID and rating
-		(*discInfo).setDiscID(row[0]);
-		(*discInfo).setDiscRating(row[1]);
+		try {
+			row = query.selectRow();	
+			//if error was not thrown, this disc is already in database;
+			
+			//set Disc ID and rating
+			(*discInfo).setDiscID(row[0]);
+			(*discInfo).setDiscRating(row[1]);
+		}
+		catch(tntdb::Error &e) {
+		  if(0 == strcmp("not found", e.what())) {
+			   //if error thrown is tntdb::NotFound, this disc does not exist so insert
+			   query = conn.prepare("INSERT INTO Disc (Disc_Name, Disc_Length, Disc_NumChapters, Disc_Rating_ID, Disc_Serial) VALUES (:v1, :v2, :v3, :v4, :v5)");
+			   query.setString("v1", discname).setInt("v2", (*discInfo).getDiscLength()).setInt("v3", (*discInfo).getDiscChapterNum()).setInt("v4", (*discInfo).getDiscRating());
+			   query.setString("v5", serial);
+			 
+			 try {
+				  query.execute();
+				 
+				  query = conn.prepare("SELECT Disc_ID FROM Disc WHERE Disc_Name = :v1 AND Disc_Length = :v2 AND Disc_NumChapters = :v3 AND Disc_Serial = :v4");
+				  query.setString("v1", discname).setInt("v2", (*discInfo).getDiscLength()).setInt("v3", (*discInfo).getDiscChapterNum()).setString("v4", serial);
+				 
+				  (*discInfo).setDiscID(query.selectValue());
+		
+			 }
+			 catch(tntdb::Error &e) {
+				return DB_GEN_ERROR;
+			 }
+		  }
+		  else
+			 return DB_GEN_ERROR;
+			
+			//get ID for this discID
+			getDisc(discInfo);
+		}
 	}
-	catch(tntdb::Error &e) {
-      if(0 == strcmp("not found", e.what())) {
-		   //if error thrown is tntdb::NotFound, this disc does not exist so insert
-		   query = conn.prepare("INSERT INTO Disc (Disc_Name, Disc_Length, Disc_NumChapters, Disc_Rating_ID, Disc_Serial) VALUES (:v1, :v2, :v3, :v4, :v5)");
-		   query.setString("v1", discname).setInt("v2", (*discInfo).getDiscLength()).setInt("v3", (*discInfo).getDiscChapterNum()).setInt("v4", (*discInfo).getDiscRating());
-		   query.setString("v5", serial);
-         
-         try {
-		      query.execute();
-			 
-			  query = conn.prepare("SELECT Disc_ID FROM Disc WHERE Disc_Name = :v1 AND Disc_Length = :v2 AND Disc_NumChapters = :v3 AND Disc_Serial = :v4");
-			  query.setString("v1", discname).setInt("v2", (*discInfo).getDiscLength()).setInt("v3", (*discInfo).getDiscChapterNum()).setString("v4", serial);
-			 
-			  (*discInfo).setDiscID(query.selectValue());
-	
-         }
-         catch(tntdb::Error &e) {
-            return DB_GEN_ERROR;
-         }
-      }
-      else
-         return DB_GEN_ERROR;
-		
-		//get ID for this discID
-		getDisc(discInfo);
+    else {
+	   
+	   query = conn.prepare("UPDATE Disc SET Disc_Rating_ID = :v1 WHERE Disc_ID = :v2");
+	   query.setInt("v1", (*discInfo).getDiscRating()).setInt("v2", (*discInfo).getDiscID());
+			   
+	   try {
+	      query.execute();		 
+	   }
+	   catch(tntdb::Error &e) {
+		  return DB_GEN_ERROR;
+	   }
+	   
 	}
 	
 	return SUCCESS;
