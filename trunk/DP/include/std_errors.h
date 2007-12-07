@@ -40,7 +40,7 @@ typedef enum {
 } ERRORS;
 
 typedef enum {
-	G,
+	G=1,
 	PG,
 	PG13,
 	NC17,
