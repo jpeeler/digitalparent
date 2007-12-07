@@ -722,6 +722,7 @@ void media_player_dlg::on_Logout_clicked()
 	skipTimes.clear();
 	skipChapters.clear();
 	firstTime=true;
+	useController()->c_setOtherUserID(0);
 	if(isAdmin){			
 		useController()->dp_state=DP_ADMIN_PANEL;
 		hide();
