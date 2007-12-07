@@ -252,6 +252,9 @@ int Controller::loadDisc()
 	
 	dvd_read_info(disc_name, disc_serial, &discLength, &discNumChapters);
 	
+	// make sure the disc object is not dirty from previous disc
+	void c_clearDisc();
+	
 	// create C++ strings and set them in disc object
 	std::string discName(disc_name);
 	std::string discSerial(disc_serial);
