@@ -45,6 +45,9 @@ void admin_dlg::on_change_icon_clicked()
 void admin_dlg::on_add_user_button_clicked()
 {  	
 	ad_state = AD_ADD_USER;
+	
+	useController()->c_clearUserOther();
+	
 	fill_image_button_scroller(ALL_ICONS);
 	m_user_image = "";
 	
@@ -475,9 +478,9 @@ void admin_dlg::on_user_save_button_clicked()
 			}				
 			else							
 			{
-				//useController()->c_clearUserOther();
+				useController()->c_clearUserOther();
 				error_label->set_text("");
-				//on_admin_settings_button_clicked();				
+				on_admin_settings_button_clicked();				
 			}
 		break;
 		}
