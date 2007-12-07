@@ -62,6 +62,13 @@ void media_player_dlg::init()
 	discRating = new class DiscRating();
 	discRating->hide();
 	
+	
+	saveProfile = new class Gtk::Button("Save Profile");
+	playlist_dlg = new class playlist_dlg();
+
+	playlist_dlg->vbox4->pack_end(*saveProfile, Gtk::PACK_EXPAND_WIDGET, 0);
+	playlist_dlg->hide();						//hide the dlg
+	
 	skipChapters.clear();
 	skipTimes.clear();
     chapterMarks.clear();
@@ -188,11 +195,6 @@ void media_player_dlg::init()
 	
 	
 
-	saveProfile = new class Gtk::Button("Save Profile");
-	playlist_dlg = new class playlist_dlg();
-
-	playlist_dlg->vbox4->pack_end(*saveProfile, Gtk::PACK_EXPAND_WIDGET, 0);
-	playlist_dlg->hide();						//hide the dlg
 	
 	volume_slider->set_value(libvlc_audio_get_volume(inst,&excp));
 	time_slider->set_range(0,(useController()->c_getDisc()->getDiscLength())/1000);
@@ -722,7 +724,7 @@ void media_player_dlg::on_Logout_clicked()
 	skipTimes.clear();
 	skipChapters.clear();
 	firstTime=true;
-	useController()->c_setOtherUserID(0);
+	useController()->c_clearUserOther();
 	if(isAdmin){			
 		useController()->dp_state=DP_ADMIN_PANEL;
 		hide();
