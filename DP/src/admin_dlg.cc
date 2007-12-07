@@ -23,6 +23,7 @@ void admin_dlg::on_logout_button_clicked()
 
 void admin_dlg::on_media_player_button_clicked()
 {  	
+	useController()->c_clearUserOther();
 	if ( useController()->dp_state == DP_ADMIN_PANEL )
 		useController()->dp_state = DP_ADMIN_PLAY;
 	else useController()->dp_state = DP_USER_PLAY;
@@ -474,9 +475,9 @@ void admin_dlg::on_user_save_button_clicked()
 			}				
 			else							
 			{
-				useController()->c_clearUserOther();
+				//useController()->c_clearUserOther();
 				error_label->set_text("");
-				on_admin_settings_button_clicked();				
+				//on_admin_settings_button_clicked();				
 			}
 		break;
 		}
